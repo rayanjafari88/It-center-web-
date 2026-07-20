@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT Command Center</title>
+    <script>
+      (() => {
+        const appearance = localStorage.getItem("itcc.theme") || "system";
+        const lang = localStorage.getItem("itcc.lang") || "en";
+        const dark = appearance === "dark" || (appearance === "system" && window.matchMedia?.("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.appearance = appearance;
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+      })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="auth-loading">
+    <div id="authSplash" class="auth-splash">
+      <div class="auth-splash-card">
+        <span class="logo">IT</span>
+        <strong>IT Command Center</strong>
+        <small>Loading your workspace...</small>
+      </div>
+    </div>
+    <div id="login" class="login-shell hidden">
+      <section class="login-panel">
+        <div class="login-copy">
+          <div class="product-mark">IT</div>
+          <p class="eyebrow">IT Operations Management</p>
+          <h1>IT Command Center</h1>
+          <p class="muted">A calm command workspace for assets, tickets, contracts, people, documents, and audit history.</p>
+          <div class="login-pills">
+            <span>Audit-ready</span>
+            <span>Bilingual</span>
+            <span>Dark mode</span>
+          </div>
+        </div>
+        <form id="loginForm" class="auth-card">
+          <div>
+            <h2>Welcome back</h2>
+            <p class="muted">Sign in to your V1 operations workspace.</p>
+          </div>
+          <label>
+            Username or Email
+            <input name="email" value="manager@itcc.local" autocomplete="username" />
+          </label>
+          <label>
+            Password
+            <input name="password" type="password" value="manager123" autocomplete="current-password" />
+          </label>
+          <button class="btn btn-primary" type="submit">Login</button>
+          <p class="hint">Demo accounts: admin/admin123, manager/manager123, staff/staff123, employee/admin123.</p>
+        </form>
+      </section>
+    </div>
+
+    <div id="app" class="app hidden">
+      <aside class="sidebar">
+        <div class="sidebar-inner">
+          <div class="brand">
+            <span class="logo">IT</span>
+            <div>
+              <strong>IT Command Center</strong>
+              <small>Operations Suite</small>
+            </div>
+          </div>
+          <div class="sidebar-search-shell">
+            <span></span>
+            <input id="sidebarSearch" type="search" placeholder="Jump to module..." aria-label="Search modules" />
+          </div>
+          <nav id="nav"></nav>
+          <div class="sidebar-footer">
+            <span class="sidebar-footer-dot"></span>
+            <div>
+              <strong id="sidebarUserName">Manager</strong>
+              <small id="sidebarRoleName">IT Manager</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-row">
+            <div class="page-context">
+              <div class="breadcrumbs" id="breadcrumbs">Operations / Dashboard</div>
+              <div class="page-title-line">
+                <p class="eyebrow" id="sectionEyebrow">Operations</p>
+                <h2 id="pageTitle">Dashboard</h2>
+              </div>
+            </div>
+            <label class="global-search">
+              <span id="globalSearchIcon"></span>
+              <input id="globalSearch" placeholder="Search tickets, assets, people, vendors..." />
+            </label>
+            <div class="top-actions">
+              <button class="btn btn-primary header-create" type="button" data-header-quick-create>+ Create</button>
+              <button id="notificationsButton" class="icon-btn" type="button" aria-label="Notifications"></button>
+              <button id="langToggle" class="btn btn-secondary lang-toggle" type="button">Arabic</button>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle theme"></button>
+              <button id="profileButton" class="profile-button" type="button">
+                <span class="avatar" id="avatar">AM</span>
+                <span>
+                  <strong id="userName">Manager</strong>
+                  <small id="roleName">IT Manager</small>
+                </span>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <section id="content"></section>
+      </main>
+    </div>
+
+    <div id="toastHost" class="toast-host"></div>
+    <div id="menuHost"></div>
+    <div id="dialogHost"></div>
+
+    <template id="modalTemplate">
+      <div class="modal-backdrop">
+        <form class="modal surface-card">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Record editor</p>
+              <h3></h3>
+            </div>
+            <button type="button" class="icon-btn close" aria-label="Close"></button>
+          </div>
+          <div class="modal-fields"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary close">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

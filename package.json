@@ -1,0 +1,11 @@
+{
+  "name": "it-command-center-v1",
+  "version": "1.0.0",
+  "description": "V1 IT Operations Management Platform prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "UNLICENSED"
+}
+
