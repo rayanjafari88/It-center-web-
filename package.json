@@ -4,8 +4,23 @@
   "description": "V1 IT Operations Management Platform prototype",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node qa/scripts/run-tests.js --suite regression",
+    "test:api": "node qa/scripts/run-tests.js --suite api",
+    "test:security": "node qa/scripts/run-tests.js --suite security",
+    "test:regression": "node qa/scripts/run-tests.js --suite regression",
+    "test:browser": "node qa/scripts/run-browser-tests.js",
+    "test:browser:headed": "npx playwright test --headed",
+    "test:browser:ui": "npx playwright test --ui",
+    "test:browser:report": "npx playwright show-report qa/reports/playwright-html",
+    "test:browser:readiness": "node qa/scripts/run-tests.js --suite browser",
+    "test:all": "node qa/scripts/run-browser-tests.js --with-node",
+    "qa:seed": "node qa/scripts/seed.js",
+    "qa:cleanup": "node qa/scripts/cleanup.js",
+    "qa:report": "node qa/scripts/report.js"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
 }
-

@@ -11935,3 +11935,50 @@ html[dir="rtl"] .modal-backdrop,
 html[dir="ltr"] .modal-backdrop {
   place-items: center;
 }
+
+/* QA documented defect PW-013: mobile Employee Portal shell created horizontal overflow at 390px. */
+@media (max-width: 480px) {
+  html,
+  body,
+  #app,
+  .app,
+  .main {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .sidebar,
+  .main,
+  .topbar,
+  .topbar-row,
+  #content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #content {
+    padding-inline: 10px !important;
+  }
+
+  .employee-action-grid,
+  .employee-dashboard-grid,
+  .employee-upcoming-grid,
+  .collection-grid,
+  .task-stack {
+    grid-template-columns: 1fr !important;
+    min-width: 0 !important;
+  }
+
+  .global-search,
+  .top-actions,
+  .employee-hero,
+  .surface-card {
+    min-width: 0 !important;
+  }
+}
