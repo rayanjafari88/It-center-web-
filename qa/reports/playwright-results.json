@@ -1,0 +1,1020 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Administrator.HQ-MOHE\\Documents\\Codex\\2026-06-14\\i-want-to-build-version-1\\work\\it-command-center\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "C:\\Users\\Administrator.HQ-MOHE\\Documents\\Codex\\2026-06-14\\i-want-to-build-version-1\\work\\it-command-center\\playwright.config.js",
+    "rootDir": "C:/Users/Administrator.HQ-MOHE/Documents/Codex/2026-06-14/i-want-to-build-version-1/work/it-command-center/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "C:\\Users\\Administrator.HQ-MOHE\\Documents\\Codex\\2026-06-14\\i-want-to-build-version-1\\work\\it-command-center\\qa\\scripts\\playwright-global-setup.js",
+    "globalTeardown": "C:\\Users\\Administrator.HQ-MOHE\\Documents\\Codex\\2026-06-14\\i-want-to-build-version-1\\work\\it-command-center\\qa\\scripts\\playwright-global-teardown.js",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Administrator.HQ-MOHE/Documents/Codex/2026-06-14/i-want-to-build-version-1/work/it-command-center/qa/reports/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/Administrator.HQ-MOHE/Documents/Codex/2026-06-14/i-want-to-build-version-1/work/it-command-center/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/reports/playwright-results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "qa/reports/playwright-html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "accessibility.spec.js",
+      "file": "accessibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "accessibility smoke: keyboard focus, labels, buttons and Escape behavior",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1460,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T05:59:55.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d316df4bad39fab891ed-761e6b4f12c8d0277734",
+          "file": "accessibility.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "admin-centers.spec.js",
+      "file": "admin-centers.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "settings admin centers expose V1 administration destinations without employee access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 911,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T05:59:57.241Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9447c4f4d5ad72bccf3b-3ebc02a420682d460473",
+          "file": "admin-centers.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "notifications bell opens and stays recipient scoped in the UI shell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 741,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T05:59:58.168Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9447c4f4d5ad72bccf3b-50a455b93148068d05e9",
+          "file": "admin-centers.spec.js",
+          "line": 13,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "assets.spec.js",
+      "file": "assets.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "asset create, edit, assign, employee visibility, duplicate serial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 935,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T05:59:58.936Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "538c68fb46f37f272c53-2a65536b035b40e1bb49",
+          "file": "assets.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "auth.spec.js",
+      "file": "auth.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "successful login, invalid login, refresh persistence, logout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1533,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T05:59:59.890Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d5ed79a6b333c2ba7209-b9befdeaae4b593749cf",
+          "file": "auth.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "unauthorized employee admin page redirects or hides admin modules",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 669,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:01.438Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d5ed79a6b333c2ba7209-d0b0c211e179c3850e77",
+          "file": "auth.spec.js",
+          "line": 21,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "contracts-vendors.spec.js",
+      "file": "contracts-vendors.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "vendors and contracts create, relate, edit, archive and restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 944,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:02.126Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6b1a130fc3e1b6f19101-90e605b8b5e33de9044e",
+          "file": "contracts-vendors.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "documents.spec.js",
+      "file": "documents.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "document create, permitted access, archive and restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 788,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:03.087Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d6a5e959622d2fd9deae-d8c54d8bd613d72dea97",
+          "file": "documents.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "employee-portal.spec.js",
+      "file": "employee-portal.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "employee ticket creation and privacy flow through API with visible portal",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 713,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:03.894Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff71a9569ecf2611852-5d36195969ccfaa7a54d",
+          "file": "employee-portal.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "suggested article preview preserves request form shell and closes overlays",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 748,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:04.624Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff71a9569ecf2611852-b0229be28848d51731e2",
+          "file": "employee-portal.spec.js",
+          "line": 21,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "knowledge-base.spec.js",
+      "file": "knowledge-base.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "knowledge draft privacy, publish, employee open, Arabic and English content",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 862,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:05.397Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fa3af9614638d5be75af-acc5e7a43ad128502b61",
+          "file": "knowledge-base.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "localization.spec.js",
+      "file": "localization.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "English LTR and Arabic RTL persist across refresh",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 973,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:06.283Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "01125cb6fe6ee1f06ddc-50cf631a01fa4640d70a",
+          "file": "localization.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "modals.spec.js",
+      "file": "modals.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Escape closes top overlay and app remains clickable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 671,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:07.277Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a31f1a2adc24f762324c-08df9c82012eb6858499",
+          "file": "modals.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "people.spec.js",
+      "file": "people.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "people workspace create, view, edit, search and employee restriction",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 920,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:07.965Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bdf2b4215be7a02a779d-87e1d28b48ea97cb7bab",
+          "file": "people.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "responsive.spec.js",
+      "file": "responsive.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "responsive smoke 1440x900",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 660,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:08.903Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "68833bfb7a01a66a4f98-0d87a74ed4cc5c2e65db",
+          "file": "responsive.spec.js",
+          "line": 12,
+          "column": 3
+        },
+        {
+          "title": "responsive smoke 1024x768",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 468,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:09.579Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "68833bfb7a01a66a4f98-c5915395943ac8d9dd41",
+          "file": "responsive.spec.js",
+          "line": 12,
+          "column": 3
+        },
+        {
+          "title": "responsive smoke 768x1024",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 424,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:10.062Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "68833bfb7a01a66a4f98-e1623bf8cc032593ee31",
+          "file": "responsive.spec.js",
+          "line": 12,
+          "column": 3
+        },
+        {
+          "title": "responsive smoke 390x844",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 427,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:10.499Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "68833bfb7a01a66a4f98-420e620ce7537a5d0924",
+          "file": "responsive.spec.js",
+          "line": 12,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "settings-notifications-search.spec.js",
+      "file": "settings-notifications-search.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "settings modules render for manager and stay hidden from employee",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 888,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:10.945Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6a6760cee9f9f0808774-58f9ada3dab3bbea0239",
+          "file": "settings-notifications-search.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "notifications are recipient-scoped and read actions work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 724,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:11.846Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6a6760cee9f9f0808774-a228acea29a274077079",
+          "file": "settings-notifications-search.spec.js",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "global search handles English, Arabic and special characters without exposing forbidden records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 681,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:12.583Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6a6760cee9f9f0808774-334e2243b993879a140a",
+          "file": "settings-notifications-search.spec.js",
+          "line": 28,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "tasks.spec.js",
+      "file": "tasks.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "personal task status flow and privacy",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 782,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:13.289Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "40021642a52d97e48aeb-a0fbae21458d6f7be520",
+          "file": "tasks.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "work task creation and assignment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 812,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:14.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "40021642a52d97e48aeb-ca224be067f3e12dcdb2",
+          "file": "tasks.spec.js",
+          "line": 24,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "tickets.spec.js",
+      "file": "tickets.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "tickets workspace opens and supports status, comments, attachment, internal note privacy",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 915,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-07-21T06:00:14.916Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3f5faa06df07e4ecadf6-ea615d25060908bc2493",
+          "file": "tickets.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-21T05:59:54.579Z",
+    "duration": 21412.112,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

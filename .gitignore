@@ -1,0 +1,3 @@
+node_modules/
+qa/reports/playwright-artifacts/
+qa/reports/playwright-html/
