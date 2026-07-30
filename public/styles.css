@@ -4536,8 +4536,8 @@ body.rtl .comment-replies {
 .ticket-workspace-actions select { min-height: 32px; max-width: 135px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-solid); color: var(--text); font: inherit; font-size: 11px; }
 .ticket-workspace-actions .ticket-reason.hidden { display: none; }
 .ticket-workspace-actions .btn { min-height: 32px; padding: 6px 8px; font-size: 11px; }
-.ticket-draft-state { align-self: end; padding: 7px 2px; color: var(--faint); font-size: 11px; font-weight: 800; }
-.ticket-draft-state.dirty { color: var(--warning); }
+/* Compact variant of the shared save-state indicator for the ticket toolbar. */
+.ticket-workspace-actions .form-save-state { align-self: end; margin-inline-end: 0; padding: 7px 2px; font-size: 11px; font-weight: 800; }
 .workspace-tabs { display: inline-flex; width: auto; margin: 10px 0; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .workspace-tabs .tab { flex: 0 0 auto; padding: 6px 9px; border-radius: 7px; font-size: 11px; }
 
@@ -5332,13 +5332,13 @@ body.rtl .comment-replies {
   display: none;
 }
 
-.ticket-draft-state {
+.ticket-workspace-actions .form-save-state {
   min-height: 28px;
   padding: 7px 4px;
   font-size: 10px;
 }
 
-.ticket-draft-state:not(.dirty) {
+.ticket-workspace-actions .form-save-state:not([data-state]) {
   display: none;
 }
 

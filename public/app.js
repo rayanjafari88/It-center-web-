@@ -1662,7 +1662,10 @@ Object.assign(uiTextAr, {
   "Unsaved changes": "تغييرات غير محفوظة",
   "Saving...": "جارٍ الحفظ...",
   "Saved": "تم الحفظ",
-  "Not saved": "لم يتم الحفظ"
+  "Not saved": "لم يتم الحفظ",
+  "No results found": "لا توجد نتائج",
+  "Try a different keyword or clear filters.": "جرّب كلمة أخرى أو امسح عوامل التصفية.",
+  "Clear filters": "مسح عوامل التصفية"
 });
 
 function trText(value) {
@@ -5823,7 +5826,7 @@ function preferencesPage() {
         <label><span>Language</span><select name="language"><option value="en" ${prefs.language === "en" ? "selected" : ""}>English</option><option value="ar" ${prefs.language === "ar" ? "selected" : ""}>Arabic</option></select></label>
         <label><span>Appearance</span><select name="theme"><option value="system" ${prefs.theme === "system" ? "selected" : ""}>System</option><option value="light" ${prefs.theme === "light" ? "selected" : ""}>Light</option><option value="dark" ${prefs.theme === "dark" ? "selected" : ""}>Dark</option></select></label>
         <label><span>Default landing page</span><select name="landing"><option value="employee_portal" ${prefs.landing === "employee_portal" ? "selected" : ""}>Dashboard</option><option value="tickets" ${prefs.landing === "tickets" ? "selected" : ""}>Tickets</option><option value="tasks" ${prefs.landing === "tasks" ? "selected" : ""}>My Tasks</option><option value="documents" ${prefs.landing === "documents" ? "selected" : ""}>Company Documents</option><option value="knowledge_base" ${prefs.landing === "knowledge_base" ? "selected" : ""}>Knowledge Base</option></select></label>
-        <div class="settings-actions"><button class="btn btn-primary" type="submit">Save Preferences</button></div>
+        <div class="settings-actions">${formSaveStateHtml()}<button class="btn btn-primary" type="submit">Save Preferences</button></div>
       </form>
     </section>
   `;
@@ -5841,7 +5844,7 @@ function notificationPreferencesPage() {
         <label class="preference-toggle"><span><strong>Asset notifications</strong><small>Assignment, return, and maintenance alerts.</small></span><input name="assets" type="checkbox" ${prefs.assets ? "checked" : ""}></label>
         <label class="preference-toggle"><span><strong>Contract notifications</strong><small>Upcoming contract expiration alerts.</small></span><input name="contracts" type="checkbox" ${prefs.contracts ? "checked" : ""}></label>
         <label class="preference-toggle"><span><strong>Vendor notifications</strong><small>Tickets waiting for vendor response.</small></span><input name="vendors" type="checkbox" ${prefs.vendors ? "checked" : ""}></label>
-        <div class="settings-actions"><button class="btn btn-primary" type="submit">Save Notification Settings</button></div>
+        <div class="settings-actions">${formSaveStateHtml()}<button class="btn btn-primary" type="submit">Save Notification Settings</button></div>
       </form>
     </section>
   `;
@@ -6899,7 +6902,7 @@ function managerTicketsPage() {
         </div>
         ${chartContext}
         <div class="ticket-workspace-list" aria-label="Ticket list">
-          ${data.map((ticket) => ticketWorkspaceListItem(ticket, selected?.id === ticket.id)).join("") || emptyState("No matching tickets", "Try changing search or filters.")}
+          ${data.map((ticket) => ticketWorkspaceListItem(ticket, selected?.id === ticket.id)).join("") || emptyState("No results found", "Try a different keyword or clear filters.", `<button class="btn btn-secondary" type="button" data-clear-filters="tickets">Clear filters</button>`)}
         </div>
       </aside>
       <section class="ticket-workspace-detail-panel">${selected ? ticketWorkspaceDetail(selected) : emptyState("No ticket selected", "Choose a ticket from the workspace list.")}</section>
@@ -7000,7 +7003,7 @@ function ticketWorkspaceActionBar(row) {
   return `
     <section class="ticket-workspace-actions" aria-label="Ticket quick actions">
       <button class="btn btn-primary" type="button" data-ticket-workspace-compose="reply">${icon("reply")}Reply</button>
-      <form data-ticket-management-form="${row.id}"><label><span>Assign</span><select name="assignedToId" data-ticket-draft-field="assignedToId"><option value="">Assign</option>${itUsers.map((user) => `<option value="${user.id}" ${draft.assignedToId === user.id ? "selected" : ""}>${escapeHtml(user.name)}</option>`).join("")}</select></label><label><span>Change Status</span><select name="status" data-ticket-draft-field="status" data-ticket-status-select>${optionList(statuses, draft.status, true)}</select></label><label class="ticket-reason ${showWaitingReason ? "" : "hidden"}" data-ticket-waiting-reason><span>Waiting reason</span><select name="waitingReason" data-ticket-draft-field="waitingReason"><option value="">Select reason</option>${optionList(["User", "Vendor", "Approval", "Parts", "External Company", "Other"], draft.waitingReason)}</select></label><label class="ticket-reason ${showCancelReason ? "" : "hidden"}" data-ticket-cancel-reason><span>Cancel reason</span><select name="cancelReason" data-ticket-draft-field="cancelReason"><option value="">Select reason</option>${optionList(["Requester", "IT", "Duplicate", "Created by mistake", "No longer needed", "Other"], draft.cancelReason)}</select></label><span class="ticket-draft-state ${draft.dirty ? "dirty" : ""}">${draft.dirty ? "Unsaved changes" : "Saved &#10003;"}</span><button class="btn btn-primary" type="submit" ${draft.dirty ? "" : "disabled"}>Save Changes</button></form>
+      <form data-ticket-management-form="${row.id}"><label><span>Assign</span><select name="assignedToId" data-ticket-draft-field="assignedToId"><option value="">Assign</option>${itUsers.map((user) => `<option value="${user.id}" ${draft.assignedToId === user.id ? "selected" : ""}>${escapeHtml(user.name)}</option>`).join("")}</select></label><label><span>Change Status</span><select name="status" data-ticket-draft-field="status" data-ticket-status-select>${optionList(statuses, draft.status, true)}</select></label><label class="ticket-reason ${showWaitingReason ? "" : "hidden"}" data-ticket-waiting-reason><span>Waiting reason</span><select name="waitingReason" data-ticket-draft-field="waitingReason"><option value="">Select reason</option>${optionList(["User", "Vendor", "Approval", "Parts", "External Company", "Other"], draft.waitingReason)}</select></label><label class="ticket-reason ${showCancelReason ? "" : "hidden"}" data-ticket-cancel-reason><span>Cancel reason</span><select name="cancelReason" data-ticket-draft-field="cancelReason"><option value="">Select reason</option>${optionList(["Requester", "IT", "Duplicate", "Created by mistake", "No longer needed", "Other"], draft.cancelReason)}</select></label>${formSaveStateHtml(draft.dirty ? "dirty" : "")}<button class="btn btn-primary" type="submit" ${draft.dirty ? "" : "disabled"}>Save Changes</button></form>
       <details class="ticket-v2-more"><summary>${icon("more")}More</summary><div><button type="button" class="btn btn-secondary" data-ticket-upload="${row.id}">${icon("attachments")}Upload file</button><button type="button" class="btn btn-secondary" data-ticket-link-asset="${row.id}">Link asset</button><button type="button" class="btn btn-secondary" data-ticket-attachments="${row.id}">View all attachments</button>${has("tickets", "archive") ? `<button type="button" class="btn btn-warning" data-archive="tickets" data-id="${row.id}">Archive</button><button type="button" class="btn btn-danger" data-trash="tickets" data-id="${row.id}">Delete</button>` : ""}${["Add watcher", "Link vendor", "Link contract", "Print", "Export"].map(comingSoonButton).join("")}</div></details>
     </section>
   `;
@@ -7140,7 +7143,7 @@ function tasksWorkspacePage() {
         ${taskQuickFilters()}
         ${taskWorkspaceFilters()}
         <div class="ticket-workspace-list" aria-label="Task list">
-          ${data.map((task) => taskWorkspaceItem(task, selected?.id === task.id)).join("") || emptyState("No matching tasks", "Try changing search or filters.")}
+          ${data.map((task) => taskWorkspaceItem(task, selected?.id === task.id)).join("") || emptyState("No results found", "Try a different keyword or clear filters.", `<button class="btn btn-secondary" type="button" data-clear-filters="tasks">Clear filters</button>`)}
         </div>
       </aside>
       <section class="ticket-workspace-detail-panel">${selected ? taskWorkspaceDetail(selected) : emptyState("No task selected", "Choose a task from the workspace list.")}</section>
@@ -7717,6 +7720,60 @@ function setFormSaveState(node, state) {
   }
 }
 
+// Markup for the shared indicator. Every editable form uses this one component so
+// "Unsaved changes" looks and reads the same everywhere.
+function formSaveStateHtml(state = "") {
+  const label = formSaveStateText[state];
+  return `<p class="form-save-state" data-save-state${state ? ` data-state="${state}"` : ""} role="status" aria-live="polite">${label ? escapeHtml(trText(label)) : ""}</p>`;
+}
+
+// Marks a form dirty as soon as it is edited, so the indicator never lies.
+function wireFormSaveState(form) {
+  if (!form) return null;
+  const node = $("[data-save-state]", form);
+  if (!node) return null;
+  const markDirty = () => {
+    form.dataset.dirty = "true";
+    setFormSaveState(node, "dirty");
+  };
+  form.addEventListener("input", markDirty);
+  form.addEventListener("change", markDirty);
+  return node;
+}
+
+// render() paints a skeleton and fills #content inside afterPaint(), which replaces
+// the form markup - so the "Saved" flash has to be queued behind that.
+function flashFormSaved(formSelector) {
+  afterPaint(() => afterPaint(() => {
+    const form = $(formSelector);
+    if (form) setFormSaveState($("[data-save-state]", form), "saved");
+  }));
+}
+
+// Runs a save and reports it through the shared indicator.
+async function runFormSave(form, save) {
+  const node = $("[data-save-state]", form);
+  const submit = $("button[type='submit']", form);
+  const submitLabel = submit?.textContent || "";
+  setFormSaveState(node, "saving");
+  if (submit) {
+    submit.disabled = true;
+    submit.textContent = trText("Saving...");
+  }
+  try {
+    await save();
+    form.dataset.dirty = "false";
+    return true;
+  } catch (error) {
+    setFormSaveState(node, "error");
+    if (submit) {
+      submit.disabled = false;
+      submit.textContent = submitLabel;
+    }
+    throw error;
+  }
+}
+
 // One line telling an admin how much of the taxonomy is actually routed, so gaps are
 // visible without opening all six groups.
 function assignmentCoverageSummary(settings, parents) {
@@ -7811,7 +7868,7 @@ function ticketAssignmentSettingsPanel() {
           }).join("")}
         </div>
         <div class="settings-actions ticket-assignment-actions">
-          <p class="form-save-state" data-assignment-save-state role="status" aria-live="polite"></p>
+          ${formSaveStateHtml()}
           <button class="btn btn-secondary" type="button" data-reset-ticket-assignment>Reset to Manual Only</button>
           <button class="btn btn-primary" type="submit" data-assignment-submit>Save Ticket Assignment</button>
         </div>
@@ -8949,6 +9006,20 @@ function bindPageActions() {
     form.classList.toggle("is-internal", internal);
     $$("[data-ticket-composer-mode]", form).forEach((item) => item.classList.toggle("active", item === button));
   }));
+  $$("[data-clear-filters]").forEach((button) => button.addEventListener("click", () => {
+    const scope = button.dataset.clearFilters;
+    state.query = "";
+    state.globalQuery = "";
+    if (scope === "tickets") {
+      state.managerTicketFilters = { status: "", priority: "", assignee: "", category: "", waitingReason: "", resolvedToday: "", chart: null };
+      state.ticketWorkspaceSelectedId = "";
+    }
+    if (scope === "tasks") {
+      state.filters.tasks = {};
+      state.taskWorkspaceSelectedId = "";
+    }
+    render();
+  }));
   $$("[data-task-filter]").forEach((select) => select.addEventListener("change", (event) => {
     const filters = taskFilters();
     filters[event.currentTarget.dataset.taskFilter] = event.currentTarget.value;
@@ -8973,30 +9044,41 @@ function bindPageActions() {
   $$("[data-task-workflow]").forEach((button) => button.addEventListener("click", () => openTaskWorkflowDialog(button.dataset.taskWorkflow, button.dataset.workflow)));
   $$("[data-task-subtask-form]").forEach((form) => form.addEventListener("submit", submitTaskSubtask));
   $$("[data-task-notes-form]").forEach((form) => form.addEventListener("submit", submitTaskNotes));
-  $("[data-preferences-form]")?.addEventListener("submit", (event) => {
+  wireFormSaveState($("[data-preferences-form]"));
+  $("[data-preferences-form]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const values = Object.fromEntries(new FormData(event.currentTarget).entries());
-    saveUserPreferences(values);
-    state.lang = values.language;
-    localStorage.setItem("itcc.lang", state.lang);
-    setAppearanceMode(values.theme);
+    const form = event.currentTarget;
+    const values = Object.fromEntries(new FormData(form).entries());
+    await runFormSave(form, async () => {
+      saveUserPreferences(values);
+      state.lang = values.language;
+      localStorage.setItem("itcc.lang", state.lang);
+      setAppearanceMode(values.theme);
+    });
     toast("Preferences saved", "Your workspace preferences were updated.");
     render();
+    flashFormSaved("[data-preferences-form]");
   });
-  $("[data-notification-preferences-form]")?.addEventListener("submit", (event) => {
+  wireFormSaveState($("[data-notification-preferences-form]"));
+  $("[data-notification-preferences-form]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const preferences = Object.fromEntries(["tickets", "tasks", "assets", "contracts", "vendors"].map((key) => [key, form.elements[key].checked]));
-    api("/api/preferences/notifications", { method: "PATCH", body: JSON.stringify(preferences) }).then(async () => {
+    try {
+      await runFormSave(form, () => api("/api/preferences/notifications", { method: "PATCH", body: JSON.stringify(preferences) }));
       await loadState();
       toast("Notifications saved", "Your notification preferences were updated.");
       render();
-    }).catch((error) => toast("Could not save preferences", error.message));
+      flashFormSaved("[data-notification-preferences-form]");
+    } catch (error) {
+      toast("Could not save preferences", error.message);
+    }
   });
   $$("[data-settings-tab]").forEach((button) => button.addEventListener("click", () => {
     state.settingsTab = button.dataset.settingsTab;
     render();
   }));
+  wireFormSaveState($("[data-ticket-assignment-form]"));
   $("[data-ticket-assignment-form]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -9013,16 +9095,8 @@ function bindPageActions() {
         }
       }
     }
-    const submit = $("[data-assignment-submit]", form);
-    const saveState = $("[data-assignment-save-state]", form);
-    const submitLabel = submit?.textContent || "";
-    setFormSaveState(saveState, "saving");
-    if (submit) {
-      submit.disabled = true;
-      submit.textContent = trText("Saving...");
-    }
     try {
-      await api("/api/settings/ticket-assignment", {
+      await runFormSave(form, () => api("/api/settings/ticket-assignment", {
         method: "PATCH",
         body: JSON.stringify({
           enabled: form.elements.enabled.checked,
@@ -9031,26 +9105,14 @@ function bindPageActions() {
           categoryAssignees,
           categoryRoutes
         })
-      });
-      form.dataset.dirty = "false";
+      }));
       toast("Ticket assignment saved", "New tickets will follow the updated V1 assignment rules.");
       await loadState();
       render();
-      setFormSaveState($("[data-assignment-save-state]"), "saved");
+      flashFormSaved("[data-ticket-assignment-form]");
     } catch (error) {
-      if (submit) {
-        submit.disabled = false;
-        submit.textContent = submitLabel;
-      }
-      setFormSaveState(saveState, "error");
       toast("Could not save assignment settings", error.message);
     }
-  });
-  // Design system section 15: a form that can be edited must say whether it is saved.
-  $("[data-ticket-assignment-form]")?.addEventListener("input", (event) => {
-    const form = event.currentTarget;
-    form.dataset.dirty = "true";
-    setFormSaveState($("[data-assignment-save-state]", form), "dirty");
   });
   $("[data-reset-ticket-assignment]")?.addEventListener("click", async () => {
     try {
