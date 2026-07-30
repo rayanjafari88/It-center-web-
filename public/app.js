@@ -604,6 +604,1017 @@ Object.assign(uiTextAr, {
   "Configure auto-assignment, strategy": "تهيئة الإسناد التلقائي والاستراتيجية"
 });
 
+/* Parameterised templates. Keep the {placeholder} tokens in the Arabic value —
+   tpl() substitutes them, so word order may differ from English. */
+Object.assign(uiTextAr, {
+  "{n} matching": "{n} مطابقة",
+  "{n} min read": "قراءة {n} دقيقة",
+  "{n} views": "{n} مشاهدة",
+  "{n} helpful": "{n} مفيد",
+  "{n} records": "{n} سجل",
+  "{n} days": "{n} يوم",
+  "{n} days remaining": "{n} يوم متبقٍ",
+  "{n} days overdue": "متأخر {n} يوم",
+  "{n} days expired": "منتهٍ منذ {n} يوم",
+  "{n} overdue": "{n} متأخر",
+  "{n} active contracts": "{n} عقد نشط",
+  "Expired {n} days ago": "انتهى منذ {n} يوم",
+  "Expires in {n} days": "ينتهي خلال {n} يوم",
+  "page {a} of {b}": "صفحة {a} من {b}",
+  "Open {module}": "فتح {module}",
+  "Search {module}": "البحث في {module}",
+  "{module} list": "قائمة {module}",
+  "No {module} found": "لا توجد {module}",
+  "No {module} selected": "لم يتم اختيار {module}",
+  "Appearance: {mode}": "المظهر: {mode}",
+  "Last updated {date}": "آخر تحديث {date}"
+});
+
+/* Ticket workspace */
+Object.assign(uiTextAr, {
+  "Ticket list": "قائمة التذاكر",
+  "Ticket Information": "معلومات التذكرة",
+  "Ticket details": "تفاصيل التذكرة",
+  "Ticket Number": "رقم التذكرة",
+  "Ticket quick actions": "إجراءات سريعة للتذكرة",
+  "Ticket attachments": "مرفقات التذكرة",
+  "Ticket created": "تم إنشاء التذكرة",
+  "Request summary": "ملخص الطلب",
+  "Number": "الرقم",
+  "Assignment": "الإسناد",
+  "Assignee": "المسؤول",
+  "Assign": "إسناد",
+  "Waiting Reason": "سبب الانتظار",
+  "Waiting reason": "سبب الانتظار",
+  "Not waiting": "ليس في الانتظار",
+  "Not cancelled": "غير ملغاة",
+  "Waiting for Vendor": "بانتظار المورد",
+  "Main Category": "التصنيف الرئيسي",
+  "Subcategory": "التصنيف الفرعي",
+  "Knowledge Suggestions": "اقتراحات المعرفة",
+  "No suggestions yet.": "لا توجد اقتراحات بعد.",
+  "Watchers": "المتابعون",
+  "No active watchers": "لا يوجد متابعون",
+  "Add watcher": "إضافة متابع",
+  "Link asset": "ربط أصل",
+  "Link vendor": "ربط مورد",
+  "Link contract": "ربط عقد",
+  "Remove Link": "إزالة الرابط",
+  "Linked Record": "السجل المرتبط",
+  "No conversation yet": "لا توجد محادثة بعد",
+  "Start the conversation with the requester.": "ابدأ المحادثة مع مقدم الطلب.",
+  "Write a reply to the requester": "اكتب ردًا لمقدم الطلب",
+  "Send": "إرسال",
+  "No files yet": "لا توجد ملفات بعد",
+  "Attachments uploaded by IT or the requester will appear here.": "ستظهر هنا المرفقات التي يرفعها قسم تقنية المعلومات أو مقدم الطلب.",
+  "Secondary record detail stays here so the conversation remains the default workspace.": "تبقى التفاصيل الثانوية هنا لتظل المحادثة مساحة العمل الافتراضية.",
+  "SLA breached": "تم خرق اتفاقية مستوى الخدمة",
+  "Breached": "مخروقة",
+  "Open Tickets": "التذاكر المفتوحة",
+  "Open Ticket": "فتح التذكرة",
+  "Related Tickets": "التذاكر المرتبطة",
+  "Summary": "الملخص",
+  "Remaining": "المتبقي",
+  "Days Remaining": "الأيام المتبقية",
+  "Not set": "غير محدد",
+  "Not linked": "غير مرتبط",
+  "Not recorded": "غير مسجل",
+  "Not scheduled": "غير مجدول",
+  "Not versioned": "بدون إصدارات",
+  "Not rated helpful": "لم يُقيَّم كمفيد"
+});
+
+/* Asset workspace */
+Object.assign(uiTextAr, {
+  "Asset list": "قائمة الأصول",
+  "Asset Identity": "هوية الأصل",
+  "Asset Number": "رقم الأصل",
+  "Asset Name": "اسم الأصل",
+  "Asset Documents": "مستندات الأصل",
+  "Asset assignment": "إسناد الأصل",
+  "Asset assignment form": "نموذج إسناد الأصل",
+  "Asset return": "إرجاع الأصل",
+  "Assigned custody snapshot": "لمحة عن العهدة المسندة",
+  "Operational ownership, physical holder, location, and attention level at a glance.": "الملكية التشغيلية والحائز الفعلي والموقع ومستوى الاهتمام في لمحة واحدة.",
+  "Lifecycle State": "حالة دورة الحياة",
+  "Lifecycle Actions": "إجراءات دورة الحياة",
+  "Current Lifecycle": "دورة الحياة الحالية",
+  "Guided workflows": "مسارات عمل موجهة",
+  "Assign Asset": "إسناد الأصل",
+  "Transfer Asset": "نقل الأصل",
+  "Temporary Custody": "عهدة مؤقتة",
+  "Return to IT Storage": "إرجاع إلى مخزن تقنية المعلومات",
+  "Send to Repair": "إرسال للإصلاح",
+  "Mark Lost / Stolen": "تعليم كمفقود / مسروق",
+  "Dispose Asset": "التخلص من الأصل",
+  "Print Asset Label": "طباعة ملصق الأصل",
+  "Print label": "طباعة الملصق",
+  "Export asset": "تصدير الأصل",
+  "Bulk update": "تحديث جماعي",
+  "Open Asset": "فتح الأصل",
+  "Create Asset Ticket": "إنشاء تذكرة للأصل",
+  "Operational Context": "السياق التشغيلي",
+  "Financial / Disposal": "المالية / التخلص",
+  "Permanent Custodian": "الحائز الدائم",
+  "Current Holder": "الحائز الحالي",
+  "Current Holder Type": "نوع الحائز الحالي",
+  "Expected Return": "الإرجاع المتوقع",
+  "Latest Movement": "آخر حركة",
+  "Serial Number": "الرقم التسلسلي",
+  "Manufacturer": "الشركة المصنعة",
+  "Model": "الطراز",
+  "Warranty Status": "حالة الضمان",
+  "Supplier": "المورد",
+  "Purchase Cost": "تكلفة الشراء",
+  "Current Value": "القيمة الحالية",
+  "Disposal Reason": "سبب التخلص",
+  "Settlement Status": "حالة التسوية",
+  "Settlement Date": "تاريخ التسوية",
+  "Maintenance History": "سجل الصيانة",
+  "Add Maintenance Record": "إضافة سجل صيانة",
+  "No maintenance records": "لا توجد سجلات صيانة",
+  "Maintenance and repair history will appear here.": "سيظهر هنا سجل الصيانة والإصلاح.",
+  "Invoices, warranty files, manuals, photos, and attachments.": "الفواتير وملفات الضمان والأدلة والصور والمرفقات.",
+  "Returned and historical assets": "الأصول المُرجعة والتاريخية",
+  "No asset history": "لا يوجد سجل للأصل",
+  "Asset assignment and return events appear here.": "تظهر هنا أحداث إسناد الأصول وإرجاعها.",
+  "Warranty: not set": "الضمان: غير محدد"
+});
+
+/* Task workspace */
+Object.assign(uiTextAr, {
+  "Task list": "قائمة المهام",
+  "Task Number": "رقم المهمة",
+  "Task Type": "نوع المهمة",
+  "Task notes": "ملاحظات المهمة",
+  "Task files": "ملفات المهمة",
+  "Task created": "تم إنشاء المهمة",
+  "Execution Snapshot": "لمحة عن التنفيذ",
+  "Execution task filters": "مرشحات مهام التنفيذ",
+  "Owner, assignment, due date, progress, and remaining time for the selected task.": "المالك والإسناد وتاريخ الاستحقاق والتقدم والوقت المتبقي للمهمة المحددة.",
+  "Progress": "التقدم",
+  "Start": "بدء",
+  "Complete": "إكمال",
+  "Pause Task": "إيقاف المهمة مؤقتًا",
+  "Duplicate Task": "تكرار المهمة",
+  "Convert to Ticket": "تحويل إلى تذكرة",
+  "Set Reminder": "ضبط تذكير",
+  "Add Subtask": "إضافة مهمة فرعية",
+  "Subtasks": "المهام الفرعية",
+  "Subtask title": "عنوان المهمة الفرعية",
+  "No subtasks": "لا توجد مهام فرعية",
+  "Create subtasks to break work into smaller steps.": "أنشئ مهام فرعية لتقسيم العمل إلى خطوات أصغر.",
+  "Checklist and progress": "قائمة التحقق والتقدم",
+  "Parent progress reflects completed subtasks.": "يعكس تقدم المهمة الأصلية المهام الفرعية المكتملة.",
+  "Capture decisions, updates, blockers, and next steps.": "سجّل القرارات والتحديثات والعوائق والخطوات التالية.",
+  "Add internal notes, decisions, or progress updates.": "أضف ملاحظات داخلية أو قرارات أو تحديثات التقدم.",
+  "Save Notes": "حفظ الملاحظات",
+  "Upload and review files related to this task here.": "ارفع وراجع الملفات المتعلقة بهذه المهمة هنا.",
+  "Link tickets, assets, contracts, vendors, people, documents, forms, or knowledge articles.": "اربط التذاكر أو الأصول أو العقود أو الموردين أو الأشخاص أو المستندات أو النماذج أو مقالات المعرفة.",
+  "Schedule Context": "سياق الجدولة",
+  "Reminder": "تذكير",
+  "Duration": "المدة",
+  "Recurrence": "التكرار",
+  "Pattern": "النمط",
+  "Estimated Time": "الوقت المقدر",
+  "Actual Time": "الوقت الفعلي",
+  "Linked Work": "العمل المرتبط",
+  "Latest Activity": "آخر نشاط",
+  "Related Module": "الوحدة المرتبطة",
+  "More Filters": "مزيد من المرشحات",
+  "No tasks": "لا توجد مهام",
+  "Assigned, recurring, and completed tasks appear here.": "تظهر هنا المهام المسندة والمتكررة والمكتملة."
+});
+
+/* Knowledge base */
+Object.assign(uiTextAr, {
+  "Knowledge article list": "قائمة مقالات المعرفة",
+  "Article Snapshot": "لمحة عن المقال",
+  "Article context": "سياق المقال",
+  "Article published": "تم نشر المقال",
+  "Article ticket created": "تم إنشاء تذكرة للمقال",
+  "Current publishing state": "حالة النشر الحالية",
+  "The Article Snapshot carries publishing state; this view keeps supporting context concise.": "تحمل لمحة المقال حالة النشر؛ ويبقي هذا العرض السياق المساند موجزًا.",
+  "Reading Time": "زمن القراءة",
+  "Reading View": "عرض القراءة",
+  "Readable knowledge content for support and self-service.": "محتوى معرفي سهل القراءة للدعم والخدمة الذاتية.",
+  "Publish": "نشر",
+  "Review Schedule": "جدول المراجعة",
+  "Review Date": "تاريخ المراجعة",
+  "Export PDF": "تصدير PDF",
+  "Advanced governance": "حوكمة متقدمة",
+  "Table of Contents": "جدول المحتويات",
+  "No headings yet": "لا توجد عناوين بعد",
+  "Add H1, H2, or H3 headings to generate navigation.": "أضف عناوين H1 أو H2 أو H3 لإنشاء التنقل.",
+  "Keywords": "الكلمات المفتاحية",
+  "Product": "المنتج",
+  "Tags": "الوسوم",
+  "Sort By": "ترتيب حسب",
+  "Drafts": "المسودات",
+  "Favorites": "المفضلة",
+  "Most Viewed": "الأكثر مشاهدة",
+  "Recently Updated": "المحدثة مؤخرًا",
+  "Newest": "الأحدث",
+  "Oldest": "الأقدم",
+  "Alphabetical": "أبجديًا",
+  "All Languages": "كل اللغات",
+  "Save Content": "حفظ المحتوى",
+  "Drop images, PDFs, videos, DOCX, GIF, SVG, ZIP, or attachments here": "أفلت الصور أو ملفات PDF أو الفيديو أو DOCX أو GIF أو SVG أو ZIP أو المرفقات هنا",
+  "Related Assets": "الأصول المرتبطة",
+  "Related Vendors": "الموردون المرتبطون",
+  "Related Contracts": "العقود المرتبطة",
+  "Related Documents": "المستندات المرتبطة",
+  "Related Tickets linked to this article will appear here.": "ستظهر هنا التذاكر المرتبطة بهذا المقال.",
+  "Related Assets linked to this article will appear here.": "ستظهر هنا الأصول المرتبطة بهذا المقال.",
+  "Related Vendors linked to this article will appear here.": "سيظهر هنا الموردون المرتبطون بهذا المقال.",
+  "Related Contracts linked to this article will appear here.": "ستظهر هنا العقود المرتبطة بهذا المقال.",
+  "No Related Records": "لا توجد سجلات مرتبطة",
+  "No related records": "لا توجد سجلات مرتبطة",
+  "Bold": "عريض", "Italic": "مائل", "Underline": "تسطير", "Color": "اللون",
+  "Highlight": "تظليل", "Bullets": "تعداد نقطي", "Numbers": "تعداد رقمي",
+  "Checklist": "قائمة تحقق", "Table": "جدول", "Link": "رابط", "Quote": "اقتباس",
+  "Code": "كود", "Divider": "فاصل", "Information": "معلومة", "Danger": "خطر",
+  "Success": "نجاح", "Tip": "نصيحة", "Best Practice": "أفضل ممارسة",
+  "Requirement": "متطلب", "Procedure": "إجراء"
+});
+
+/* Documents */
+Object.assign(uiTextAr, {
+  "Document Workspace": "مساحة عمل المستندات",
+  "Document Snapshot": "لمحة عن المستند",
+  "Document record": "سجل المستند",
+  "Document Type": "نوع المستند",
+  "Document created": "تم إنشاء المستند",
+  "Document updated": "تم تحديث المستند",
+  "Document information": "معلومات المستند",
+  "Core details without repeating the snapshot metadata.": "التفاصيل الأساسية دون تكرار بيانات اللمحة.",
+  "Current file state": "حالة الملف الحالية",
+  "Current File": "الملف الحالي",
+  "No file attached": "لا يوجد ملف مرفق",
+  "Primary document file": "ملف المستند الرئيسي",
+  "Upload a PDF, Word, Excel, or image file for this document.": "ارفع ملف PDF أو Word أو Excel أو صورة لهذا المستند.",
+  "Upload Replacement": "رفع بديل",
+  "New version": "إصدار جديد",
+  "Upload a replacement or supporting file. Existing upload permissions are preserved.": "ارفع ملفًا بديلًا أو مساندًا. تبقى صلاحيات الرفع الحالية كما هي.",
+  "Previous Versions": "الإصدارات السابقة",
+  "File history": "سجل الملفات",
+  "No previous versions": "لا توجد إصدارات سابقة",
+  "Replacement files will appear here after upload.": "ستظهر الملفات البديلة هنا بعد الرفع.",
+  "Download History": "سجل التنزيل",
+  "Access log": "سجل الوصول",
+  "Download history is available in a future version.": "سجل التنزيل متاح في إصدار لاحق.",
+  "No documents": "لا توجد مستندات",
+  "Signed forms, policies, and certificates appear here.": "تظهر هنا النماذج الموقعة والسياسات والشهادات.",
+  "No attachments": "لا توجد مرفقات",
+  "Upload PDFs, images, Word, or Excel files.": "ارفع ملفات PDF أو صورًا أو Word أو Excel.",
+  "View all attachments": "عرض كل المرفقات",
+  "Optional attachment name": "اسم المرفق (اختياري)",
+  "Move": "نقل",
+  "Visibility": "الظهور",
+  "Internal": "داخلي",
+  "Approval State": "حالة الاعتماد",
+  "No description provided": "لا يوجد وصف",
+  "Uncategorized": "غير مصنف"
+});
+
+/* Vendors and contracts */
+Object.assign(uiTextAr, {
+  "Vendor list": "قائمة الموردين",
+  "Vendor Snapshot": "لمحة عن المورد",
+  "Vendor Name": "اسم المورد",
+  "Vendor Rating": "تقييم المورد",
+  "Vendor Relationship": "العلاقة مع المورد",
+  "Vendor portal sync": "مزامنة بوابة المورد",
+  "Relationship health": "صحة العلاقة",
+  "Health": "الصحة",
+  "Contract Count": "عدد العقود",
+  "Covered Assets": "الأصول المشمولة",
+  "Linked Assets": "الأصول المرتبطة",
+  "Linked Licenses": "التراخيص المرتبطة",
+  "Linked Coverage": "التغطية المرتبطة",
+  "Last Interaction": "آخر تفاعل",
+  "No activity": "لا يوجد نشاط",
+  "Contact Vendor": "التواصل مع المورد",
+  "Merge": "دمج",
+  "Primary Contact": "جهة الاتصال الرئيسية",
+  "Add Contact": "إضافة جهة اتصال",
+  "Support Email": "بريد الدعم",
+  "Support Phone": "هاتف الدعم",
+  "Support Hours": "ساعات الدعم",
+  "Support Details": "تفاصيل الدعم",
+  "Support SLA": "اتفاقية مستوى خدمة الدعم",
+  "Business hours": "ساعات العمل",
+  "Company Profile": "ملف الشركة",
+  "Business Context": "السياق التجاري",
+  "Compliance": "الامتثال",
+  "Escalation": "التصعيد",
+  "Response SLA": "زمن الاستجابة",
+  "Portal Available": "البوابة متاحة",
+  "Portal": "البوابة",
+  "Annual Spend": "الإنفاق السنوي",
+  "Certificates": "الشهادات",
+  "Contract list": "قائمة العقود",
+  "Contract Snapshot": "لمحة عن العقد",
+  "Contract Owner": "مالك العقد",
+  "Renewal state": "حالة التجديد",
+  "Renew": "تجديد",
+  "Terminate": "إنهاء",
+  "Approval routing": "مسار الاعتماد",
+  "Annual Cost": "التكلفة السنوية",
+  "Monthly Cost": "التكلفة الشهرية",
+  "Financial Summary": "الملخص المالي",
+  "Currency": "العملة",
+  "End Date": "تاريخ الانتهاء",
+  "Reminder Date": "تاريخ التذكير",
+  "Auto Renewal": "تجديد تلقائي",
+  "Owner Department": "الإدارة المالكة",
+  "Related Contracts": "العقود المرتبطة",
+  "No renewals or warranties in the next 30 days.": "لا توجد تجديدات أو ضمانات خلال الثلاثين يومًا القادمة."
+});
+
+/* People, accounts and shared chrome */
+Object.assign(uiTextAr, {
+  "People list": "قائمة الأشخاص",
+  "People quick actions": "إجراءات سريعة للأشخاص",
+  "Profile Context": "سياق الملف الشخصي",
+  "Employee profile and operational relationships": "الملف الشخصي للموظف والعلاقات التشغيلية",
+  "Employment and reporting details": "تفاصيل التوظيف والتسلسل الإداري",
+  "Employee Number": "رقم الموظف",
+  "Manager": "المدير",
+  "Branch": "الفرع",
+  "Org chart": "الهيكل التنظيمي",
+  "Export profile": "تصدير الملف",
+  "Send onboarding": "إرسال التهيئة",
+  "System Access": "الوصول للنظام",
+  "Login Account": "حساب الدخول",
+  "Login Account Active": "حساب الدخول نشط",
+  "Login Account Enabled": "حساب الدخول مفعّل",
+  "This person has a linked login account.": "لدى هذا الشخص حساب دخول مرتبط.",
+  "No linked person": "لا يوجد شخص مرتبط",
+  "No Login": "لا يوجد حساب دخول",
+  "Login accounts": "حسابات الدخول",
+  "User account list": "قائمة حسابات المستخدمين",
+  "Search user accounts": "البحث في حسابات المستخدمين",
+  "Account details are read-only here except controlled account actions.": "تفاصيل الحساب للقراءة فقط هنا باستثناء إجراءات الحساب المتحكم بها.",
+  "Account Type": "نوع الحساب",
+  "Account Status": "حالة الحساب",
+  "Username": "اسم المستخدم",
+  "Last Login": "آخر تسجيل دخول",
+  "Previous login": "تسجيل الدخول السابق",
+  "Password Expiry": "انتهاء كلمة المرور",
+  "Password Expires": "تنتهي كلمة المرور",
+  "No expiry": "بدون انتهاء",
+  "Reset Password": "إعادة تعيين كلمة المرور",
+  "Disable": "تعطيل",
+  "Disable Account": "تعطيل الحساب",
+  "Export account": "تصدير الحساب",
+  "Force logout": "إجبار تسجيل الخروج",
+  "Login history report": "تقرير سجل الدخول",
+  "Sessions": "الجلسات",
+  "Security": "الأمان",
+  "Enabled": "مفعّل",
+  "Disabled": "معطّل",
+  "Is System": "نظامي",
+  "Role": "الدور",
+  "Cost Center": "مركز التكلفة",
+  "Created By": "أنشئ بواسطة",
+  "Updated At": "تاريخ التحديث",
+  "Actions": "الإجراءات",
+  "Add comment": "إضافة تعليق",
+  "No comments": "لا توجد تعليقات",
+  "Start the discussion for this record.": "ابدأ النقاش حول هذا السجل.",
+  "Write a threaded reply": "اكتب ردًا في المحادثة",
+  "Save edit": "حفظ التعديل",
+  "Previous": "السابق",
+  "Next": "التالي",
+  "Yes": "نعم",
+  "No": "لا",
+  "Normal": "عادي",
+  "Standard": "قياسي",
+  "Temporary": "مؤقت",
+  "Signed": "موقّع",
+  "Approved": "معتمد",
+  "Configure": "تهيئة",
+  "Search modules": "البحث في الوحدات",
+  "Notification center": "مركز الإشعارات",
+  "Notification filter": "مرشح الإشعارات",
+  "Mark all as read": "تعليم الكل كمقروء",
+  "Ticket assignments, updates, overdue tasks, renewals, and warranty signals.": "إسناد التذاكر والتحديثات والمهام المتأخرة والتجديدات وإشارات الضمان.",
+  "Focused list view with sorting, filters, pagination, export, and column control.": "عرض قائمة مركّز مع الترتيب والمرشحات والتصفح والتصدير والتحكم بالأعمدة.",
+  "Links to assets, tickets, documents, contracts, vendors, and employees appear here.": "تظهر هنا الروابط بالأصول والتذاكر والمستندات والعقود والموردين والموظفين.",
+  "Reusable operational forms prepared for V1 workflows.": "نماذج تشغيلية قابلة لإعادة الاستخدام معدّة لمسارات الإصدار الأول.",
+  "Primary focus": "التركيز الرئيسي",
+  "Supporting context": "السياق المساند",
+  "Start common work": "ابدأ الأعمال الشائعة",
+  "Capture a new support request.": "سجّل طلب دعم جديد.",
+  "Add work for IT follow-up.": "أضف عملًا لمتابعة تقنية المعلومات.",
+  "Add a new device or inventory item.": "أضف جهازًا أو عنصر مخزون جديدًا.",
+  "Publish or file an operational document.": "انشر أو احفظ مستندًا تشغيليًا.",
+  "More actions coming soon": "مزيد من الإجراءات قريبًا",
+  "All Role": "كل الأدوار",
+  "All Account Type": "كل أنواع الحسابات",
+  "All Task Type": "كل أنواع المهام",
+  "All Related Module": "كل الوحدات المرتبطة",
+  "All Recurring": "كل المتكررة",
+  "All Due Date": "كل تواريخ الاستحقاق",
+  "All Created By": "كل المنشئين"
+});
+
+/* Lookup values, departments, locations and job titles */
+Object.assign(uiTextAr, {
+  "Human Resources": "الموارد البشرية",
+  "Finance": "المالية",
+  "Information Technology": "تقنية المعلومات",
+  "IT Operations": "عمليات تقنية المعلومات",
+  "Operations": "العمليات",
+  "Riyadh HQ": "المقر الرئيسي - الرياض",
+  "Jeddah Branch": "فرع جدة",
+  "IT Storage": "مخزن تقنية المعلومات",
+  "IT Inventory": "مخزون تقنية المعلومات",
+  "Operations floor": "صالة العمليات",
+  "Accountant": "محاسب",
+  "Operations Lead": "قائد العمليات",
+  "IT Support Specialist": "أخصائي دعم تقني",
+  "HR Specialist": "أخصائي موارد بشرية",
+  "Software Licensing": "تراخيص البرمجيات",
+  "Hardware Support": "دعم الأجهزة",
+  "Laptop": "حاسب محمول",
+  "Monitor": "شاشة",
+  "Printer": "طابعة",
+  "Scanner": "ماسح ضوئي",
+  "Mobile Phone": "هاتف محمول",
+  "Keyboard": "لوحة مفاتيح",
+  "Person": "شخص",
+  "User": "مستخدم",
+  "Asset": "أصل",
+  "Ticket": "تذكرة",
+  "Task": "مهمة",
+  "Contract": "عقد",
+  "Document": "مستند",
+  "Service": "خدمة",
+  "Support": "دعم",
+  "Maintenance": "صيانة",
+  "Parts": "قطع غيار",
+  "Warranty": "ضمان",
+  "License": "ترخيص",
+  "Subscription": "اشتراك",
+  "Approval": "اعتماد",
+  "External Company": "شركة خارجية",
+  "Device usage agreement": "اتفاقية استخدام الجهاز",
+  "VPN request": "طلب شبكة افتراضية",
+  "Email request": "طلب بريد إلكتروني",
+  "Access request": "طلب صلاحية",
+  "Accounts & Access / MFA Issue": "الحسابات والصلاحيات / مشكلة التحقق الثنائي",
+  "Accounts & Access / Password Reset": "الحسابات والصلاحيات / إعادة تعيين كلمة المرور",
+  "Accounts & Access / Shared Folder Access": "الحسابات والصلاحيات / الوصول لمجلد مشترك",
+  "Hardware & Devices / Printer": "الأجهزة والمعدات / طابعة",
+  "Hardware & Devices / Scanner": "الأجهزة والمعدات / ماسح ضوئي",
+  "Network & Connectivity / VPN": "الشبكة والاتصال / شبكة افتراضية",
+  "Service Requests / Equipment Request": "طلبات الخدمة / طلب معدات",
+  "Service Requests / License Request": "طلبات الخدمة / طلب ترخيص",
+  "Service Requests / New Laptop": "طلبات الخدمة / حاسب محمول جديد",
+  "Software & Applications": "البرمجيات والتطبيقات",
+  "Software & Applications / Outlook": "البرمجيات والتطبيقات / أوتلوك",
+  "Software & Applications / ERP": "البرمجيات والتطبيقات / نظام تخطيط الموارد",
+  "Accounts & Access": "الحسابات والصلاحيات",
+  "Hardware & Devices": "الأجهزة والمعدات",
+  "Network & Connectivity": "الشبكة والاتصال",
+  "Service Requests": "طلبات الخدمة"
+});
+
+/* Remaining chrome, and the lowercase codes that leak out of data fields where
+   a label was expected (category/type/module values stored as raw codes). */
+Object.assign(uiTextAr, {
+  "Updated {when}": "آخر تحديث {when}",
+  "{n} contracts": "{n} عقد",
+  "not dated": "بدون تاريخ",
+  "Not rated": "غير مقيَّم",
+  "Lifecycle": "دورة الحياة",
+  "Warning": "تحذير",
+  "Upload Attachment": "رفع مرفق",
+  "Status:": "الحالة:",
+  "Updated:": "آخر تحديث:",
+  "Replies:": "الردود:",
+  "SLA & Portal": "اتفاقية الخدمة والبوابة",
+  "Login success": "نجاح تسجيل الدخول",
+  "Login Success": "نجاح تسجيل الدخول",
+  "Assignment updated": "تم تحديث الإسناد",
+  "No file": "لا يوجد ملف",
+  "Company document": "مستند الشركة",
+  "Assigned": "مسند",
+  "Unassigned": "غير مسند",
+  "No linked record": "لا يوجد سجل مرتبط",
+  "Valid until": "صالح حتى",
+  "1 star": "نجمة واحدة",
+  "2 stars": "نجمتان",
+  "3 stars": "٣ نجوم",
+  "4 stars": "٤ نجوم",
+  "5 stars": "٥ نجوم",
+  "30 Days": "٣٠ يومًا",
+  "60 Days": "٦٠ يومًا",
+  "90 Days": "٩٠ يومًا",
+  // raw codes rendered where a label was expected
+  "users": "المستخدمون",
+  "tickets": "التذاكر",
+  "tasks": "المهام",
+  "assets": "الأصول",
+  "documents": "المستندات",
+  "contracts": "العقود",
+  "vendors": "الموردون",
+  "employees": "الموظفون",
+  "transfers": "التنقلات",
+  "attachments": "المرفقات",
+  "comments": "التعليقات",
+  "notifications": "الإشعارات",
+  "roles": "الأدوار",
+  "settings": "الإعدادات",
+  "timeline": "المسار الزمني",
+  "trash": "سلة المحذوفات",
+  "dashboard": "لوحة التحكم",
+  "ticket": "تذكرة",
+  "task": "مهمة",
+  "asset": "أصل",
+  "document": "مستند",
+  "contract": "عقد",
+  "employee": "موظف",
+  "company": "شركة",
+  "create": "إنشاء",
+  "view": "عرض",
+  "uploaded": "تم الرفع",
+  "draft": "مسودة",
+  "approved": "معتمد",
+  "outlook": "أوتلوك",
+  "erp": "نظام تخطيط الموارد",
+  "laptop": "حاسب محمول",
+  "printer": "طابعة",
+  "vpn": "شبكة افتراضية",
+  "network": "شبكة",
+  "hardware": "أجهزة",
+  "access": "صلاحيات",
+  "email": "بريد إلكتروني",
+  "head_office": "المقر الرئيسي",
+  "hr_specialist": "أخصائي موارد بشرية",
+  "microsoft-365": "مايكروسوفت ٣٦٥",
+  "remote-work": "العمل عن بُعد"
+});
+
+/* Activity / audit feed titles and the last of the shared chrome */
+Object.assign(uiTextAr, {
+  "{entity} created": "تم إنشاء {entity}",
+  "{entity} updated": "تم تحديث {entity}",
+  "{entity} archived": "تمت أرشفة {entity}",
+  "{entity} restored": "تمت استعادة {entity}",
+  "{entity} moved to trash": "تم نقل {entity} إلى سلة المحذوفات",
+  "{entity} activity": "نشاط {entity}",
+  "Status changed": "تم تغيير الحالة",
+  "Comment added": "تمت إضافة تعليق",
+  "Attachment uploaded": "تم رفع مرفق",
+  "Asset entered maintenance": "دخل الأصل الصيانة",
+  "Contract reminder": "تذكير بالعقد",
+  "Activity recorded in the command center.": "تم تسجيل النشاط في مركز القيادة.",
+  "Change details are available in Audit Feed.": "تفاصيل التغيير متاحة في سجل التدقيق.",
+  "login": "تسجيل دخول",
+  "logout": "تسجيل خروج",
+  "update": "تحديث",
+  "archive": "أرشفة",
+  "restore": "استعادة",
+  "delete": "حذف",
+  "upload": "رفع",
+  "comment": "تعليق",
+  "assign": "إسناد",
+  "Login": "تسجيل الدخول",
+  "Logout": "تسجيل الخروج",
+  "Update": "تحديث",
+  "Create": "إنشاء",
+  "Archive": "أرشفة",
+  "Restore": "استعادة",
+  "Delete": "حذف",
+  "Upload": "رفع",
+  "Upload file": "رفع ملف",
+  "Preview": "معاينة",
+  "Download": "تنزيل",
+  "Remove": "إزالة",
+  "Open": "فتح",
+  "Open Vendor Workspace": "فتح مساحة عمل المورد",
+  "Create Vendor Ticket": "إنشاء تذكرة للمورد",
+  "Supporting files": "الملفات المساندة",
+  "Linked files": "الملفات المرتبطة",
+  "No Attachments": "لا توجد مرفقات",
+  "Upload PDFs, images, Word, or Excel files for this article.": "ارفع ملفات PDF أو صورًا أو Word أو Excel لهذا المقال.",
+  "File Name": "اسم الملف",
+  "Uploaded By": "رفعه",
+  "Date": "التاريخ",
+  "Size": "الحجم",
+  "Type": "النوع",
+  "File": "ملف",
+  "Not dated": "بدون تاريخ",
+  "Not updated": "لم يُحدَّث",
+  "Contact": "جهة الاتصال",
+  "Portal URL": "رابط البوابة",
+  "Vendor Summary": "ملخص المورد",
+  "Assigned to Unassigned": "مسند إلى: غير محدد",
+  "Inventory": "المخزون",
+  "unscheduled": "غير مجدول",
+  "due": "الاستحقاق",
+  "record": "سجل",
+  "Article": "مقال",
+  "Draft": "مسودة",
+  "Published": "منشور",
+  "Unread": "غير مقروء",
+  "Read": "مقروء",
+  "{n} files": "{n} ملف",
+  "{n} attachments": "{n} مرفق",
+  "Ends {date}": "ينتهي في {date}",
+  "Tickets": "التذاكر",
+  "Files": "الملفات"
+});
+
+/* Modal and guided-form chrome */
+Object.assign(uiTextAr, {
+  "Create {module}": "إنشاء {module}",
+  "New {module}": "{module} جديد",
+  "Save Changes": "حفظ التغييرات",
+  "Guided form": "نموذج موجّه",
+  "Start with the required basics.": "ابدأ بالأساسيات المطلوبة.",
+  "Primary details": "التفاصيل الأساسية",
+  "The minimum information needed to save this record.": "الحد الأدنى من المعلومات اللازمة لحفظ هذا السجل.",
+  "Advanced options": "خيارات متقدمة",
+  "Optional fields for lifecycle, metadata, internal notes, and less common configuration.": "حقول اختيارية لدورة الحياة والبيانات الوصفية والملاحظات الداخلية والإعدادات الأقل شيوعًا.",
+  "Related records": "السجلات المرتبطة",
+  "Connect this record to existing people, assets, tickets, vendors, contracts, or documents.": "اربط هذا السجل بأشخاص أو أصول أو تذاكر أو موردين أو عقود أو مستندات موجودة.",
+  "Approval status": "حالة الاعتماد",
+  "Current approval state for this record.": "حالة الاعتماد الحالية لهذا السجل.",
+  "Attachments and file details": "المرفقات وتفاصيل الملفات",
+  "Add filenames or upload-related information after the core record is clear.": "أضف أسماء الملفات أو معلومات الرفع بعد اكتمال بيانات السجل الأساسية.",
+  "Current lifecycle state.": "حالة دورة الحياة الحالية.",
+  "Auto-generated when blank": "يُنشأ تلقائيًا عند تركه فارغًا",
+  "Short, clear title": "عنوان قصير وواضح",
+  "Use a short, searchable title.": "استخدم عنوانًا قصيرًا قابلًا للبحث.",
+  "Official name": "الاسم الرسمي",
+  "Use the official display name.": "استخدم الاسم الرسمي للعرض.",
+  "Create the request with only the details needed for triage. Optional routing and internal fields stay below.": "أنشئ الطلب بالتفاصيل اللازمة للفرز فقط. تبقى حقول التوجيه والحقول الداخلية الاختيارية بالأسفل.",
+  "Create executable work with owner, priority, and due date first.": "أنشئ عملًا قابلًا للتنفيذ بتحديد المالك والأولوية وتاريخ الاستحقاق أولًا.",
+  "Create the asset identity and custody basics. Lifecycle fields remain available when needed.": "أنشئ هوية الأصل وأساسيات العهدة. تبقى حقول دورة الحياة متاحة عند الحاجة.",
+  "Choose the closest option so routing and reporting stay clean.": "اختر أقرب خيار للحفاظ على دقة التوجيه والتقارير.",
+  "Choose the main classification.": "اختر التصنيف الرئيسي.",
+  "Use the lowest priority that accurately reflects urgency.": "استخدم أقل أولوية تعكس درجة الإلحاح بدقة.",
+  "Leave blank if the team should triage first.": "اتركه فارغًا إذا كان على الفريق الفرز أولًا.",
+  "Describe the request, problem, or context...": "صف الطلب أو المشكلة أو السياق...",
+  "Add enough context for the next person to act.": "أضف سياقًا كافيًا ليتمكن الشخص التالي من التصرف.",
+  "Add optional notes...": "أضف ملاحظات اختيارية...",
+  "Attachment names": "أسماء المرفقات",
+  "Must be unique when available": "يجب أن يكون فريدًا عند توفره",
+  "Serial number": "الرقم التسلسلي",
+  "Start date": "تاريخ البدء",
+  "Choose Main Category": "اختر التصنيف الرئيسي",
+  "Submit a request": "إرسال طلب",
+  "Create Ticket": "إنشاء تذكرة",
+  "Create Service Account": "إنشاء حساب خدمة",
+  "New Service Account": "حساب خدمة جديد",
+  "Account Details": "تفاصيل الحساب",
+  "Service and API accounts can exist without a linked person.": "يمكن أن توجد حسابات الخدمة وواجهات البرمجة دون شخص مرتبط.",
+  "Account name": "اسم الحساب",
+  "Confirm Password": "تأكيد كلمة المرور",
+  "Expiry Date": "تاريخ الانتهاء",
+  "Linked Person Optional": "الشخص المرتبط (اختياري)",
+  "Linked Person": "الشخص المرتبط",
+  "New Account": "حساب جديد",
+  "People actions": "إجراءات الأشخاص",
+  "Account actions": "إجراءات الحساب",
+  "Enable Account": "تفعيل الحساب",
+  "Edit": "تعديل",
+  "Register Person": "تسجيل شخص",
+  "Export list": "تصدير القائمة",
+  "Create Account": "إنشاء حساب",
+  "Account Purpose": "الغرض من الحساب",
+  "Who is this login for?": "لمن هذا الحساب؟",
+  "Employee Account": "حساب موظف",
+  "A login that belongs to a person.": "حساب دخول يخص شخصًا.",
+  "Service Account": "حساب خدمة",
+  "A service or API login with no person behind it.": "حساب خدمة أو واجهة برمجة دون شخص مرتبط.",
+  "Person": "الشخص",
+  "Attach the login to an existing person, or add a new one here.": "اربط الحساب بشخص موجود أو أضف شخصًا جديدًا هنا.",
+  "Existing Person": "شخص موجود",
+  "Pick someone already in People.": "اختر شخصًا موجودًا في صفحة الأشخاص.",
+  "New Person": "شخص جديد",
+  "Create the People record with this account.": "أنشئ سجل الشخص مع هذا الحساب.",
+  "Sign-in credentials and role. These fields are the same for every account.": "بيانات تسجيل الدخول والدور. هذه الحقول واحدة لكل الحسابات.",
+  "Register and manage every login here — employee accounts and service accounts alike.": "سجّل وأدر جميع حسابات الدخول هنا — حسابات الموظفين وحسابات الخدمة على حد سواء.",
+  "Create the master People record. Login access is registered from User Accounts.": "أنشئ سجل الشخص الرئيسي. يتم تسجيل الوصول بتسجيل الدخول من صفحة حسابات المستخدمين.",
+  "Choose the person this account belongs to.": "اختر الشخص الذي يخصه هذا الحساب.",
+  "Person name is required.": "اسم الشخص مطلوب.",
+  "Person email is required.": "بريد الشخص الإلكتروني مطلوب.",
+  "Department is required.": "القسم مطلوب.",
+  "Account name is required.": "اسم الحساب مطلوب.",
+  "Username is required.": "اسم المستخدم مطلوب.",
+  "Role is required.": "الدور مطلوب.",
+  "Account type is required.": "نوع الحساب مطلوب.",
+  "Password is required.": "كلمة المرور مطلوبة.",
+  "Confirm Password is required.": "تأكيد كلمة المرور مطلوب.",
+  "Password and Confirm Password must match.": "يجب أن تتطابق كلمة المرور مع تأكيدها.",
+  "Account type": "نوع الحساب",
+  "Manage authentication accounts only. Create real people from People, then add System Access there.": "إدارة حسابات المصادقة فقط. أنشئ الأشخاص من صفحة الأشخاص ثم أضف الوصول للنظام هناك.",
+  "Customize Dashboard": "تخصيص لوحة التحكم",
+  "Personalization": "التخصيص",
+  "Choose the widgets, order, density, and default landing page for your account only.": "اختر العناصر وترتيبها والكثافة وصفحة البداية الافتراضية لحسابك فقط.",
+  "Widgets": "العناصر",
+  "Show, hide, and reorder dashboard sections.": "إظهار وإخفاء وإعادة ترتيب أقسام لوحة التحكم.",
+  "Health Score": "مؤشر الصحة",
+  "Primary KPIs": "المؤشرات الرئيسية",
+  "Secondary KPIs": "المؤشرات الثانوية",
+  "Work Queue": "قائمة العمل",
+  "Default landing page": "صفحة البداية الافتراضية",
+  "Default dashboard density": "كثافة لوحة التحكم الافتراضية",
+  "Default recent activity count": "عدد الأنشطة الأخيرة الافتراضي",
+  "Restore Default Layout": "استعادة التخطيط الافتراضي",
+  "Save": "حفظ",
+  "Cancel": "إلغاء"
+});
+
+/* Lookup option values shown in selects */
+Object.assign(uiTextAr, {
+  "Access & Accounts": "الحسابات والصلاحيات",
+  "Hardware": "الأجهزة",
+  "Software": "البرمجيات",
+  "Network": "الشبكة",
+  "New Request": "طلب جديد",
+  "General": "عام",
+  "Other requests": "طلبات أخرى",
+  "Password reset": "إعادة تعيين كلمة المرور",
+  "Permissions": "الصلاحيات",
+  "Account access": "الوصول للحساب",
+  "Mobile device": "جهاز محمول",
+  "Peripherals": "ملحقات",
+  "Application issue": "مشكلة في تطبيق",
+  "Software installation": "تثبيت برنامج",
+  "License request": "طلب ترخيص",
+  "Internet": "الإنترنت",
+  "WiFi": "شبكة لاسلكية",
+  "Connectivity issue": "مشكلة اتصال",
+  "New laptop": "حاسب محمول جديد",
+  "New monitor": "شاشة جديدة",
+  "Email account": "حساب بريد إلكتروني",
+  "Hardware & Devices": "الأجهزة والمعدات",
+  "General Questions": "أسئلة عامة",
+  "Desktop": "حاسب مكتبي",
+  "Custom": "مخصص",
+  "Project": "مشروع",
+  "Follow-up": "متابعة",
+  "IT Operational": "تشغيلي لتقنية المعلومات",
+  "Head Office": "المقر الرئيسي",
+  "Branch Riyadh": "فرع الرياض",
+  "Branch Jeddah": "فرع جدة",
+  "Remote": "عن بُعد",
+  "Warehouse": "المستودع",
+  "Sold to Employee": "بيع لموظف",
+  "Reserved": "محجوز",
+  "Pending Return": "بانتظار الإرجاع",
+  "Lost": "مفقود",
+  "Stolen": "مسروق",
+  "Retired": "متقاعد",
+  "Disposed": "تم التخلص منه",
+  "Rejected": "مرفوض",
+  "Action required": "يتطلب إجراء",
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "archived": "مؤرشف",
+  "overdue": "متأخر",
+  "done": "منجز",
+  "new": "جديد",
+  "good": "جيد",
+  "fair": "مقبول",
+  "damaged": "تالف",
+  "lost": "مفقود",
+  "waiting_approval": "بانتظار الاعتماد",
+  "Quarterly": "ربع سنوي",
+  "At due time": "عند موعد الاستحقاق",
+  "1 day before": "قبل يوم واحد",
+  "3 days before": "قبل ٣ أيام",
+  "7 days before": "قبل ٧ أيام",
+  "30 days before": "قبل ٣٠ يومًا",
+  "60 days before": "قبل ٦٠ يومًا",
+  "90 days before": "قبل ٩٠ يومًا",
+  "Scrapped": "تم إتلافه",
+  "Donated": "تم التبرع به",
+  "Recycled": "تم تدويره",
+  "Not Required": "غير مطلوب",
+  "Not selected": "لم يتم الاختيار",
+  "on_leave": "في إجازة",
+  "renewal_due": "التجديد مستحق",
+  "expired": "منتهٍ",
+  "signed": "موقّع",
+  "Locked": "مقفل",
+  "Password Expired": "انتهت كلمة المرور",
+  "preferred": "مفضّل",
+  "under_review": "قيد المراجعة",
+  "Licensing": "التراخيص",
+  "Cloud": "السحابة",
+  "Consulting": "الاستشارات",
+  "Template": "قالب"
+});
+
+/* Field labels and helper text inside the create/edit forms */
+Object.assign(uiTextAr, {
+  "Create the renewal-critical contract details first.": "أنشئ تفاصيل العقد الحرجة للتجديد أولًا.",
+  "Create the vendor relationship basics first.": "أنشئ أساسيات العلاقة مع المورد أولًا.",
+  "Create the document record first; links and file details can be added below.": "أنشئ سجل المستند أولًا؛ يمكن إضافة الروابط وتفاصيل الملف بالأسفل.",
+  "Create article content with publication details first.": "أنشئ محتوى المقال مع تفاصيل النشر أولًا.",
+  "Create reusable form structure for documents and requests.": "أنشئ بنية نموذج قابلة لإعادة الاستخدام للمستندات والطلبات.",
+  "Create the master People record first. Login access is optional.": "أنشئ سجل الشخص الرئيسي أولًا. الوصول بتسجيل الدخول اختياري.",
+  "Who needs help or owns this request.": "من يحتاج المساعدة أو يملك هذا الطلب.",
+  "Assigned IT staff": "موظف تقنية المعلومات المسند",
+  "Related asset": "الأصل المرتبط",
+  "Ticket number": "رقم التذكرة",
+  "Internal notes": "ملاحظات داخلية",
+  "Visible to IT only.": "مرئي لتقنية المعلومات فقط.",
+  "Task title": "عنوان المهمة",
+  "The person accountable for completion.": "الشخص المسؤول عن الإنجاز.",
+  "Due date": "تاريخ الاستحقاق",
+  "When this work should be finished.": "الموعد الذي يجب إنهاء هذا العمل فيه.",
+  "Related type": "النوع المرتبط",
+  "Related record": "السجل المرتبط",
+  "Task number": "رقم المهمة",
+  "Task type": "نوع المهمة",
+  "Progress %": "نسبة التقدم %",
+  "Estimated hours": "الساعات المقدرة",
+  "Actual hours": "الساعات الفعلية",
+  "Asset category": "تصنيف الأصل",
+  "Brand": "العلامة التجارية",
+  "Must be unique when available.": "يجب أن يكون فريدًا عند توفره.",
+  "Where the item or person is primarily based.": "المكان الأساسي للعنصر أو الشخص.",
+  "Current holder person": "الشخص الحائز الحالي",
+  "Who currently has custody.": "من لديه العهدة حاليًا.",
+  "Permanent custodian": "الحائز الدائم",
+  "The official custodian for this asset.": "الحائز الرسمي لهذا الأصل.",
+  "Asset number": "رقم الأصل",
+  "Asset attention": "مستوى الاهتمام بالأصل",
+  "Condition": "الحالة الفنية",
+  "Current holder type": "نوع الحائز الحالي",
+  "Current holder name": "اسم الحائز الحالي",
+  "Expected return date": "تاريخ الإرجاع المتوقع",
+  "Purchase date": "تاريخ الشراء",
+  "Warranty end date": "تاريخ انتهاء الضمان",
+  "Purchase cost": "تكلفة الشراء",
+  "Current value": "القيمة الحالية",
+  "Disposal reason": "سبب التخلص",
+  "Disposed to": "جهة التخلص",
+  "Disposed to name": "اسم جهة التخلص",
+  "Settlement status": "حالة التسوية",
+  "Settlement date": "تاريخ التسوية",
+  "Disposal notes": "ملاحظات التخلص",
+  "Invoice / attachment names": "أسماء الفواتير / المرفقات",
+  "Basic Information": "المعلومات الأساسية",
+  "Employee no": "الرقم الوظيفي",
+  "Business unit": "وحدة العمل",
+  "Phone country code": "رمز الهاتف الدولي",
+  "Mobile number": "رقم الجوال",
+  "Import Excel": "استيراد Excel",
+  "Export Excel": "تصدير Excel",
+  "Import people from Excel": "استيراد الأشخاص من Excel",
+  "Choose a file built on the same template as the export.": "اختر ملفًا مبنيًا على قالب التصدير نفسه.",
+  "Apply import": "تنفيذ الاستيراد",
+  "Import complete": "اكتمل الاستيراد",
+  "Nothing to import": "لا يوجد ما يمكن استيراده",
+  "Rows read": "الصفوف المقروءة",
+  "Employee number is required": "الرقم الوظيفي مطلوب",
+  "Unique. Used to match rows on Excel import.": "فريد. يُستخدم لمطابقة الصفوف عند الاستيراد من Excel.",
+  "Export list (CSV)": "تصدير القائمة (CSV)",
+  "The workbook has been downloaded.": "تم تنزيل الملف.",
+  "Could not export": "تعذّر التصدير",
+  "Could not import": "تعذّر الاستيراد",
+  "To create": "سيتم إنشاؤها",
+  "To update": "سيتم تحديثها",
+  "Skipped": "تم تخطيها",
+  "Person type": "نوع الشخص",
+  "Job title": "المسمى الوظيفي",
+  "Choose whether this person needs login access.": "اختر ما إذا كان هذا الشخص يحتاج وصولًا بتسجيل الدخول.",
+  "No Login Account": "بدون حساب دخول",
+  "Create only the People master record.": "أنشئ سجل الشخص الرئيسي فقط.",
+  "Create sign-in access when Save Person is pressed.": "أنشئ وصول تسجيل الدخول عند الضغط على حفظ الشخص.",
+  "Temporary Password": "كلمة مرور مؤقتة",
+  "Require password change on first login": "طلب تغيير كلمة المرور عند أول تسجيل دخول",
+  "Send welcome email": "إرسال بريد ترحيبي",
+  "This account will be created when you save.": "سيتم إنشاء هذا الحساب عند الحفظ.",
+  "Linked To": "مرتبط بـ",
+  "This Person": "هذا الشخص",
+  "Save Person": "حفظ الشخص",
+  "Select the vendor responsible for this contract.": "اختر المورد المسؤول عن هذا العقد.",
+  "End date": "تاريخ الانتهاء",
+  "Used for renewal and expiry alerts.": "يُستخدم لتنبيهات التجديد والانتهاء.",
+  "Renewal reminder": "تذكير التجديد",
+  "Renewal reminder date": "تاريخ تذكير التجديد",
+  "Cost": "التكلفة",
+  "Vendor name": "اسم المورد",
+  "Contact person": "شخص الاتصال",
+  "Use a valid work email address.": "استخدم بريدًا إلكترونيًا مؤسسيًا صالحًا.",
+  "Service types": "أنواع الخدمات",
+  "Select the document or form type.": "اختر نوع المستند أو النموذج.",
+  "Linked type": "النوع المرتبط",
+  "Linked record": "السجل المرتبط",
+  "Signed document file": "ملف المستند الموقّع",
+  "Write the article content here...": "اكتب محتوى المقال هنا...",
+  "Write the article content employees or IT will read.": "اكتب محتوى المقال الذي سيقرأه الموظفون أو تقنية المعلومات.",
+  "Fields": "الحقول",
+  "List the fields this template should include.": "اذكر الحقول التي يجب أن يتضمنها هذا القالب."
+});
+
+/* Employee request wizard: steps, subcategories and service-request options */
+Object.assign(uiTextAr, {
+  "Choose Subcategory": "اختر التصنيف الفرعي",
+  "More Information": "معلومات إضافية",
+  "(Optional)": "(اختياري)",
+  "Subject": "الموضوع",
+  "Write a short title for your question or request.": "اكتب عنوانًا قصيرًا لسؤالك أو طلبك.",
+  "How do I connect to the meeting room screen?": "كيف أتصل بشاشة قاعة الاجتماعات؟",
+  "Tell IT what happened, what you expected, and anything you already tried.": "أخبر تقنية المعلومات بما حدث، وما كنت تتوقعه، وما جربته بالفعل.",
+  "Suggested articles": "مقالات مقترحة",
+  "These may solve the issue before a ticket is needed.": "قد تحل هذه المقالات المشكلة قبل الحاجة إلى تذكرة.",
+  "Attachment": "مرفق",
+  "Item name": "اسم العنصر",
+  "Quantity": "الكمية",
+  "+ Add Another Item": "+ إضافة عنصر آخر",
+
+  // Accounts & Access
+  "Password Reset": "إعادة تعيين كلمة المرور",
+  "Account Locked": "الحساب مقفل",
+  "MFA Issue": "مشكلة في التحقق الثنائي",
+  "Email Access": "الوصول للبريد الإلكتروني",
+  "Shared Folder Access": "الوصول لمجلد مشترك",
+
+  // Hardware & Devices
+  "Mobile Device": "جهاز محمول",
+  "Keyboard / Mouse": "لوحة مفاتيح / فأرة",
+  "Docking Station": "قاعدة توصيل",
+  "Headset": "سماعة رأس",
+  "Other Device": "جهاز آخر",
+
+  // Software & Applications
+  "Teams": "تيمز",
+  "Office": "أوفيس",
+  "Browser": "المتصفح",
+  "PDF Software": "برنامج PDF",
+  "Other Application": "تطبيق آخر",
+
+  // Network & Connectivity
+  "Shared Folder": "مجلد مشترك",
+  "Network Drive": "محرك شبكة",
+  "Other Network Issue": "مشكلة شبكة أخرى",
+
+  // Service Requests
+  "New Laptop": "حاسب محمول جديد",
+  "New Software": "برنامج جديد",
+  "Software Installation": "تثبيت برنامج",
+  "Access Request": "طلب صلاحية",
+  "License Request": "طلب ترخيص",
+  "Equipment Request": "طلب معدات",
+  "Other Request": "طلب آخر",
+  "Other": "أخرى",
+
+  // Service request pickers
+  "Equipment requested": "المعدات المطلوبة",
+  "Select everything you need. IT will receive one request.": "اختر كل ما تحتاجه. ستصل تقنية المعلومات طلب واحد.",
+  "Licenses requested": "التراخيص المطلوبة",
+  "Select every license you need in this request.": "اختر كل ترخيص تحتاجه في هذا الطلب.",
+  "License name": "اسم الترخيص",
+  "Software to install": "البرامج المطلوب تثبيتها",
+  "Select all programs you need installed.": "اختر كل البرامج التي تحتاج تثبيتها.",
+  "Software name": "اسم البرنامج",
+  "Software requested": "البرامج المطلوبة",
+  "Access requested": "الصلاحيات المطلوبة",
+  "Select all systems or access types you need.": "اختر كل الأنظمة أو أنواع الصلاحيات التي تحتاجها.",
+  "Access name": "اسم الصلاحية",
+  "Request items": "عناصر الطلب",
+  "Add each item or service you need in this request.": "أضف كل عنصر أو خدمة تحتاجها في هذا الطلب.",
+  "Request item": "عنصر الطلب",
+  "Requested items": "العناصر المطلوبة",
+
+  // Selectable items
+  "Keyboard": "لوحة مفاتيح",
+  "Mouse": "فأرة",
+  "USB Drive": "ذاكرة USB",
+  "HDMI Cable": "كابل HDMI",
+  "Ethernet Cable": "كابل شبكة",
+  "Webcam": "كاميرا ويب",
+  "Other Item": "عنصر آخر",
+  "Microsoft Project": "مايكروسوفت بروجكت",
+  "Visio": "فيزيو",
+  "Adobe Acrobat": "أدوبي أكروبات",
+  "AutoCAD": "أوتوكاد",
+  "Other License": "ترخيص آخر",
+  "Chrome": "كروم",
+  "Adobe Reader": "أدوبي ريدر",
+  "Zoom": "زووم",
+  "Other Software": "برنامج آخر",
+  "Email Group": "مجموعة بريدية",
+  "Other Access": "صلاحية أخرى",
+  "+ Add Another {item}": "+ إضافة {item} آخر",
+  "Item": "عنصر",
+  "License": "ترخيص",
+  "Access": "صلاحية",
+  "Drop a file here or browse": "أفلت ملفًا هنا أو تصفح",
+  "PDF, image, Word, or Excel file": "ملف PDF أو صورة أو Word أو Excel"
+});
+
 function trText(value) {
   const text = String(value ?? "");
   if (state.lang !== "ar") return text;
@@ -620,13 +1631,25 @@ function trText(value) {
     if (groupedComments) return `${text.match(/^\s*/)?.[0] || ""}${groupedComments[1]} \u062a\u0639\u0644\u064a\u0642\u0627\u062a \u062c\u062f\u064a\u062f\u0629 \u0639\u0644\u0649 ${groupedComments[2]}${text.match(/\s*$/)?.[0] || ""}`;
     const groupedTickets = normalized.match(/^(\d+)\s+new tickets waiting review$/i);
     if (groupedTickets) return `${text.match(/^\s*/)?.[0] || ""}${groupedTickets[1]} \u062a\u0630\u0627\u0643\u0631 \u062c\u062f\u064a\u062f\u0629 \u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629${text.match(/\s*$/)?.[0] || ""}`;
+    const duplicateEmployeeNo = normalized.match(/^Employee number (.+) already exists$/i);
+    if (duplicateEmployeeNo) return `الرقم الوظيفي ${duplicateEmployeeNo[1]} مستخدم بالفعل`;
     const statusChanged = normalized.match(/^Status changed to (.+)\.$/i);
     if (statusChanged) return `${text.match(/^\s*/)?.[0] || ""}\u062a\u0645 \u062a\u063a\u064a\u064a\u0631 \u0627\u0644\u062d\u0627\u0644\u0629 \u0625\u0644\u0649 ${trText(statusChanged[1])}.${text.match(/\s*$/)?.[0] || ""}`;
     const taskMoved = normalized.match(/^Task updated and moved to (.+)\.$/i);
     if (taskMoved) return `${text.match(/^\s*/)?.[0] || ""}\u062a\u0645 \u062a\u062d\u062f\u064a\u062b \u0627\u0644\u0645\u0647\u0645\u0629 \u0648\u0646\u0642\u0644\u0647\u0627 \u0625\u0644\u0649 ${trText(taskMoved[1])}.${text.match(/\s*$/)?.[0] || ""}`;
   }
   const translated = uiTextAr[normalized] || uiTextAr[labelizeRaw(normalized)] || uiTextAr[Object.keys(uiTextAr).find((key) => key.toLowerCase() === normalized.toLowerCase())];
-  if (!translated) return text;
+  if (!translated) {
+    // Summary lines are assembled by joining parts with " | ". The joined string
+    // is never in the dictionary, so translate each segment on its own.
+    for (const separator of [" | ", " / "]) {
+      if (!normalized.includes(separator)) continue;
+      const parts = normalized.split(separator);
+      const mapped = parts.map((part) => trText(part));
+      if (mapped.some((part, index) => part !== parts[index])) return mapped.join(separator);
+    }
+    return text;
+  }
   const leading = text.match(/^\s*/)?.[0] || "";
   const trailing = text.match(/\s*$/)?.[0] || "";
   return `${leading}${translated}${trailing}`;
@@ -634,6 +1657,32 @@ function trText(value) {
 
 function labelizeRaw(value) {
   return String(value ?? "").replace(/_/g, " ").replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
+}
+
+// Builds a string from a translatable template so word order can differ per
+// language. Concatenating a translated fragment onto an English one leaves
+// half-translated text like "Open الأصول" or "14 matching".
+function tpl(template, vars = {}) {
+  let out = trText(template);
+  for (const [key, value] of Object.entries(vars)) {
+    out = out.split(`{${key}}`).join(String(value ?? ""));
+  }
+  return out;
+}
+
+// Renders any stored date in the active locale instead of leaking an ISO string.
+function displayDate(value, withTime = false) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  const locale = state.lang === "ar" ? "ar" : "en";
+  return withTime ? date.toLocaleString(locale) : date.toLocaleDateString(locale);
+}
+
+// Field labels sit in a CSS grid, so a bare text node plus a separate
+// required-marker span landed on two different rows. Wrap them as one item.
+function fieldLabel(label, required) {
+  return `<span class="field-label-text">${label ?? ""}${required || ""}</span>`;
 }
 
 function localizeRenderedUi(root = document.body) {
@@ -644,7 +1693,10 @@ function localizeRenderedUi(root = document.body) {
       if (!parent) return NodeFilter.FILTER_REJECT;
       if (["SCRIPT", "STYLE", "TEXTAREA", "CODE", "PRE"].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
       if (parent.closest("[data-no-localize], .record-title, .user-name, .profile-avatar")) return NodeFilter.FILTER_REJECT;
-      return uiTextAr[node.nodeValue.replace(/\s+/g, " ").trim()] ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      const value = node.nodeValue.replace(/\s+/g, " ").trim();
+      if (uiTextAr[value]) return NodeFilter.FILTER_ACCEPT;
+      if ([" | ", " / "].some((sep) => value.includes(sep) && value.split(sep).some((part) => uiTextAr[part]))) return NodeFilter.FILTER_ACCEPT;
+      return NodeFilter.FILTER_REJECT;
     }
   });
   const textNodes = [];
@@ -659,6 +1711,36 @@ function localizeRenderedUi(root = document.body) {
   $$(".eyebrow, .command-lane-head strong, .ticket-overview-label", root).forEach((node) => {
     node.textContent = trText(node.textContent);
   });
+}
+
+// Modals, menus and dialogs are injected into their hosts long after render(),
+// and only some of the code paths that open them called localizeRenderedUi.
+// Watching the hosts localizes every overlay regardless of who opened it.
+let localizingOverlay = false;
+function watchOverlayLocalization() {
+  const observer = new MutationObserver((records) => {
+    if (localizingOverlay || state.lang !== "ar") return;
+    const content = $("#content");
+    // Some labels are filled with `el.textContent = "..."`, which adds a text
+    // node rather than an element, so localize the parent in that case.
+    const added = records
+      .flatMap((record) => [...record.addedNodes])
+      .map((node) => (node.nodeType === 3 ? node.parentElement : node))
+      .filter((node) => node && node.nodeType === 1 && !(content && content.contains(node)));
+    if (!added.length) return;
+    localizingOverlay = true;
+    try {
+      added.forEach((node) => localizeRenderedUi(node));
+    } finally {
+      localizingOverlay = false;
+    }
+  });
+  // Menus render into their hosts, but openModal() appends the backdrop
+  // straight to <body>. Watching the whole body subtree also covers content
+  // injected into an overlay that is already open — the request wizard swaps
+  // in its subcategory cards without reopening the modal. #content is skipped
+  // because render() localizes it directly.
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 const modules = ["dashboard", "employee_portal", "users", "roles", "employees", "assets", "transfers", "tickets", "tasks", "contracts", "vendors", "documents", "attachments", "comments", "notifications", "knowledge_base", "archive_center", "trash", "form_templates", "audit_logs", "timeline", "settings", "lookup_items"];
@@ -792,7 +1874,7 @@ const assetSettlementStatuses = ["Not Required", "Pending", "Completed"];
 const schemas = {
   users: [["name", "Account name", null, { required: true }], ["username", "Username", null, { required: true }], ["email", "Email", "email"], ["password", "Password", "password", { required: true }], ["roleId", "Role", "roles", { required: true }], ["accountType", "Account type", "account_types", { default: "Service", required: true }], ["status", "Account Status", "lookup:user_status", { default: "active" }], ["expiryDate", "Expiry Date", "date"], ["requirePasswordChange", "Require password change on first login", "checkbox", { default: true }]],
   roles: [["name", "Role name", null, { required: true }], ["description", "Description", "textarea"]],
-  employees: [["employeeNo", "Employee no"], ["name", "Name", null, { required: true }], ["personType", "Person type", "person_types", { default: "Employee", required: true }], ["departmentId", "Department", "departments", { required: true }], ["jobTitle", "Job title", "lookup:job_title"], ["location", "Location", "lookup:location"], ["managerId", "Manager", "employees", { advanced: true }], ["email", "Email", "email", { required: true }], ["phone", "Phone"], ["status", "Status", "lookup:employee_status", { default: "active" }]],
+  employees: [["employeeNo", "Employee no", null, { required: true, help: "Unique. Used to match rows on Excel import." }], ["name", "Name", null, { required: true }], ["personType", "Person type", "person_types", { default: "Employee" }], ["departmentId", "Department", "departments", { required: true }], ["jobTitle", "Job title", "lookup:job_title"], ["location", "Location", "lookup:location"], ["businessUnit", "Business unit", "lookup:business_unit"], ["managerId", "Manager", "employees", { advanced: true }], ["email", "Email", "email", { required: true }], ["phoneCountryCode", "Phone country code", "lookup:phone_country_code", { default: "+966" }], ["phone", "Mobile number"], ["status", "Status", "lookup:employee_status", { default: "active" }]],
   assets: [["assetNumber", "Asset number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["type", "Asset category", "lookup:asset_category", { required: true }], ["brand", "Brand", "lookup:brand"], ["model", "Model", "lookup:asset_model"], ["serialNumber", "Serial number", null, { required: true }], ["status", "Status", "asset_statuses", { default: "available" }], ["attention", "Asset attention", "asset_attention", { default: "normal" }], ["condition", "Condition", "lookup:asset_condition", { default: "good" }], ["location", "Location", "lookup:location"], ["departmentId", "Department", "departments"], ["permanentCustodianId", "Permanent custodian", "employees"], ["currentHolderType", "Current holder type", "holder_types", { default: "Person" }], ["currentOwnerId", "Current holder person", "employees"], ["currentHolderName", "Current holder name"], ["expectedReturnDate", "Expected return date", "date"], ["supplierId", "Vendor", "vendors"], ["purchaseDate", "Purchase date", "date", { advanced: true }], ["warrantyEndDate", "Warranty end date", "date", { advanced: true }], ["cost", "Purchase cost", "number", { advanced: true }], ["currentValue", "Current value", "number", { advanced: true }], ["disposalReason", "Disposal reason", "disposal_reasons", { advanced: true }], ["disposedToType", "Disposed to", "disposed_to_types", { advanced: true }], ["disposedToName", "Disposed to name", null, { advanced: true }], ["settlementStatus", "Settlement status", "settlement_statuses", { advanced: true }], ["settlementDate", "Settlement date", "date", { advanced: true }], ["disposalNotes", "Disposal notes", "textarea", { advanced: true }], ["attachmentsText", "Invoice / attachment names", "textarea", { advanced: true }], ["notes", "Notes", "textarea", { advanced: true }]],
   transfers: [["movementType", "Action", "lookup:transfer_action", { required: true }], ["assetId", "Asset", "assets", { required: true }], ["fromEmployeeId", "From employee", "employees"], ["fromLocation", "From location", "lookup:location"], ["toEmployeeId", "To employee", "employees"], ["toLocation", "To location", "lookup:location"], ["date", "Date", "date", { default: () => today() }], ["performedBy", "Performed by", "users", { default: () => state.user?.id }], ["condition", "Asset condition", "lookup:asset_condition"], ["notes", "Notes", "textarea"], ["attachmentsText", "Attachment names", "textarea", { advanced: true }], ["relatedDocumentId", "Related document", "documents", { advanced: true }]],
   tickets: [["ticketNumber", "Ticket number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["requesterId", "Requester", "employees", { required: true }], ["category", "Category", "lookup:ticket_category", { required: true }], ["priority", "Priority", "lookup:ticket_priority", { default: "medium", required: true }], ["status", "Status", "lookup:ticket_status", { default: "open" }], ["assignedToId", "Assigned IT staff", "it_users"], ["relatedAssetId", "Related asset", "assets"], ["approvalStatus", "Approval status", "lookup:approval_status", { advanced: true, default: "Draft" }], ["description", "Description", "textarea", { required: true }], ["waitingReason", "Waiting reason", "lookup:ticket_waiting_reason", { advanced: true, itOnly: true }], ["cancelReason", "Cancel reason", "lookup:ticket_cancel_reason", { advanced: true, itOnly: true }], ["internalNotes", "Internal notes", "textarea", { advanced: true, itOnly: true }], ["attachmentsText", "Attachment names", "textarea", { advanced: true }]],
@@ -933,7 +2015,7 @@ function navigationAreaFor(module) {
 
 function breadcrumbFor(module, row = null) {
   const area = trText(navigationAreaFor(module));
-  const parts = [trText("IT Command Center"), area, displayLabel(module)].filter(Boolean);
+  const parts = [area, displayLabel(module)].filter(Boolean);
   if (row) parts.push(primaryTitle(module, row));
   return parts.join(" / ");
 }
@@ -1011,8 +2093,9 @@ function applyPreferences() {
   resetStaticShellLabels();
   $("#langToggle").textContent = state.lang === "en" ? "العربية" : "English";
   $("#themeToggle").innerHTML = icon(state.theme === "system" ? "settings" : theme === "dark" ? "sun" : "moon");
-  $("#themeToggle").title = trText(`Appearance: ${state.theme === "system" ? "System" : labelize(state.theme)}`);
-  $("#themeToggle").setAttribute("aria-label", trText(`Appearance: ${state.theme === "system" ? "System" : labelize(state.theme)}`));
+  const appearanceLabel = tpl("Appearance: {mode}", { mode: trText(state.theme === "system" ? "System" : labelize(state.theme)) });
+  $("#themeToggle").title = appearanceLabel;
+  $("#themeToggle").setAttribute("aria-label", appearanceLabel);
   const unread = userNotifications().filter((item) => item.unread).length;
   $("#notificationsButton").innerHTML = `${icon("bell")}${unread ? `<span class="counter">${unread}</span>` : ""}`;
   $("#notificationsButton").classList.toggle("has-dot", unread > 0);
@@ -1190,7 +2273,7 @@ function render() {
   $("#pageTitle").textContent = displayLabel(state.page);
   $("#sectionEyebrow").textContent = state.page === "dashboard" ? trText("Live workspace") : viewModeLabel(state.page);
   $("#content").innerHTML = skeleton();
-  requestAnimationFrame(() => {
+  afterPaint(() => {
     if (state.page === "dashboard") $("#content").innerHTML = dashboard();
     else if (state.page === "employee_portal") $("#content").innerHTML = employeePortal();
     else if (state.page === "profile") $("#content").innerHTML = profilePage();
@@ -1236,6 +2319,13 @@ function viewModeLabel(page) {
 
 function skeleton() {
   return `<div class="skeleton"><div class="skeleton-line" style="width:44%"></div><div class="skeleton-line"></div><div class="skeleton-line" style="width:74%"></div></div>`;
+}
+
+// Hidden tabs never run animation frames, so a rAF-only paint leaves the page
+// stuck on its skeleton until the tab is focused.
+function afterPaint(callback) {
+  if (document.visibilityState === "hidden") setTimeout(callback, 0);
+  else requestAnimationFrame(callback);
 }
 
 function dashboard() {
@@ -1383,9 +2473,9 @@ function isRenewalSoon(contract) {
 function remainingDays(dateValue) {
   if (!dateValue) return "No date set";
   const days = Math.ceil((new Date(`${dateValue}T00:00:00`).getTime() - new Date(`${today()}T00:00:00`).getTime()) / 86400000);
-  if (days < 0) return `${Math.abs(days)} days overdue`;
+  if (days < 0) return tpl("{n} days overdue", { n: Math.abs(days) });
   if (days === 0) return "Due today";
-  return `${days} days remaining`;
+  return tpl("{n} days remaining", { n: days });
 }
 function dashboardSignalGroups({ contracts, assets, tasks, tickets }) {
   const warrantySoon = assets.filter((asset) => asset.warrantyEndDate && remainingDays(asset.warrantyEndDate) !== "No date set" && (() => { const days = Math.ceil((new Date(`${asset.warrantyEndDate}T00:00:00`).getTime() - new Date(`${today()}T00:00:00`).getTime()) / 86400000); return days >= 0 && days <= 30; })());
@@ -2034,9 +3124,9 @@ function assetWarrantyExpiring(asset) {
 function assetWarrantyText(asset) {
   if (!asset.warrantyEndDate) return "No warranty date";
   const days = Math.ceil((new Date(`${asset.warrantyEndDate}T00:00:00`).getTime() - new Date(`${today()}T00:00:00`).getTime()) / 86400000);
-  if (days < 0) return `Expired ${Math.abs(days)} days ago`;
+  if (days < 0) return tpl("Expired {n} days ago", { n: Math.abs(days) });
   if (days === 0) return "Expires today";
-  if (days <= 30) return `Expires in ${days} days`;
+  if (days <= 30) return tpl("Expires in {n} days", { n: days });
   return `Valid until ${asset.warrantyEndDate}`;
 }
 
@@ -2191,10 +3281,10 @@ function workflowField(name, label, type = "text", options = {}) {
   const placeholder = options.placeholder ? ` placeholder="${escapeHtml(options.placeholder)}"` : "";
   const help = options.help ? `<small class="field-help">${escapeHtml(options.help)}</small>` : "";
   const full = options.full ? "full" : "";
-  if (type === "textarea") return `<label class="${full}">${label}${required}<textarea name="${name}"${placeholder}>${escapeHtml(value)}</textarea>${help}</label>`;
-  if (type === "checkbox") return `<label class="checkbox-field ${full}"><span>${label}${required}</span><input name="${name}" type="checkbox" value="true" ${value ? "checked" : ""} /></label>`;
-  if (type === "select") return `<label class="${full}">${label}${required}<select name="${name}" ${options.required ? "required" : ""}>${(options.options || []).map((item) => Array.isArray(item) ? `<option value="${escapeHtml(item[0])}" ${String(value) === String(item[0]) ? "selected" : ""}>${escapeHtml(item[1])}</option>` : `<option value="${escapeHtml(item)}" ${String(value) === String(item) ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}</select>${help}</label>`;
-  return `<label class="${full}">${label}${required}<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${options.required ? "required" : ""}${placeholder} />${help}</label>`;
+  if (type === "textarea") return `<label class="${full}">${fieldLabel(label, required)}<textarea name="${name}"${placeholder}>${escapeHtml(value)}</textarea>${help}</label>`;
+  if (type === "checkbox") return `<label class="checkbox-field ${full}"><span>${fieldLabel(label, required)}</span><input name="${name}" type="checkbox" value="true" ${value ? "checked" : ""} /></label>`;
+  if (type === "select") return `<label class="${full}">${fieldLabel(label, required)}<select name="${name}" ${options.required ? "required" : ""}>${(options.options || []).map((item) => Array.isArray(item) ? `<option value="${escapeHtml(item[0])}" ${String(value) === String(item[0]) ? "selected" : ""}>${escapeHtml(item[1])}</option>` : `<option value="${escapeHtml(item)}" ${String(value) === String(item) ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}</select>${help}</label>`;
+  return `<label class="${full}">${fieldLabel(label, required)}<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${options.required ? "required" : ""}${placeholder} />${help}</label>`;
 }
 
 function employeeWorkflowOptions() {
@@ -2487,7 +3577,7 @@ function contractVendorTab(contract) {
   const vendor = rows("vendors").find((item) => item.id === contract.vendorId);
   const linkedContracts = rows("contracts").filter((item) => item.vendorId === contract.vendorId);
   if (!vendor) return emptyState("No vendor linked", "Assign a vendor to this contract.");
-  return `<section class="contract-tab-grid"><article class="surface-card contract-info-card"><div class="section-title"><div><p class="eyebrow">Vendor Summary</p><h3>${escapeHtml(vendor.name)}</h3></div><div class="record-card-actions"><button class="btn btn-secondary" data-open-module="vendors" data-open-id="${vendor.id}">Open Vendor Workspace</button><button class="btn btn-secondary" data-contract-workflow="ticket" data-id="${contract.id}">Create Vendor Ticket</button></div></div><dl><div><dt>Vendor Name</dt><dd>${escapeHtml(vendor.name || "Not set")}</dd></div><div><dt>Primary Contact</dt><dd>${escapeHtml(vendor.contactPerson || "Not set")}</dd></div><div><dt>Support Email</dt><dd>${escapeHtml(vendor.email || contract.supportEmail || "Not set")}</dd></div><div><dt>Support Phone</dt><dd>${escapeHtml(vendor.phone || contract.supportPhone || "Not set")}</dd></div><div><dt>Portal URL</dt><dd>${escapeHtml(contract.portalUrl || "Not set")}</dd></div><div><dt>Vendor Rating</dt><dd>${escapeHtml(String(vendor.rating || "Not rated"))}</dd></div></dl></article><article class="surface-card"><div class="section-title"><div><p class="eyebrow">Related Contracts</p><h3>${linkedContracts.length} contracts</h3></div></div><div class="compact-list">${linkedContracts.map((item) => `<button class="contract-linked-row" data-contract-workspace-select="${item.id}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(contractNumber(item))}</span></button>`).join("")}</div></article></section>`;
+  return `<section class="contract-tab-grid"><article class="surface-card contract-info-card"><div class="section-title"><div><p class="eyebrow">Vendor Summary</p><h3>${escapeHtml(vendor.name)}</h3></div><div class="record-card-actions"><button class="btn btn-secondary" data-open-module="vendors" data-open-id="${vendor.id}">Open Vendor Workspace</button><button class="btn btn-secondary" data-contract-workflow="ticket" data-id="${contract.id}">Create Vendor Ticket</button></div></div><dl><div><dt>Vendor Name</dt><dd>${escapeHtml(vendor.name || "Not set")}</dd></div><div><dt>Primary Contact</dt><dd>${escapeHtml(vendor.contactPerson || "Not set")}</dd></div><div><dt>Support Email</dt><dd>${escapeHtml(vendor.email || contract.supportEmail || "Not set")}</dd></div><div><dt>Support Phone</dt><dd>${escapeHtml(vendor.phone || contract.supportPhone || "Not set")}</dd></div><div><dt>Portal URL</dt><dd>${escapeHtml(contract.portalUrl || "Not set")}</dd></div><div><dt>Vendor Rating</dt><dd>${escapeHtml(String(vendor.rating || "Not rated"))}</dd></div></dl></article><article class="surface-card"><div class="section-title"><div><p class="eyebrow">Related Contracts</p><h3>${escapeHtml(tpl("{n} contracts", { n: linkedContracts.length }))}</h3></div></div><div class="compact-list">${linkedContracts.map((item) => `<button class="contract-linked-row" data-contract-workspace-select="${item.id}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(contractNumber(item))}</span></button>`).join("")}</div></article></section>`;
 }
 
 function contractAssetsTab(contract) {
@@ -2552,9 +3642,9 @@ function contractDaysRemaining(contract) {
 function contractDaysLabel(contract) {
   const days = contractDaysRemaining(contract);
   if (days === 99999) return "No end date";
-  if (days < 0) return `${Math.abs(days)} days expired`;
+  if (days < 0) return tpl("{n} days expired", { n: Math.abs(days) });
   if (days === 0) return "Expires today";
-  return `${days} days`;
+  return tpl("{n} days", { n: days });
 }
 
 function contractRenewalHealth(contract) {
@@ -2791,7 +3881,7 @@ function vendorWorkspaceItem(vendor, active) {
       <span class="workspace-item-top"><strong>${escapeHtml(vendor.name || "Untitled vendor")}</strong><span class="badge ${vendorHealthBadgeClass(vendor)}">${escapeHtml(vendorHealth(vendor))}</span></span>
       <span class="workspace-ticket-subject">${escapeHtml(vendorCategory(vendor))}</span>
       <span class="workspace-item-meta"><span>${escapeHtml(vendorPrimaryContact(vendor).name || vendor.contactPerson || "No contact")}</span><span>${escapeHtml(vendorStatusLabel(vendor))}</span></span>
-      <span class="workspace-ticket-indicators"><span class="workspace-indicator info">${contracts.filter((contract) => !["terminated", "expired", "archived"].includes(contractLifecycleStatus(contract))).length} active contracts</span><span class="workspace-indicator ${vendorCriticality(vendor) === "Critical" ? "critical" : "neutral"}">${escapeHtml(vendorCriticality(vendor))}</span></span>
+      <span class="workspace-ticket-indicators"><span class="workspace-indicator info">${escapeHtml(tpl("{n} active contracts", { n: contracts.filter((contract) => !["terminated", "expired", "archived"].includes(contractLifecycleStatus(contract))).length }))}</span><span class="workspace-indicator ${vendorCriticality(vendor) === "Critical" ? "critical" : "neutral"}">${escapeHtml(vendorCriticality(vendor))}</span></span>
     </button>
   `;
 }
@@ -3346,8 +4436,8 @@ function knowledgeWorkspaceItem(article, active) {
       <span class="workspace-item-top"><span>${icon("knowledge_base")}<strong>${escapeHtml(article.title || "Untitled article")}</strong></span><span class="badge ${knowledgeStatusBadge(article)}">${escapeHtml(knowledgeStatus(article))}</span></span>
       <span class="workspace-ticket-subject">${escapeHtml(article.category || "Knowledge Base")}</span>
       <span class="workspace-item-meta"><span>${escapeHtml(knowledgeOwnerLabel(article))}</span><span>v${escapeHtml(String(knowledgeVersion(article)))}</span></span>
-      <span class="workspace-ticket-indicators"><span class="workspace-indicator info">${knowledgeViews(article)} views</span><span class="workspace-indicator success">${knowledgeHelpful(article)} helpful</span><span class="workspace-indicator neutral">${escapeHtml(knowledgeReadingTime(article))}</span></span>
-      <small class="muted">Updated ${escapeHtml(article.updatedAt ? relativeTime(article.updatedAt) : "not dated")}</small>
+      <span class="workspace-ticket-indicators"><span class="workspace-indicator info">${escapeHtml(tpl("{n} views", { n: knowledgeViews(article) }))}</span><span class="workspace-indicator success">${escapeHtml(knowledgeHelpful(article) === "Not rated" ? trText("Not rated") : tpl("{n} helpful", { n: knowledgeHelpful(article) }))}</span><span class="workspace-indicator neutral">${escapeHtml(knowledgeReadingTime(article))}</span></span>
+      <small class="muted">${escapeHtml(tpl("Updated {when}", { when: article.updatedAt ? relativeTime(article.updatedAt) : trText("not dated") }))}</small>
     </button>
   `;
 }
@@ -3593,7 +4683,7 @@ function knowledgeAttachmentsTab(article) {
 
 function knowledgeRelatedTab(article) {
   const related = knowledgeRelatedRecords(article);
-  const section = (title, module, items) => `<article class="surface-card"><div class="section-title"><div><p class="eyebrow">${escapeHtml(title)}</p><h3>${items.length} records</h3></div></div><div class="compact-list">${items.map((row) => `<button class="contract-linked-row" data-open-module="${module}" data-open-id="${row.id}"><strong>${escapeHtml(primaryTitle(module, row))}</strong><span>${escapeHtml(secondaryTitle(module, row) || t(module))}</span></button>`).join("") || emptyState("No Related Records", `${title} linked to this article will appear here.`)}</div></article>`;
+  const section = (title, module, items) => `<article class="surface-card"><div class="section-title"><div><p class="eyebrow">${escapeHtml(title)}</p><h3>${escapeHtml(tpl("{n} records", { n: items.length }))}</h3></div></div><div class="compact-list">${items.map((row) => `<button class="contract-linked-row" data-open-module="${module}" data-open-id="${row.id}"><strong>${escapeHtml(primaryTitle(module, row))}</strong><span>${escapeHtml(secondaryTitle(module, row) || t(module))}</span></button>`).join("") || emptyState("No Related Records", `${title} linked to this article will appear here.`)}</div></article>`;
   return `<section class="knowledge-related-grid">${section("Related Tickets", "tickets", related.tickets)}${section("Related Assets", "assets", related.assets)}${section("Related Vendors", "vendors", related.vendors)}${section("Related Contracts", "contracts", related.contracts)}${section("Related Documents", "documents", related.documents)}${section("Related Tasks", "tasks", related.tasks)}${section("Related Forms", "form_templates", related.forms)}${section("Related People", "employees", related.people)}${section("Related User Accounts", "users", related.users)}</section>`;
 }
 
@@ -3733,9 +4823,14 @@ function knowledgeTags(article) {
   return String(article.tagsText || article.tags || "").split(",").map((item) => item.trim()).filter(Boolean);
 }
 function knowledgeReadingTime(article) {
-  if (article.readingTime) return article.readingTime;
+  // Stored values arrive as English strings like "4 min read"; re-template them
+  // so they follow the active language instead of leaking through.
+  if (article.readingTime) {
+    const stored = String(article.readingTime).match(/^\s*(\d+)\s*min read\s*$/i);
+    return stored ? tpl("{n} min read", { n: stored[1] }) : article.readingTime;
+  }
   const words = String(article.body || article.title || "").trim().split(/\s+/).filter(Boolean).length;
-  return `${Math.max(1, Math.ceil(words / 180))} min read`;
+  return tpl("{n} min read", { n: Math.max(1, Math.ceil(words / 180)) });
 }
 function knowledgeSearchText(article) {
   return [article.title, article.category, knowledgeTags(article).join(" "), article.keywords, article.body, article.bodyHtml, knowledgeOwnerLabel(article), knowledgeProduct(article)].join(" ").toLowerCase();
@@ -4191,7 +5286,7 @@ function standardWorkspacePage(name) {
   const data = standardWorkspaceCollection(name);
   const selected = data.find((row) => row.id === state.workspaceSelected[name]) || data[0] || null;
   if (selected) state.workspaceSelected[name] = selected.id;
-  const action = has(name, "create") && schemas[name] ? `<button class="btn btn-primary" data-add="${name}">${icon("plus")}New ${escapeHtml(singularDisplayLabel(name))}</button>` : "";
+  const action = has(name, "create") && schemas[name] ? `<button class="btn btn-primary" data-add="${name}">${icon("plus")}${escapeHtml(tpl("New {module}", { module: singularDisplayLabel(name) }))}</button>` : "";
   const stripPrimary = name === "documents" && selected ? (selected.title || "Document content") : selected ? primaryTitle(name, selected) : "";
   const stripSecondary = name === "documents" && selected ? `${documentFriendlyType(selected)} / ${selected.signedFileName || "No file attached"}` : selected ? (secondaryTitle(name, selected) || workspaceMeta(name, selected).join(" / ")) : "";
   return `
@@ -4199,13 +5294,13 @@ function standardWorkspacePage(name) {
     ${name === "documents" ? "" : workspaceIdentityStrip(name, stripPrimary, stripSecondary)}
     <section class="ticket-workspace standard-workspace" data-standard-workspace="${name}">
       <aside class="ticket-workspace-list-panel">
-        <div class="ticket-workspace-list-tools"><input id="searchBox" placeholder="Search ${escapeHtml(displayLabel(name))}" value="${escapeHtml(state.query)}" /></div>
+        <div class="ticket-workspace-list-tools"><input id="searchBox" placeholder="${escapeHtml(tpl("Search {module}", { module: displayLabel(name) }))}" value="${escapeHtml(state.query)}" /></div>
         ${standardWorkspaceFilters(name)}
-        <div class="ticket-workspace-list" aria-label="${escapeHtml(displayLabel(name))} list">
-          ${data.map((row) => standardWorkspaceItem(name, row, selected?.id === row.id)).join("") || emptyState(`No ${displayLabel(name).toLowerCase()} found`, "Try changing search or filters.")}
+        <div class="ticket-workspace-list" aria-label="${escapeHtml(tpl("{module} list", { module: displayLabel(name) }))}">
+          ${data.map((row) => standardWorkspaceItem(name, row, selected?.id === row.id)).join("") || emptyState(tpl("No {module} found", { module: displayLabel(name) }), "Try changing search or filters.")}
         </div>
       </aside>
-      <section class="ticket-workspace-detail-panel">${selected ? standardWorkspaceDetail(name, selected) : emptyState(`No ${singularDisplayLabel(name).toLowerCase()} selected`, "Choose a record from the workspace list.")}</section>
+      <section class="ticket-workspace-detail-panel">${selected ? standardWorkspaceDetail(name, selected) : emptyState(tpl("No {module} selected", { module: singularDisplayLabel(name) }), "Choose a record from the workspace list.")}</section>
     </section>
   `;
 }
@@ -4255,9 +5350,9 @@ function workspaceMeta(name, row) {
     assets: [row.assetNumber, row.type, look("employees", row.ownerId), row.departmentId],
     contracts: [row.type, look("vendors", row.vendorId), row.endDate ? `Ends ${row.endDate}` : ""],
     vendors: [row.contactPerson, row.email, row.phone],
-    documents: [row.type, row.linkedType, row.updatedAt || row.createdAt],
-    knowledge_base: [row.category, Array.isArray(row.tags) ? row.tags.join(", ") : row.tags, row.updatedAt || row.createdAt],
-    form_templates: [row.type, row.status, row.updatedAt || row.createdAt]
+    documents: [row.type, row.linkedType, displayDate(row.updatedAt || row.createdAt)],
+    knowledge_base: [row.category, Array.isArray(row.tags) ? row.tags.join(", ") : row.tags, displayDate(row.updatedAt || row.createdAt)],
+    form_templates: [row.type, row.status, displayDate(row.updatedAt || row.createdAt)]
   };
   return (maps[name] || []).filter(Boolean);
 }
@@ -4326,7 +5421,7 @@ function documentWorkspaceSnapshot(row, attachments = documentAttachments(row)) 
     ["Version", documentVersionLabel(row)]
   ];
   return `<section class="surface-card document-snapshot-panel">
-    <div class="section-title"><div><p class="eyebrow">Document Snapshot</p><h3>Current file state</h3></div><span class="badge muted">${attachments.length} file${attachments.length === 1 ? "" : "s"}</span></div>
+    <div class="section-title"><div><p class="eyebrow">Document Snapshot</p><h3>Current file state</h3></div><span class="badge muted">${escapeHtml(tpl("{n} files", { n: attachments.length }))}</span></div>
     <div class="document-snapshot-grid">${snapshot.map(([label, value]) => `<div><small>${escapeHtml(label)}</small><strong>${escapeHtml(value || "Not set")}</strong></div>`).join("")}</div>
   </section>`;
 }
@@ -4674,10 +5769,13 @@ function peopleWorkspacePage() {
   const selected = data.find((person) => person.id === state.peopleWorkspaceSelectedId) || data[0] || null;
   if (selected) state.peopleWorkspaceSelectedId = selected.id;
   return `
-    ${workspaceIdentityHeader("employees", has("employees", "create") ? `<button class="btn btn-primary" data-add="employees">${icon("plus")}New Person</button>` : "")}
+    ${workspaceIdentityHeader("employees", has("users", "create") ? `<button class="btn btn-primary" data-add="users">${icon("plus")}${escapeHtml(trText("New Account"))}</button>` : "")}
     <section class="ticket-workspace people-workspace">
       <aside class="ticket-workspace-list-panel">
-        <div class="ticket-workspace-list-tools"><input id="searchBox" placeholder="Search people" value="${escapeHtml(state.query)}" /></div>
+        <div class="ticket-workspace-list-tools people-list-tools">
+          <input id="searchBox" placeholder="Search people" value="${escapeHtml(state.query)}" />
+          ${peopleActionsButton()}
+        </div>
         ${peopleWorkspaceFilters()}
         <div class="ticket-workspace-list" aria-label="People list">
           ${data.map((person) => peopleWorkspaceItem(person, selected?.id === person.id)).join("") || emptyState("No people found", "Try changing search or filters.")}
@@ -4694,8 +5792,7 @@ function userAccountsWorkspacePage() {
   if (selected) state.accountWorkspaceSelectedId = selected.id;
   return `
     <div class="toolbar manager-ticket-toolbar">
-      <div><p class="eyebrow">Login accounts</p><h3>User Accounts</h3><p class="muted">Manage authentication accounts only. Create real people from People, then add System Access there.</p></div>
-      <div class="filters">${has("users", "create") ? `<button class="btn btn-primary" data-add="users">${icon("plus")}New Service Account</button>` : ""}</div>
+      <div><p class="eyebrow">Login accounts</p><h3>User Accounts</h3><p class="muted">Review and manage existing logins. New accounts are registered from People.</p></div>
     </div>
     <section class="ticket-workspace account-workspace">
       <aside class="ticket-workspace-list-panel">
@@ -4798,7 +5895,7 @@ function peopleWorkspaceDetail(person) {
       <div class="detail-head-actions">${peopleMoreMenu(person)}</div>
     </header>
     ${peopleProfilePanel(person)}
-    ${peopleQuickActions(person)}
+    ${personAccountActions(person)}
     <div class="tabs workspace-tabs">${tabs.map((item) => `<button class="tab ${safeTab === item ? "active" : ""}" data-people-workspace-tab="${item}">${item}</button>`).join("")}</div>
     <div class="ticket-workspace-detail-body">${peopleWorkspaceTabContent(person, safeTab)}</div>
   `;
@@ -4855,13 +5952,165 @@ function peopleRelationshipCounts(person) {
   };
 }
 
-function peopleQuickActions(person) {
-  return `<section class="people-quick-actions" aria-label="People quick actions">
-    <button class="btn btn-secondary" data-page-jump="assets">${icon("assets")}Assign Asset</button>
-    <button class="btn btn-secondary" data-add="tickets">${icon("tickets")}Create Ticket</button>
-    <button class="btn btn-secondary" data-add="tasks">${icon("tasks")}Create Task</button>
-    <button class="btn btn-secondary" data-add="documents">${icon("documents")}Upload Document</button>
+/* Every "create a login for this person" entry point opens the same account
+   form as User Accounts, pre-linked to that person, rather than a bespoke
+   dialog with its own field set. */
+function openAccountForPerson(personId) {
+  const person = rows("employees").find((row) => row.id === personId);
+  if (!person) return;
+  openModal("users", null, {
+    employeeId: person.id,
+    name: person.name || "",
+    email: person.email || "",
+    accountType: "Employee"
+  });
+}
+
+/* Sits where the old quick-action bar was, between the profile panel and the
+   tabs. What it offers depends on whether the person already has a login:
+   people without one get New Account, people with one get the account actions
+   that used to be buried in the Account tab. */
+function personAccountActions(person) {
+  if (!has("users", "edit") && !has("users", "create")) return "";
+  const user = linkedUserForPerson(person);
+  if (!user) {
+    if (!has("users", "create")) return "";
+    return `<section class="record-card-actions person-account-actions" aria-label="${escapeHtml(trText("Account actions"))}">
+      <button class="btn btn-primary" data-create-person-account="${person.id}">${icon("plus")}${escapeHtml(trText("New Account"))}</button>
+    </section>`;
+  }
+  if (!has("users", "edit")) return "";
+  const enabled = accountStatusLabel(user) === "Enabled";
+  return `<section class="record-card-actions person-account-actions" aria-label="${escapeHtml(trText("Account actions"))}">
+    <button class="btn btn-secondary" data-edit="users" data-id="${user.id}">${icon("edit")}${escapeHtml(trText("Edit"))}</button>
+    <button class="btn btn-secondary" data-reset-user-password="${user.id}">${escapeHtml(trText("Reset Password"))}</button>
+    ${enabled
+      ? `<button class="btn btn-secondary" data-disable-user-account="${user.id}">${escapeHtml(trText("Disable Account"))}</button>`
+      : `<button class="btn btn-secondary" data-unlock-user-account="${user.id}">${escapeHtml(trText("Enable Account"))}</button>`}
   </section>`;
+}
+
+/* Registration moved off the page header into this menu, so the People
+   workspace keeps one place for list-level actions. Both entries are gated on
+   the permission that actually drives them, which keeps IT Staff — who can
+   create people but cannot open Settings — able to register. */
+function peopleActionsButton() {
+  if (!peopleListActions().length) return "";
+  return `<button type="button" class="icon-btn people-actions-toggle" data-people-actions aria-label="${escapeHtml(trText("People actions"))}" title="${escapeHtml(trText("People actions"))}">${icon("settings")}</button>`;
+}
+
+function peopleListActions() {
+  const actions = [];
+  if (has("employees", "create")) actions.push({ attr: 'data-add="employees"', icon: "plus", label: "Register Person" });
+  if (has("employees", "create")) actions.push({ attr: "data-import-people", icon: "attachments", label: "Import Excel" });
+  if (has("employees", "export")) actions.push({ attr: "data-export-people", icon: "download", label: "Export Excel" });
+  if (has("employees", "export")) actions.push({ attr: 'data-export="employees"', icon: "download", label: "Export list (CSV)" });
+  return actions;
+}
+
+/* Excel import/export use the same workbook layout as the customer template:
+   Sheet1 carries the records, dropdown_list_items the allowed values. */
+function exportPeopleWorkbook() {
+  const headers = { "x-user-id": state.user?.id || localStorage.getItem("itcc.userId") || "user_manager" };
+  fetch("/api/employees/export", { headers })
+    .then((response) => {
+      if (!response.ok) throw new Error("Export failed");
+      return response.blob();
+    })
+    .then((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `people-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast(trText("Export Excel"), trText("The workbook has been downloaded."));
+    })
+    .catch((error) => toast(trText("Could not export"), error.message));
+}
+
+function openPeopleImportDialog() {
+  const picker = document.createElement("input");
+  picker.type = "file";
+  picker.accept = ".xlsx";
+  picker.addEventListener("change", async () => {
+    const file = picker.files?.[0];
+    if (!file) return;
+    try {
+      const fileBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+        reader.onerror = () => reject(new Error("Could not read the file"));
+        reader.readAsDataURL(file);
+      });
+      const preview = await api("/api/employees/import", { method: "POST", body: JSON.stringify({ fileBase64, preview: true }) });
+      showPeopleImportPreview(file.name, fileBase64, preview);
+    } catch (error) {
+      toast(trText("Could not import"), error.message);
+    }
+  });
+  picker.click();
+}
+
+function showPeopleImportPreview(fileName, fileBase64, preview) {
+  const summary = preview.summary || {};
+  const rows = [
+    ["Rows read", summary.rowsRead || 0],
+    ["To create", summary.toCreate || 0],
+    ["To update", summary.toUpdate || 0],
+    ["Skipped", summary.skipped || 0]
+  ];
+  const problems = (preview.problems || []).map((problem) => `<li>${escapeHtml(`Row ${problem.row}: ${problem.reason}`)}</li>`).join("");
+  $("#dialogHost").innerHTML = `
+    <div class="modal-backdrop">
+      <form class="modal surface-card people-import-modal" data-people-import-form>
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow">${escapeHtml(trText("Import Excel"))}</p>
+            <h3>${escapeHtml(trText("Import people from Excel"))}</h3>
+            <p class="muted">${escapeHtml(fileName)}</p>
+          </div>
+          <button type="button" class="icon-btn close" data-import-cancel aria-label="${escapeHtml(trText("Cancel"))}">${icon("close")}</button>
+        </div>
+        <div class="modal-fields">
+          <div class="detail-grid">
+            ${rows.map(([label, value]) => `<div class="detail-field"><small>${escapeHtml(trText(label))}</small><strong>${value}</strong></div>`).join("")}
+          </div>
+          ${problems ? `<section class="surface-card"><p class="eyebrow">${escapeHtml(trText("Skipped"))}</p><ul class="import-problem-list">${problems}</ul></section>` : ""}
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-import-cancel>${escapeHtml(trText("Cancel"))}</button>
+          <button type="submit" class="btn btn-primary" ${summary.rowsRead ? "" : "disabled"}>${escapeHtml(trText("Apply import"))}</button>
+        </div>
+      </form>
+    </div>
+  `;
+  const close = () => { $("#dialogHost").innerHTML = ""; };
+  $$("[data-import-cancel]").forEach((button) => button.addEventListener("click", close));
+  $("[data-people-import-form]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submit = $("[data-people-import-form] button[type='submit']");
+    if (submit) { submit.disabled = true; submit.textContent = trText("Apply import"); }
+    try {
+      const result = await api("/api/employees/import", { method: "POST", body: JSON.stringify({ fileBase64 }) });
+      close();
+      await loadState();
+      render();
+      toast(trText("Import complete"), `${result.created} created, ${result.updated} updated.`);
+    } catch (error) {
+      if (submit) submit.disabled = false;
+      toast(trText("Could not import"), error.message);
+    }
+  });
+}
+
+function openPeopleActionsMenu(anchor) {
+  const actions = peopleListActions();
+  if (!actions.length) return;
+  renderFloatingMenu(`<div class="profile-menu">${actions.map((action) => `<button class="menu-item" ${action.attr}>${icon(action.icon)}${escapeHtml(trText(action.label))}</button>`).join("")}</div>`, anchor, { width: 240 });
+  bindPageActions();
 }
 
 function accountWorkspaceDetail(account) {
@@ -4957,7 +6206,7 @@ function peopleTimelineTab(person) {
 }
 
 function relatedRecordCard(name, row, meta = "") {
-  return `<article class="record-card"><div class="record-card-head"><div class="record-icon">${icon(name)}</div><div><strong>${escapeHtml(primaryTitle(name, row))}</strong><span>${escapeHtml(meta || secondaryTitle(name, row))}</span></div></div><div class="record-card-actions"><button class="btn btn-secondary" data-view="${name}" data-id="${row.id}">Open ${escapeHtml(displayLabel(name))}</button></div></article>`;
+  return `<article class="record-card"><div class="record-card-head"><div class="record-icon">${icon(name)}</div><div><strong>${escapeHtml(primaryTitle(name, row))}</strong><span>${escapeHtml(meta || secondaryTitle(name, row))}</span></div></div><div class="record-card-actions"><button class="btn btn-secondary" data-view="${name}" data-id="${row.id}">${escapeHtml(tpl("Open {module}", { module: displayLabel(name) }))}</button></div></article>`;
 }
 
 function eventCardFromTransfer(transfer) {
@@ -5405,7 +6654,7 @@ function employeeKnowledgeBaseCard(row) {
       <p class="muted">${body}</p>
       <div class="kb-card-meta">
         <span class="badge ${row.published ? "success" : "info"}">${row.published ? "Published" : "Draft"}</span>
-        <span>${readingTime(row.body)} min read</span>
+        <span>${escapeHtml(tpl("{n} min read", { n: readingTime(row.body) }))}</span>
         <span>${knowledgeHelpful(row)}</span>
       </div>
       <div class="kb-tags">${(row.tags || []).slice(0, 3).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join("")}</div>
@@ -5557,7 +6806,7 @@ function managerTicketsPage() {
     ${workspaceIdentityHeader("tickets", `<button class="btn btn-primary ticket-v2-primary" data-add="tickets">${icon("plus")}Create Ticket</button>`)}
     <section class="ticket-workspace ticket-workspace-v2">
       <aside class="ticket-workspace-list-panel">
-        <div class="ticket-v2-list-head"><strong>Ticket list</strong><small>${data.length} matching</small></div>
+        <div class="ticket-v2-list-head"><strong>Ticket list</strong><small>${escapeHtml(tpl("{n} matching", { n: data.length }))}</small></div>
         <div class="ticket-workspace-list-tools"><input id="searchBox" placeholder="Search tickets, requester, category..." value="${escapeHtml(state.query)}" /></div>
         <div class="manager-ticket-filters">
           ${select("status", "Status", statuses, (value) => value, (value) => labelize(value))}
@@ -5698,7 +6947,7 @@ function ticketWorkspaceSidePanel(row) {
     ${section("SLA", [["Remaining", ticketSla(row).label], ["Updated", relativeTime(row.updatedAt || row.createdAt)]])}
     <section><h4>Related Records</h4>${relatedButton("Asset", "assets", asset)}${relatedButton("Vendor", "vendors", vendor)}${relatedButton("Contract", "contracts", contract)}</section>
     <section><h4>Knowledge Suggestions</h4><div class="ticket-v2-suggestion-list">${suggestions.map((item) => `<button class="btn btn-secondary" data-open-module="knowledge_base" data-open-id="${item.id}"><span>${escapeHtml(item.title)}</span><small>View</small></button>`).join("") || `<p class="muted compact-empty">No suggestions yet.</p>`}</div></section>
-    <section><h4>Attachments</h4><div class="ticket-v2-side-row"><span>Files</span><strong>${attachments.length} attachment${attachments.length === 1 ? "" : "s"}</strong></div><button class="btn btn-secondary ticket-v2-side-action" type="button" data-ticket-attachments="${row.id}">View all attachments</button></section>
+    <section><h4>Attachments</h4><div class="ticket-v2-side-row"><span>Files</span><strong>${escapeHtml(tpl("{n} attachments", { n: attachments.length }))}</strong></div><button class="btn btn-secondary ticket-v2-side-action" type="button" data-ticket-attachments="${row.id}">View all attachments</button></section>
     <section><h4>Watchers</h4><div class="ticket-v2-watchers">${watcherIds.slice(0, 5).map((id) => `<span class="avatar mini" title="${escapeHtml(look("users", id) || id)}">${escapeHtml(initials(look("users", id) || id))}</span>`).join("") || `<span class="muted">No active watchers</span>`}${watcherIds.length > 5 ? `<strong>+${watcherIds.length - 5}</strong>` : ""}<span class="badge neutral">Coming soon</span></div></section>
   </aside>`;
 }
@@ -5935,7 +7184,7 @@ function taskExecutionSnapshot(task) {
     ["Assigned To", look("users", task.assignedToId) || "Unassigned", "user"],
     ["Due Date", task.dueDate || "Not scheduled", "calendar"],
     ["Progress", `${Number(task.progress || taskProgressFromSubtasks(task) || 0)}%`, "chart"],
-    ["Remaining", remaining === null ? "Not scheduled" : remaining < 0 ? `${Math.abs(remaining)} overdue` : remaining === 0 ? "Due today" : `${remaining} days`, "calendar"]
+    ["Remaining", remaining === null ? "Not scheduled" : remaining < 0 ? tpl("{n} overdue", { n: Math.abs(remaining) }) : remaining === 0 ? "Due today" : tpl("{n} days", { n: remaining }), "calendar"]
   ];
   return `<section class="task-execution-panel">
     <div class="task-execution-head"><p class="eyebrow">Execution Snapshot</p><h4>${escapeHtml(task.title || "Task")}</h4><p class="muted">Owner, assignment, due date, progress, and remaining time for the selected task.</p></div>
@@ -6143,14 +7392,20 @@ function readableEventTitle(event) {
   if (raw.includes("assign")) return "Assignment updated";
   if (raw.includes("comment")) return "Comment added";
   if (raw.includes("attachment") || raw.includes("upload")) return "Attachment uploaded";
-  if (raw.includes("archive")) return `${entity} archived`;
-  if (raw.includes("trash") || raw.includes("delete")) return `${entity} moved to trash`;
-  if (raw.includes("restore")) return `${entity} restored`;
-  if (raw.includes("create") || raw.includes("added")) return `${entity} created`;
-  if (raw.includes("update") || raw.includes("edit")) return `${entity} updated`;
+  if (raw.includes("archive")) return tpl("{entity} archived", { entity });
+  if (raw.includes("trash") || raw.includes("delete")) return tpl("{entity} moved to trash", { entity });
+  if (raw.includes("restore")) return tpl("{entity} restored", { entity });
+  if (raw.includes("create") || raw.includes("added")) return tpl("{entity} created", { entity });
+  if (raw.includes("update") || raw.includes("edit")) return tpl("{entity} updated", { entity });
   if (raw.includes("maintenance")) return "Asset entered maintenance";
   if (raw.includes("renewal") || raw.includes("contract")) return "Contract reminder";
-  return event.title ? labelize(event.title) : `${entity} activity`;
+  if (!event.title) return tpl("{entity} activity", { entity });
+  // Titles like "login users" are an action plus a module; neither half is in
+  // the dictionary as a pair, so translate the words individually.
+  const label = labelize(event.title);
+  const translated = trText(label);
+  if (translated !== label) return translated;
+  return label.split(" ").map((word) => trText(word)).join(" ");
 }
 
 function readableEventDescription(event) {
@@ -6688,7 +7943,7 @@ function knowledgeBaseArticlePage(row) {
         <div class="record-card-actions compact"><span class="badge ${row.published ? "success" : "info"}">${row.published ? "Published" : "Draft"}</span><button class="btn btn-secondary ${row.favorite ? "active" : ""}" data-kb-favorite="${row.id}">${row.favorite ? "Remove Favorite" : "Add Favorite"}</button><button class="btn btn-secondary" data-kb-share="${row.id}">Share</button><button class="btn btn-secondary" data-kb-print="${row.id}">Print</button><button class="btn btn-primary" data-kb-open-ticket="${row.id}">Open Ticket</button></div>
       </div>
       <div class="reading-progress"><span data-reading-progress style="width:0%"></span></div>
-      <p class="muted article-meta">${readingTime(row.body)} min read | Progress <span data-reading-progress-label>0%</span>${updated ? ` | Last updated ${new Date(updated).toLocaleDateString()}` : ""} | Version v${escapeHtml(String(row.version || "1.0"))} | Owner ${escapeHtml(knowledgeOwnerLabel(row))}</p>
+      <p class="muted article-meta">${escapeHtml(tpl("{n} min read", { n: readingTime(row.body) }))} | ${escapeHtml(trText("Progress"))} <span data-reading-progress-label>0%</span>${updated ? ` | ${escapeHtml(tpl("Last updated {date}", { date: new Date(updated).toLocaleDateString(state.lang === "ar" ? "ar" : "en") }))}` : ""} | ${escapeHtml(trText("Version"))} v${escapeHtml(String(row.version || "1.0"))} | ${escapeHtml(trText("Owner"))} ${escapeHtml(knowledgeOwnerLabel(row))}</p>
       <div class="article-body">${escapeHtml(row.body || "No article body available.").replace(/\n/g, "<br>")}</div>
       ${(row.images || []).length ? `<div class="article-images">${row.images.map((item) => `<figure><img src="${escapeHtml(item)}" alt="${escapeHtml(row.title)} image"><figcaption>${escapeHtml(item)}</figcaption></figure>`).join("")}</div>` : ""}
       ${attachments.length ? `<section class="article-section kb-attachment-panel"><div class="section-title"><div><p class="eyebrow">Attachments</p><h3>Article files</h3></div></div><div class="attachment-list">${attachments.map(kbAttachmentCard).join("")}</div></section>` : ""}
@@ -6904,7 +8159,7 @@ function personUserAccountTab(person) {
       </div>
       <div class="record-card-actions account-actions">
         <button class="btn btn-secondary" data-open-linked-account="${user.id}">Open User Account</button>
-        ${has("users", "edit") ? `<button class="btn btn-secondary" data-reset-user-password="${user.id}">Reset Password</button><button class="btn btn-secondary" data-disable-user-account="${user.id}">Disable Login</button><button class="btn btn-secondary" data-unlock-user-account="${user.id}">Unlock</button><button class="btn btn-secondary" data-change-user-role="${user.id}">Change Role</button>` : ""}
+        ${has("users", "edit") ? `<button class="btn btn-secondary" data-change-user-role="${user.id}">Change Role</button>` : ""}
       </div>
     </section>
   `;
@@ -6984,7 +8239,7 @@ function companyDocumentOverview(row) {
           <h3>${escapeHtml(row.title || "Document")}</h3>
           <p class="muted">${escapeHtml(description)}</p>
         </div>
-        ${(row.updatedAt || row.publishDate || row.createdAt) ? `<span class="badge info">Updated ${escapeHtml(relativeTime(row.updatedAt || row.publishDate || row.createdAt))}</span>` : ""}
+        ${(row.updatedAt || row.publishDate || row.createdAt) ? `<span class="badge info">${escapeHtml(tpl("Updated {when}", { when: relativeTime(row.updatedAt || row.publishDate || row.createdAt) }))}</span>` : ""}
       </header>
       <article class="document-body">
         <p>${escapeHtml(body)}</p>
@@ -7178,8 +8433,8 @@ function paginate(name, data) {
 }
 
 function pager(name, total, paged) {
-  if (total <= state.pageSize) return `<div class="table-footer">${total} records</div>`;
-  return `<div class="table-footer"><span>${total} records | page ${paged.page + 1} of ${paged.pages}</span><div><button class="btn btn-secondary" data-page-prev="${name}">Previous</button><button class="btn btn-secondary" data-page-next="${name}">Next</button></div></div>`;
+  if (total <= state.pageSize) return `<div class="table-footer">${escapeHtml(tpl("{n} records", { n: total }))}</div>`;
+  return `<div class="table-footer"><span>${escapeHtml(tpl("{n} records", { n: total }))} | ${escapeHtml(tpl("page {a} of {b}", { a: paged.page + 1, b: paged.pages }))}</span><div><button class="btn btn-secondary" data-page-prev="${name}">Previous</button><button class="btn btn-secondary" data-page-next="${name}">Next</button></div></div>`;
 }
 
 function sortMark(name, col) {
@@ -7235,7 +8490,14 @@ function cellText(name, row, column) {
     unread: () => row.unread ? "Unread" : "Read",
     published: () => row.published === true || row.published === "true" ? "Published" : "Draft"
   };
-  return map[column] ? map[column]() : row[column];
+  if (map[column]) return map[column]();
+  const value = row[column];
+  // Raw ISO timestamps were rendering verbatim ("2026-01-15T08:00:00.000Z").
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]+Z?$/.test(value)) {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) return date.toLocaleString(state.lang === "ar" ? "ar" : "en");
+  }
+  return value;
 }
 
 function badgeClass(value) {
@@ -7695,7 +8957,7 @@ function bindPageActions() {
   $$("[data-command-create]").forEach((button) => button.addEventListener("click", () => openModal(button.dataset.commandCreate)));
   $$("[data-quick-create]").forEach((button) => button.addEventListener("click", () => openQuickCreate(button)));
   $$("[data-edit]").forEach((button) => button.addEventListener("click", () => openModal(button.dataset.edit, rows(button.dataset.edit).find((item) => item.id === button.dataset.id))));
-  $$("[data-create-person-account]").forEach((button) => button.addEventListener("click", () => openPersonAccountDialog(button.dataset.createPersonAccount)));
+  $$("[data-create-person-account]").forEach((button) => button.addEventListener("click", () => openAccountForPerson(button.dataset.createPersonAccount)));
   $$("[data-open-linked-account]").forEach((button) => button.addEventListener("click", () => openAccountWorkspace(button.dataset.openLinkedAccount)));
   $$("[data-open-linked-person]").forEach((button) => button.addEventListener("click", () => openPeopleWorkspace(button.dataset.openLinkedPerson)));
   $$("[data-reset-user-password]").forEach((button) => button.addEventListener("click", () => resetUserPassword(button.dataset.resetUserPassword)));
@@ -7829,6 +9091,9 @@ function bindPageActions() {
     await loadState();
     render();
   }));
+  $$("[data-people-actions]").forEach((button) => button.addEventListener("click", (event) => openPeopleActionsMenu(event.currentTarget)));
+  $$("[data-import-people]").forEach((button) => button.addEventListener("click", openPeopleImportDialog));
+  $$("[data-export-people]").forEach((button) => button.addEventListener("click", exportPeopleWorkbook));
   $$("[data-export]").forEach((button) => button.addEventListener("click", () => exportRows(button.dataset.export)));
   $$("[data-columns]").forEach((button) => button.addEventListener("click", () => openColumns(button.dataset.columns, button)));
   $$("[data-sort]").forEach((button) => button.addEventListener("click", () => {
@@ -8088,7 +9353,7 @@ function renderFloatingMenu(html, anchor, options = {}) {
 
 function openQuickCreate(anchor = $("[data-header-quick-create]") || $("[data-quick-create]")) {
   const menu = ["tickets", "tasks", "assets", "employees", "contracts", "vendors", "documents"].filter((name) => has(name, "create"));
-  renderFloatingMenu(`<div class="profile-menu">${menu.map((name) => `<button class="menu-item" data-add="${name}">${icon(name)}Create ${t(name)}</button>`).join("")}</div>`, anchor, { width: 280 });
+  renderFloatingMenu(`<div class="profile-menu">${menu.map((name) => `<button class="menu-item" data-add="${name}">${icon(name)}${escapeHtml(tpl("Create {module}", { module: singularDisplayLabel(name) }))}</button>`).join("")}</div>`, anchor, { width: 280 });
   bindPageActions();
 }
 
@@ -8117,7 +9382,7 @@ const formPrimaryFields = {
   tickets: ["requesterId", "category", "priority", "assignedToId", "description"],
   tasks: ["title", "ownerId", "assignedToId", "dueDate", "priority"],
   assets: ["type", "brand", "model", "serialNumber", "location", "currentOwnerId", "permanentCustodianId"],
-  employees: ["name", "personType", "departmentId", "jobTitle", "location", "email", "phone", "status"],
+  employees: ["employeeNo", "name", "personType", "departmentId", "jobTitle", "location", "businessUnit", "managerId", "email", "phoneCountryCode", "phone", "status"],
   documents: ["title", "templateType", "approvalStatus", "status"],
   knowledge_base: ["title", "category", "published", "body"],
   contracts: ["name", "type", "vendorId", "startDate", "endDate", "status", "renewalReminderPeriod"],
@@ -8256,7 +9521,7 @@ function openModal(name, row = null, prefill = {}) {
   const advancedFields = fields.filter((field) => field[3]?.advanced && !(field[3]?.itOnly && isEmployeeUser()));
   $(".modal-fields", template).innerHTML = `
     <div class="form-error" data-form-error hidden></div>
-    ${newPersonModal ? newPersonModalHtml(formRow) : newServiceAccountModal ? newServiceAccountModalHtml(formRow) : employeeTicketModal ? employeeTicketWizardHtml() : ""}
+    ${newPersonModal ? newPersonModalHtml(formRow) : newServiceAccountModal ? newAccountModalHtml(formRow) : employeeTicketModal ? employeeTicketWizardHtml() : ""}
     ${employeeTicketModal || newPersonModal || newServiceAccountModal || employeeTaskModal ? "" : genericModalFieldsHtml(name, formRow, fields, Boolean(row))}
     ${employeeTaskModal ? simpleFields.map(([key, label, type, options]) => fieldHtml(key, label, type, formRow, enrichedFieldOptions(key, options))).join("") : ""}
     ${advancedFields.length && employeeTaskModal ? `<details class="advanced-options full"><summary>Additional Details</summary><div class="modal-fields nested">${advancedFields.map(([key, label, type, options]) => fieldHtml(key, label, type, formRow, enrichedFieldOptions(key, options))).join("")}</div></details>` : ""}
@@ -8264,12 +9529,12 @@ function openModal(name, row = null, prefill = {}) {
   if (employeeTicketModal || employeeTaskModal || newPersonModal || newServiceAccountModal) {
     const submit = $(".modal button[type='submit']", template);
     if (submit) {
-      submit.textContent = employeeTicketModal ? "Create Ticket" : employeeTaskModal ? (row ? "Save Task" : "Create Task") : newPersonModal ? "Save Person" : "Create Service Account";
+      submit.textContent = employeeTicketModal ? "Create Ticket" : employeeTaskModal ? (row ? "Save Task" : "Create Task") : newPersonModal ? "Save Person" : "Create Account";
       if (employeeTicketModal || employeeTaskModal) submit.classList.add("large-submit");
     }
   } else {
     const submit = $(".modal button[type='submit']", template);
-    if (submit) submit.textContent = row ? "Save Changes" : `Create ${singularDisplayLabel(name)}`;
+    if (submit) submit.textContent = row ? trText("Save Changes") : tpl("Create {module}", { module: singularDisplayLabel(name) });
   }
   $$(".close", template).forEach((button) => button.addEventListener("click", () => backdrop.remove()));
   $(".modal", template).addEventListener("submit", async (event) => {
@@ -8302,7 +9567,7 @@ function openModal(name, row = null, prefill = {}) {
   wireModalDependencies(name);
   if (employeeTicketModal) wireEmployeeTicketWizard();
   if (employeeTaskModal) wireEmployeeTaskCategory();
-  if (newPersonModal) wirePersonSystemAccess();
+  if (newServiceAccountModal) wireNewAccountModal();
   wireModernSelects();
   wireFileDropzones();
 }
@@ -8366,7 +9631,7 @@ function sanitizePatchBody(name, body, row = null) {
 
 function recordModalTitle(name, row) {
   if (name === "employees" && !row) return "New Person";
-  if (name === "users" && !row) return "New Service Account";
+  if (name === "users" && !row) return "New Account";
   return `${row ? t("edit") : t("add")} ${singularDisplayLabel(name)}`;
 }
 
@@ -8377,108 +9642,172 @@ function newPersonModalHtml(row = {}) {
   };
   return `
     <section class="form-section full">
-      <div class="wizard-section-title"><strong>Basic Information</strong><small class="muted">Create the master People record first. Login access is optional.</small></div>
+      <div class="wizard-section-title"><strong>Basic Information</strong><small class="muted">Create the master People record. Login access is registered from User Accounts.</small></div>
       <div class="form-section-grid person-basic-grid">
-        ${["employeeNo", "name", "personType", "departmentId", "managerId", "jobTitle", "location", "phone", "email", "status"].map(field).join("")}
+        ${["employeeNo", "name", "personType", "departmentId", "managerId", "jobTitle", "location", "businessUnit", "email", "phoneCountryCode", "phone", "status"].map(field).join("")}
       </div>
     </section>
-    ${personSystemAccessHtml(row)}
   `;
 }
 
-function newServiceAccountModalHtml(row = {}) {
-  const field = (key, override = null) => {
-    if (override) return fieldHtml(override[0], override[1], override[2], row, override[3] || {});
-    const found = schemas.users.find((item) => item[0] === key);
-    return found ? fieldHtml(found[0], found[1], found[2], row, found[3] || {}) : "";
+/* ---------------------------------------------------------------------------
+   Login accounts are created from two places: the New Service Account modal
+   and the System Access section of a Person. They used to collect different
+   fields under different input names, which produced user records with
+   different shapes depending on which form was used. This is the single
+   definition both render from.
+
+   `prefix` exists because the Person form already owns `name`, `email` and
+   `status` for the person itself, so its account inputs are namespaced. The
+   fields, labels, order and required rules are identical either way, and
+   normaliseAccountPayload() maps both back to the same server payload.
+--------------------------------------------------------------------------- */
+const ACCOUNT_STATUS_OPTIONS = [
+  ["active", "Enabled"],
+  ["disabled", "Disabled"],
+  ["locked", "Locked"],
+  ["password_expired", "Password Expired"]
+];
+
+// Every account input, in the order both forms render them.
+const ACCOUNT_FIELD_KEYS = ["name", "username", "email", "roleId", "accountType", "status",
+  "password", "confirmPassword", "expiryDate", "employeeId", "requirePasswordChange"];
+
+
+// Both forms funnel through here, so the server receives one payload shape no
+// matter which screen created the account.
+function normaliseAccountPayload(body, prefix = "") {
+  const read = (field) => body[prefix ? prefix + field[0].toUpperCase() + field.slice(1) : field];
+  return {
+    name: String(read("name") || "").trim(),
+    username: String(read("username") || "").trim(),
+    email: String(read("email") || "").trim(),
+    roleId: read("roleId") || "",
+    accountType: read("accountType") || "",
+    status: read("status") || "active",
+    password: String(read("password") || ""),
+    expiryDate: String(read("expiryDate") || ""),
+    employeeId: String(read("employeeId") || ""),
+    requirePasswordChange: read("requirePasswordChange") === true || String(read("requirePasswordChange")) === "true"
   };
+}
+
+function accountFieldsHtml(row = {}, options = {}) {
+  const prefix = options.prefix || "";
+  const key = (name) => (prefix ? prefix + name[0].toUpperCase() + name.slice(1) : name);
+  const schemaField = (name, override = null) => {
+    const found = override || schemas.users.find((item) => item[0] === name);
+    if (!found) return "";
+    let config = found[3] || {};
+    // An account attached to a person is an Employee account; a standalone one
+    // defaults to Service. Same field, context-appropriate starting value.
+    if (found[0] === "accountType" && options.defaultAccountType) {
+      config = { ...config, default: options.defaultAccountType };
+    }
+    return fieldHtml(key(found[0]), found[1], found[2], row, config);
+  };
+  const statusValue = row.status || "active";
+  const statusField = `<label>${fieldLabel(escapeHtml(trText("Account Status")), ' <span class="required">*</span>')}<select name="${key("status")}" required>${ACCOUNT_STATUS_OPTIONS.map(([value, label]) => `<option value="${value}" ${String(statusValue) === value ? "selected" : ""}>${escapeHtml(trText(label))}</option>`).join("")}</select></label>`;
+
+  // On a Person the account is always linked to that person, so the selector is
+  // replaced by a fixed, non-editable statement of the link. The merged
+  // registration form owns the person choice itself and omits it here.
+  const linkedField = options.omitLinkedPerson
+    ? ""
+    : options.lockedPersonLabel
+      ? `<label>${fieldLabel(escapeHtml(trText("Linked Person")), "")}<input value="${escapeHtml(options.lockedPersonLabel)}" disabled></label>`
+      : schemaField("employeeId", ["employeeId", "Linked Person", "employees"]);
+
+  return `
+    ${schemaField("name", ["name", "Account name", null, { required: true }])}
+    ${schemaField("username")}
+    ${schemaField("email")}
+    ${schemaField("roleId")}
+    ${schemaField("accountType")}
+    ${statusField}
+    ${schemaField("password")}
+    ${fieldHtml(key("confirmPassword"), "Confirm Password", "password", row, { required: true })}
+    ${schemaField("expiryDate")}
+    ${linkedField}
+    ${schemaField("requirePasswordChange")}
+  `;
+}
+
+/* One registration page for both kinds of login account. Choosing "Employee"
+   reveals the person picker; choosing "Service" skips people entirely. People
+   records themselves are created in the People module — this form only links
+   an account to one that already exists. Account Details is the same shared
+   field set either way. */
+function newAccountModalHtml(row = {}) {
+  const people = rows("employees").filter((person) => !person.archivedAt && !person.deletedAt);
   return `
     <section class="form-section full">
-      <div class="wizard-section-title"><strong>Account Details</strong><small class="muted">Service and API accounts can exist without a linked person.</small></div>
-      <div class="form-section-grid service-account-grid">
-        ${field("name")}
-        ${field("username")}
-        ${serviceAccountStatusField(row)}
-        ${field("email")}
-        ${field("password")}
-        ${field("confirmPassword", ["confirmPassword", "Confirm Password", "password", { required: true }])}
-        ${field("expiryDate")}
-        ${field("employeeId", ["employeeId", "Linked Person Optional", "employees"])}
-        ${field("roleId")}
-        ${field("accountType")}
-      </div>
-    </section>
-  `;
-}
-
-function serviceAccountStatusField(row = {}) {
-  const value = row.status || "active";
-  const options = [
-    ["active", "Enabled"],
-    ["disabled", "Disabled"],
-    ["locked", "Locked"],
-    ["password_expired", "Password Expired"]
-  ];
-  return `<label>Account Status <span class="required">*</span><select name="status" required>${options.map(([key, label]) => `<option value="${key}" ${String(value) === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>`;
-}
-
-function personSystemAccessHtml(row = {}) {
-  return `
-    <section class="system-access-form full">
-      <div class="wizard-section-title"><strong>System Access</strong><small class="muted">Choose whether this person needs login access.</small></div>
+      <div class="wizard-section-title"><strong>Account Purpose</strong><small class="muted">Who is this login for?</small></div>
       <div class="system-access-choice-grid">
-        <label class="system-access-choice active"><input name="accountAccessMode" type="radio" value="none" checked data-system-access-choice /><span><strong>No Login Account</strong><small>Create only the People master record.</small></span></label>
-        <label class="system-access-choice"><input name="accountAccessMode" type="radio" value="create" data-system-access-choice /><span><strong>Login Account</strong><small>Create sign-in access when Save Person is pressed.</small></span></label>
+        <label class="system-access-choice active"><input name="accountPurpose" type="radio" value="employee" checked data-account-purpose /><span><strong>Employee Account</strong><small>A login that belongs to a person.</small></span></label>
+        <label class="system-access-choice"><input name="accountPurpose" type="radio" value="service" data-account-purpose /><span><strong>Service Account</strong><small>A service or API login with no person behind it.</small></span></label>
       </div>
-      <div class="system-access-fields hidden" data-system-access-fields>
-        <label>Username <span class="required">*</span><input name="accountUsername" placeholder="m.suhaibani" /></label>
-        <label>Role <span class="required">*</span><select name="accountRoleId"><option value=""></option>${rows("roles").map((role) => `<option value="${role.id}">${escapeHtml(role.name)}</option>`).join("")}</select></label>
-        <label>Temporary Password <span class="required">*</span><input name="accountTemporaryPassword" type="password" autocomplete="new-password" /></label>
-        <label>Confirm Password <span class="required">*</span><input name="accountConfirmPassword" type="password" autocomplete="new-password" /></label>
-        <label class="checkbox-field"><span>Require password change on first login</span><input name="accountRequirePasswordChange" type="checkbox" value="true" checked /></label>
-        <label class="checkbox-field"><span>Send welcome email</span><input name="accountSendWelcomeEmail" type="checkbox" value="true" /></label>
-        <div class="account-preview-box full">
-          <p class="eyebrow">Preview</p>
-          <strong>This account will be created when you save.</strong>
-          <div class="detail-grid">
-            <div class="detail-field"><small>Username</small><strong data-account-preview="username">Not set</strong></div>
-            <div class="detail-field"><small>Role</small><strong data-account-preview="role">Not selected</strong></div>
-            <div class="detail-field"><small>Linked To</small><strong>This Person</strong></div>
-            <div class="detail-field"><small>Status</small><strong>Enabled</strong></div>
-          </div>
-        </div>
+    </section>
+
+    <section class="form-section full" data-account-person-section>
+      <div class="wizard-section-title"><strong>Person</strong><small class="muted">Pick the person this login belongs to. Add them in People first if they are not listed.</small></div>
+      <div class="form-section-grid service-account-grid" data-person-existing-fields>
+        <label>${fieldLabel(escapeHtml(trText("Linked Person")), ' <span class="required">*</span>')}<select name="employeeId" data-person-picker><option value=""></option>${people.map((person) => `<option value="${escapeHtml(person.id)}" ${row.employeeId === person.id ? "selected" : ""}>${escapeHtml(person.name)}</option>`).join("")}</select></label>
+      </div>
+    </section>
+
+    <section class="form-section full">
+      <div class="wizard-section-title"><strong>Account Details</strong><small class="muted">Sign-in credentials and role. These fields are the same for every account.</small></div>
+      <div class="form-section-grid service-account-grid">
+        ${accountFieldsHtml(row, { omitLinkedPerson: true })}
       </div>
     </section>
   `;
 }
 
-function wirePersonSystemAccess() {
-  const choices = $$("[data-system-access-choice]", document);
-  const fields = document.querySelector(".modal [data-system-access-fields]");
-  if (!choices.length || !fields) return;
-  const usernamePreview = document.querySelector('.modal [data-account-preview="username"]');
-  const rolePreview = document.querySelector('.modal [data-account-preview="role"]');
-  const username = document.querySelector('.modal input[name="accountUsername"]');
-  const role = document.querySelector('.modal select[name="accountRoleId"]');
-  const syncPreview = () => {
-    if (usernamePreview) usernamePreview.textContent = username?.value?.trim() || "Not set";
-    if (rolePreview) rolePreview.textContent = role?.selectedOptions?.[0]?.textContent?.trim() || "Not selected";
-  };
+
+function wireNewAccountModal() {
+  const modal = document.querySelector(".modal");
+  if (!modal) return;
+  const purposeChoices = $$("[data-account-purpose]", modal);
+  const personSection = modal.querySelector("[data-account-person-section]");
+  if (!purposeChoices.length || !personSection) return;
+
+  const accountName = modal.querySelector('input[name="name"]');
+  const accountEmail = modal.querySelector('input[name="email"]');
+  const picker = modal.querySelector("[data-person-picker]");
+  const accountTypeSelect = modal.querySelector('select[name="accountType"], input[name="accountType"]');
+
+  // Selecting a person fills the account name and email from their record,
+  // until someone types something different.
+  [accountName, accountEmail].forEach((field) => {
+    field?.addEventListener("input", () => { field.dataset.touched = "true"; });
+  });
+  picker?.addEventListener("change", () => {
+    const person = rows("employees").find((item) => item.id === picker.value);
+    if (!person) return;
+    if (accountName && accountName.dataset.touched !== "true") accountName.value = person.name || "";
+    if (accountEmail && accountEmail.dataset.touched !== "true") accountEmail.value = person.email || "";
+  });
+
   const sync = () => {
-    const create = choices.some((choice) => choice.checked && choice.value === "create");
-    fields.classList.toggle("hidden", !create);
-    choices.forEach((choice) => choice.closest(".system-access-choice")?.classList.toggle("active", choice.checked));
-    $$("input, select", fields).forEach((input) => {
-      if (["accountUsername", "accountRoleId", "accountTemporaryPassword", "accountConfirmPassword"].includes(input.name)) input.required = create;
-      input.disabled = !create;
-    });
-    syncPreview();
+    const isEmployee = (purposeChoices.find((choice) => choice.checked)?.value || "employee") === "employee";
+    personSection.classList.toggle("hidden", !isEmployee);
+    if (picker) {
+      picker.disabled = !isEmployee;
+      picker.required = isEmployee;
+      if (!isEmployee) picker.value = "";
+    }
+    purposeChoices.forEach((choice) => choice.closest(".system-access-choice")?.classList.toggle("active", choice.checked));
+    if (accountTypeSelect && !accountTypeSelect.dataset.touched) {
+      accountTypeSelect.value = isEmployee ? "Employee" : "Service";
+    }
   };
-  choices.forEach((choice) => choice.addEventListener("change", sync));
-  username?.addEventListener("input", syncPreview);
-  role?.addEventListener("change", syncPreview);
+  accountTypeSelect?.addEventListener("change", () => { accountTypeSelect.dataset.touched = "true"; });
+  purposeChoices.forEach((choice) => choice.addEventListener("change", sync));
   sync();
 }
+
 
 function employeeTicketWizardHtml() {
   return `
@@ -8509,7 +9838,7 @@ function employeeTicketWizardHtml() {
       </section>
       <section class="wizard-step" data-more-information-step hidden>
         <details class="more-information" data-more-information>
-          <summary>More Information <span>(Optional)</span></summary>
+          <summary><span>More Information</span> <span>(Optional)</span></summary>
           <div class="more-information-fields">
             <label><span>Description <span class="required" data-description-required hidden>*</span></span><textarea name="description" placeholder="Tell IT what happened, what you expected, and anything you already tried."></textarea></label>
             ${fieldHtml("employeeAttachment", "Attachment", "file", null)}
@@ -8591,10 +9920,10 @@ function wireEmployeeTicketWizard() {
       serviceCustomRows.innerHTML = "";
       return;
     }
-    serviceTitle.textContent = config.title;
-    serviceHelper.textContent = config.helper;
-    serviceCustomNameLabel.textContent = config.customFieldLabel;
-    addServiceCustom.textContent = `+ Add Another ${config.addLabel}`;
+    serviceTitle.textContent = trText(config.title);
+    serviceHelper.textContent = trText(config.helper);
+    serviceCustomNameLabel.textContent = trText(config.customFieldLabel);
+    addServiceCustom.textContent = tpl("+ Add Another {item}", { item: trText(config.addLabel) });
     serviceOptions.innerHTML = config.items.map((item) => `<label class="equipment-chip"><input type="checkbox" name="employeeServiceItem" value="${escapeHtml(item)}"><span>${escapeHtml(item)}</span></label>`).join("");
     serviceCustomRows.innerHTML = "";
     $$("[name=\"employeeServiceItem\"]", serviceStep).forEach((input) => input.addEventListener("change", syncServiceFields));
@@ -8875,13 +10204,13 @@ function fieldHtml(key, label, type, row, options = {}) {
     if (String(type || "").startsWith("lookup_multi:")) {
       const lookupType = type.split(":")[1];
       const selected = new Set(Array.isArray(row?.[baseKey]) ? row[baseKey] : String(value || "").split(",").map((item) => item.trim()).filter(Boolean));
-      return `<label class="${full}">${label}${required}<select name="${key}" multiple>${lookupOptions(lookupType, Boolean(row)).map((option) => `<option ${selected.has(lookupValue(option)) || selected.has(option.nameEn) ? "selected" : ""} value="${escapeHtml(lookupValue(option))}">${escapeHtml(lookupLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
+      return `<label class="${full}">${fieldLabel(label, required)}<select name="${key}" multiple>${lookupOptions(lookupType, Boolean(row)).map((option) => `<option ${selected.has(lookupValue(option)) || selected.has(option.nameEn) ? "selected" : ""} value="${escapeHtml(lookupValue(option))}">${escapeHtml(lookupLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
     }
-    return `<label class="${full}">${label}${required}<textarea name="${key}"${placeholder}>${escapeHtml((row?.[baseKey] || []).join(", "))}</textarea>${describedBy}</label>`;
+    return `<label class="${full}">${fieldLabel(label, required)}<textarea name="${key}"${placeholder}>${escapeHtml((row?.[baseKey] || []).join(", "))}</textarea>${describedBy}</label>`;
   }
-  if (type === "textarea") return `<label class="full">${label}${required}<textarea name="${key}"${placeholder}>${escapeHtml(value)}</textarea>${describedBy}</label>`;
-  if (type === "file") return `<label class="full file-dropzone">${label}${required}<span class="dropzone-box">${icon("attachments")}<strong>Drop a file here or browse</strong><small data-file-name data-default-text="${escapeHtml(options.help || "PDF, image, Word, or Excel file")}">${escapeHtml(options.help || "PDF, image, Word, or Excel file")}</small></span><input name="${key}" type="file" accept=".pdf,image/*,.doc,.docx,.xls,.xlsx" />${describedBy}</label>`;
-  if (type === "checkbox") return `<label class="checkbox-field"><span>${label}${required}</span><input name="${key}" type="checkbox" value="true" ${value === true || value === "true" ? "checked" : ""} /></label>`;
+  if (type === "textarea") return `<label class="full">${fieldLabel(label, required)}<textarea name="${key}"${placeholder}>${escapeHtml(value)}</textarea>${describedBy}</label>`;
+  if (type === "file") return `<label class="full file-dropzone">${fieldLabel(label, required)}<span class="dropzone-box">${icon("attachments")}<strong>Drop a file here or browse</strong><small data-file-name data-default-text="${escapeHtml(options.help || "PDF, image, Word, or Excel file")}">${escapeHtml(options.help || "PDF, image, Word, or Excel file")}</small></span><input name="${key}" type="file" accept=".pdf,image/*,.doc,.docx,.xls,.xlsx" />${describedBy}</label>`;
+  if (type === "checkbox") return `<label class="checkbox-field"><span>${fieldLabel(label, required)}</span><input name="${key}" type="checkbox" value="true" ${value === true || value === "true" ? "checked" : ""} /></label>`;
   if (type === "info") return `<div class="form-help full"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(options.help || "")}</span></div>`;
   if (type === "employee_ticket_category") {
     return modernSelectHtml(key, label, value, Object.keys(employeeTicketCategories).map((option) => ({ value: option, label: option, icon: employeeTicketCategoryIcon(option) })), { required: options.required, describedBy, placeholder: "Search request categories", full });
@@ -8901,57 +10230,57 @@ function fieldHtml(key, label, type, row, options = {}) {
       const selectedValue = lookupType === "my_task_category" && value && !employeeTaskBuiltInCategories.includes(String(value)) && String(value) !== "Other" ? "Other" : value;
       return modernSelectHtml(key, label, selectedValue, modernOptions, { required: options.required, describedBy, placeholder: `Select ${label.toLowerCase()}`, full, selectOnly: true });
     }
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${lookupOptions(lookupType, Boolean(row)).map((option) => `<option ${String(value) === String(lookupValue(option)) || String(value) === String(option.nameEn) ? "selected" : ""} value="${escapeHtml(lookupValue(option))}">${escapeHtml(lookupLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${lookupOptions(lookupType, Boolean(row)).map((option) => `<option ${String(value) === String(lookupValue(option)) || String(value) === String(option.nameEn) ? "selected" : ""} value="${escapeHtml(lookupValue(option))}">${escapeHtml(lookupLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "templates") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${(state.db.formTemplates || []).filter((tpl) => !tpl.archivedAt && !tpl.deletedAt).map((option) => `<option ${value === option.name ? "selected" : ""} value="${escapeHtml(option.name)}">${escapeHtml(option.name)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${(state.db.formTemplates || []).filter((tpl) => !tpl.archivedAt && !tpl.deletedAt).map((option) => `<option ${value === option.name ? "selected" : ""} value="${escapeHtml(option.name)}">${escapeHtml(option.name)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "lookup_types") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${lookupListTypes().map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(labelize(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${lookupListTypes().map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(labelize(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "person_types") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}>${personTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}>${personTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "account_types") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}>${accountTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}>${accountTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "asset_statuses") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}>${assetStatuses.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(assetStatusLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}>${assetStatuses.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(assetStatusLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "asset_attention") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}>${assetAttentionLevels.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(labelize(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}>${assetAttentionLevels.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(labelize(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "holder_types") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}>${assetHolderTypeValues.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}>${assetHolderTypeValues.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "disposal_reasons") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetDisposalReasons.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetDisposalReasons.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "disposed_to_types") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetDisposedToTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetDisposedToTypes.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "settlement_statuses") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetSettlementStatuses.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${assetSettlementStatuses.map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "modules") {
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${modules.filter((module) => module !== "dashboard").map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(t(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${modules.filter((module) => module !== "dashboard").map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(t(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (String(type || "").startsWith("linked_record:")) {
     const typeField = type.split(":")[1];
     const linkedType = row?.[typeField] || "";
-    return `<label>${label}${required}<select name="${key}" data-linked-record="${typeField}" data-selected="${escapeHtml(value)}"><option value=""></option>${linkedRecordOptions(linkedType).map((option) => `<option ${value === option.id ? "selected" : ""} value="${option.id}">${escapeHtml(linkedRecordLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" data-linked-record="${typeField}" data-selected="${escapeHtml(value)}"><option value=""></option>${linkedRecordOptions(linkedType).map((option) => `<option ${value === option.id ? "selected" : ""} value="${option.id}">${escapeHtml(linkedRecordLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (["users", "it_users", "roles", "employees", "employee_assets", "departments", "vendors", "assets", "documents"].includes(type)) {
     const optionRows = entityOptions(type);
-    return `<label>${label}${required}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${optionRows.map((option) => `<option ${value === option.id ? "selected" : ""} value="${option.id}">${escapeHtml(option.name || option.assetNumber || option.title || option.email)}</option>`).join("")}</select>${describedBy}</label>`;
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${optionRows.map((option) => `<option ${value === option.id ? "selected" : ""} value="${option.id}">${escapeHtml(option.name || option.assetNumber || option.title || option.email)}</option>`).join("")}</select>${describedBy}</label>`;
   }
-  return `<label class="${full}">${label}${required}<input name="${key}" type="${type || "text"}" value="${escapeHtml(value)}" ${options.required ? "required" : ""}${placeholder} />${describedBy}</label>`;
+  return `<label class="${full}">${fieldLabel(label, required)}<input name="${key}" type="${type || "text"}" value="${escapeHtml(value)}" ${options.required ? "required" : ""}${placeholder} />${describedBy}</label>`;
 }
 
 function modernSelectHtml(key, label, value, options, config = {}) {
   const selected = options.find((option) => String(option.value) === String(value) || String(option.label) === String(value));
   const required = config.required ? ` <span class="required">*</span>` : "";
-  const placeholder = config.placeholder || `Search ${label.toLowerCase()}`;
+  const placeholder = config.placeholder || tpl("Search {module}", { module: label });
   return `
     <label class="modern-select-field ${config.full || ""}" data-modern-select ${config.selectOnly ? 'data-select-only="true"' : ""}>
       <span>${escapeHtml(label)}${required}</span>
@@ -9007,15 +10336,27 @@ function serviceCustomItems(form) {
 
 function validateForm(form, name, row = null) {
   const data = Object.fromEntries(new FormData(form).entries());
+  // One rule set for login accounts, whichever form is collecting them.
+  const validateAccountFields = (prefix) => {
+    const read = (field) => String(data[prefix ? prefix + field[0].toUpperCase() + field.slice(1) : field] || "").trim();
+    if (!read("name")) return "Account name is required.";
+    if (!read("username")) return "Username is required.";
+    if (!read("roleId")) return "Role is required.";
+    if (!read("accountType")) return "Account type is required.";
+    if (!read("password")) return "Password is required.";
+    if (!read("confirmPassword")) return "Confirm Password is required.";
+    if (read("password") !== read("confirmPassword")) return "Password and Confirm Password must match.";
+    return "";
+  };
   if (name === "employees" && !row && data.accountAccessMode === "create") {
-    if (!String(data.accountUsername || "").trim()) return "Username is required.";
-    if (!String(data.accountRoleId || "").trim()) return "Role is required.";
-    if (!String(data.accountTemporaryPassword || "").trim()) return "Temporary Password is required.";
-    if (String(data.accountTemporaryPassword || "") !== String(data.accountConfirmPassword || "")) return "Temporary Password and Confirm Password must match.";
+    const problem = validateAccountFields("account");
+    if (problem) return problem;
   }
   if (name === "users" && !row) {
-    if (!String(data.confirmPassword || "").trim()) return "Confirm Password is required.";
-    if (String(data.password || "") !== String(data.confirmPassword || "")) return "Password and Confirm Password must match.";
+    const purpose = data.accountPurpose || "employee";
+    if (purpose === "employee" && !String(data.employeeId || "").trim()) return "Choose the person this account belongs to.";
+    const problem = validateAccountFields("");
+    if (problem) return problem;
   }
   if (name === "tickets" && isEmployeeUser() && !row) {
     if (!String(data.employeeMainCategory || "").trim()) return "Main Category is required.";
@@ -9112,31 +10453,22 @@ function formToObject(form, name, row = null) {
   }
   if (name === "employees") {
     if (body.accountAccessMode === "create") {
-      body.systemAccess = {
-        createLogin: true,
-        username: String(body.accountUsername || "").trim(),
-        email: String(body.accountEmail || "").trim(),
-        roleId: body.accountRoleId,
-        temporaryPassword: body.accountTemporaryPassword,
-        expiryDate: body.accountExpiryDate || "",
-        requirePasswordChange: Boolean(body.accountRequirePasswordChange),
-        sendWelcomeEmail: Boolean(body.accountSendWelcomeEmail),
-        status: body.accountEnabled === "false" ? "disabled" : "active"
-      };
+      body.systemAccess = { createLogin: true, ...normaliseAccountPayload(body, "account") };
     }
     delete body.accountAccessMode;
     delete body.accountCreateLogin;
-    delete body.accountUsername;
-    delete body.accountEmail;
-    delete body.accountRoleId;
+    ACCOUNT_FIELD_KEYS.forEach((field) => { delete body["account" + field[0].toUpperCase() + field.slice(1)]; });
     delete body.accountTemporaryPassword;
-    delete body.accountConfirmPassword;
-    delete body.accountExpiryDate;
     delete body.accountEnabled;
-    delete body.accountRequirePasswordChange;
     delete body.accountSendWelcomeEmail;
   }
-  if (name === "users") delete body.confirmPassword;
+  if (name === "users") {
+    const purpose = body.accountPurpose || "employee";
+    Object.assign(body, normaliseAccountPayload(body, ""));
+    if (purpose === "service") body.employeeId = "";
+    delete body.confirmPassword;
+    delete body.accountPurpose;
+  }
   if (name === "tickets" && !body.status) body.status = "open";
   if (name === "tickets" && body.relatedAssetId) {
     body.relatedType = "asset";
@@ -9396,39 +10728,6 @@ function accountPayloadFromForm(form) {
   };
 }
 
-function openPersonAccountDialog(personId) {
-  const person = rows("employees").find((row) => row.id === personId);
-  if (!person) return;
-  $("#dialogHost").innerHTML = `
-    <div class="modal-backdrop">
-      <form class="confirm-card surface-card account-dialog" data-person-account-form="${person.id}">
-        <p class="eyebrow">System Access</p>
-        <h3>Create login account</h3>
-        <p class="muted">Create a linked login account for ${escapeHtml(person.name)}.</p>
-        <label>Username <span class="required">*</span><input name="username" required placeholder="m.suhaibani"></label>
-        <label>Email <small>(optional)</small><input name="email" type="email" value="${escapeHtml(person.email || "")}"></label>
-        <label>Role <span class="required">*</span><select name="roleId" required><option value=""></option>${rows("roles").map((role) => `<option value="${role.id}">${escapeHtml(role.name)}</option>`).join("")}</select></label>
-        <label>Temporary Password <span class="required">*</span><input name="temporaryPassword" type="password" required></label>
-        <label>Expiry Date <small>(optional)</small><input name="expiryDate" type="date"></label>
-        <label class="checkbox-field"><span>Require password change on first login</span><input name="requirePasswordChange" type="checkbox" value="true" checked></label>
-        <div class="modal-actions"><button class="btn btn-secondary" type="button" data-account-dialog-cancel>Cancel</button><button class="btn btn-primary" type="submit">Create Account</button></div>
-      </form>
-    </div>
-  `;
-  $("[data-account-dialog-cancel]")?.addEventListener("click", () => $("#dialogHost").innerHTML = "");
-  $("[data-person-account-form]")?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    try {
-      await api(`/api/people/${person.id}/account`, { method: "POST", body: JSON.stringify(accountPayloadFromForm(event.currentTarget)) });
-      $("#dialogHost").innerHTML = "";
-      toast("Account created", "The login account is linked to this person.");
-      await loadState();
-      render();
-    } catch (error) {
-      toast("Could not create account", error.message);
-    }
-  });
-}
 
 async function resetUserPassword(userId) {
   const password = await textDialog("Reset password", "Enter a new temporary password.", "");
@@ -9610,7 +10909,7 @@ $("#notificationsButton").addEventListener("click", (event) => {
 
 document.addEventListener("click", (event) => {
   if (!event.target.closest("[data-modern-select]")) closeModernSelects();
-  if (!event.target.closest("#menuHost, #profileButton, #notificationsButton, [data-columns], [data-quick-create], [data-header-quick-create], [data-asset-workflow], [data-contract-workflow], [data-vendor-workflow], [data-kb-workflow]")) $("#menuHost").innerHTML = "";
+  if (!event.target.closest("#menuHost, #profileButton, #notificationsButton, [data-columns], [data-quick-create], [data-header-quick-create], [data-people-actions], [data-asset-workflow], [data-contract-workflow], [data-vendor-workflow], [data-kb-workflow]")) $("#menuHost").innerHTML = "";
 });
 
 document.addEventListener("keydown", (event) => {
@@ -9630,6 +10929,7 @@ window.addEventListener("scroll", () => {
 
 loadState().then(() => {
   applyPreferences();
+  watchOverlayLocalization();
   document.body.classList.remove("auth-loading");
   $("#authSplash")?.classList.add("hidden");
   if (localStorage.getItem("itcc.userId") && state.user) {

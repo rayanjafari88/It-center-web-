@@ -128,7 +128,7 @@ function apiTests() {
       assertStatus(patched, 200, "Admin can update user");
     }),
     test("API-EMPLOYEES-001", "api", "People", "IT Manager", "High", async (ctx) => {
-      const created = await ctx.asManager({ method: "POST", path: "/api/employees", body: { fullName: `${PREFIX} Person`, name: `${PREFIX} Person`, email: "qa.auto.person@example.test", department: "QA", jobTitle: "Tester", status: "active", personType: "Employee" } });
+      const created = await ctx.asManager({ method: "POST", path: "/api/employees", body: { fullName: `${PREFIX} Person`, name: `${PREFIX} Person`, employeeNo: `QA-${Date.now()}`, email: "qa.auto.person@example.test", department: "QA", jobTitle: "Tester", status: "active", personType: "Employee" } });
       assertStatus(created, 201, "Manager can create employee");
       const patched = await ctx.asManager({ method: "PATCH", path: `/api/employees/${created.data.id}`, body: { location: "QA Lab Updated" } });
       assertStatus(patched, 200, "Manager can edit employee");

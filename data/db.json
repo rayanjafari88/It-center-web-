@@ -935,7 +935,7 @@
       "name": "Omar IT Staff",
       "username": "staff",
       "email": "staff@itcc.local",
-      "password": "manager123",
+      "password": "staff123",
       "roleId": "role_staff",
       "status": "active",
       "accountType": "Employee",

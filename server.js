@@ -2,6 +2,11 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const {
+  analyseImport: analysePeopleImport,
+  applyImport: applyPeopleImport,
+  buildExport: buildPeopleExport
+} = require("./lib/people-excel");
 
 const PORT = Number(process.env.PORT || 4173);
 const ROOT = __dirname;
@@ -2099,8 +2104,21 @@ function nextRecordNumber(db, collectionName, field, prefix) {
   return candidate;
 }
 
+function normalizeEmployeeNo(value) {
+  return String(value ?? "").trim().toLowerCase();
+}
+
 function normalizeUsername(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+// Shared fallback when the form did not send an explicit account type. The
+// meaningful distinction is whether the account belongs to a real person, so
+// both creation paths resolve it the same way.
+function resolveAccountType(db, payload, hasLinkedPerson) {
+  if (payload.accountType) return payload.accountType;
+  if (!hasLinkedPerson) return "Service";
+  return accountTypeForRole(db, payload.roleId, payload.expiryDate);
 }
 
 function accountTypeForRole(db, roleId, expiryDate = "") {
@@ -2126,17 +2144,20 @@ function createLinkedUserAccount(db, req, person, payload) {
   const validation = validateAccountPayload(db, payload);
   if (validation.error) return validation;
   if (!String(payload.temporaryPassword || payload.password || "").trim()) return { error: "Temporary password is required", status: 400 };
+  // Same field set, order and defaults as prepareUserAccountBody(), so an
+  // account created from a Person is indistinguishable from one created in the
+  // New Service Account modal.
   const user = {
     id: id("user"),
-    name: person.name,
+    name: String(payload.name || person.name || "").trim(),
     username: validation.username,
     email: String(payload.email || person.email || "").trim(),
     password: String(payload.temporaryPassword || payload.password),
     roleId: payload.roleId,
     status: payload.status || "active",
-    accountType: payload.accountType || accountTypeForRole(db, payload.roleId, payload.expiryDate),
+    accountType: resolveAccountType(db, payload, true),
     employeeId: person.id,
-    expiryDate: payload.expiryDate || "",
+    expiryDate: String(payload.expiryDate || ""),
     requirePasswordChange: payload.requirePasswordChange !== false,
     createdAt: now(),
     updatedAt: now(),
@@ -2152,10 +2173,16 @@ function prepareUserAccountBody(db, body) {
   const validation = validateAccountPayload(db, next);
   if (validation.error) return validation;
   if (!String(next.password || "").trim()) return { error: "Password is required", status: 400 };
+  next.name = String(next.name || "").trim();
   next.username = validation.username;
+  next.email = String(next.email || "").trim();
   next.status = next.status || "active";
-  next.accountType = next.accountType || "Service";
-  next.requirePasswordChange = Boolean(next.requirePasswordChange);
+  next.accountType = resolveAccountType(db, next, Boolean(next.employeeId));
+  next.employeeId = String(next.employeeId || "");
+  next.expiryDate = String(next.expiryDate || "");
+  // Was Boolean(...), which defaulted to false here while the Person path
+  // defaulted to true — the same checkbox produced opposite stored values.
+  next.requirePasswordChange = next.requirePasswordChange !== false;
   next.notificationPreferences = defaultNotificationPreferences({ roleId: next.roleId });
   return { body: next };
 }
@@ -2295,6 +2322,46 @@ async function handleApi(req, res) {
     audit(db, req, "login", "users", user.id, null, { email: user.email });
     writeDb(db);
     return send(res, 200, { user: stripInternal(user), role: db.roles.find((role) => role.id === user.roleId) });
+  }
+
+  // --- People Excel import / export -------------------------------------
+  if (req.method === "GET" && resource === "employees" && resourceId === "export") {
+    if (!can(db, user, "employees", "view")) return send(res, 403, { error: "Forbidden" });
+    const file = buildPeopleExport(db);
+    res.writeHead(200, {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": `attachment; filename="people-${new Date().toISOString().slice(0, 10)}.xlsx"`,
+      "Content-Length": file.length
+    });
+    return res.end(file);
+  }
+
+  if (req.method === "POST" && resource === "employees" && resourceId === "import") {
+    if (!can(db, user, "employees", "create")) return send(res, 403, { error: "Forbidden" });
+    const body = await readBody(req);
+    if (!body.fileBase64) return send(res, 400, { error: "No file received" });
+    let analysis;
+    try {
+      analysis = analysePeopleImport(db, Buffer.from(String(body.fileBase64), "base64"));
+    } catch (error) {
+      return send(res, 400, { error: error.message || "Could not read the workbook" });
+    }
+    if (body.preview) {
+      return send(res, 200, {
+        preview: true,
+        summary: analysis.summary,
+        problems: analysis.problems.slice(0, 20),
+        sample: analysis.rows.slice(0, 5).map((row) => ({
+          employeeNo: row.employeeNo, name: row.name, department: row.department,
+          jobTitle: row.jobTitle, email: row.email, action: row.__existingId ? "update" : "create"
+        }))
+      });
+    }
+    if (!analysis.rows.length) return send(res, 400, { error: "Nothing to import" });
+    const result = applyPeopleImport(db, analysis, { newId: id, now });
+    audit(db, req, "import", "employees", "bulk", null, result);
+    writeDb(db);
+    return send(res, 200, { imported: true, ...result, summary: analysis.summary });
   }
 
   if (req.method === "GET" && resource === "state") {
@@ -2684,6 +2751,15 @@ async function handleApi(req, res) {
     if (resource === "assets" && body.serialNumber && db.assets.some((asset) => !asset.deletedAt && asset.serialNumber && asset.serialNumber.toLowerCase() === String(body.serialNumber).toLowerCase())) {
       return send(res, 409, { error: "Serial number already exists" });
     }
+    // Employee number is the People key: the Excel import matches on it, so a
+    // duplicate would make two rows indistinguishable on the next import.
+    if (resource === "employees") {
+      const employeeNo = normalizeEmployeeNo(body.employeeNo);
+      if (!employeeNo) return send(res, 400, { error: "Employee number is required" });
+      if (db.employees.some((person) => !person.deletedAt && normalizeEmployeeNo(person.employeeNo) === employeeNo)) {
+        return send(res, 409, { error: `Employee number ${body.employeeNo} already exists` });
+      }
+    }
     if (resource === "transfers") {
       const transferAsset = db.assets.find((asset) => asset.id === body.assetId);
       const transferAction = String(body.movementType || body.action || "").toLowerCase();
@@ -2913,6 +2989,13 @@ async function handleApi(req, res) {
     }
     if (resource === "assets" && body.serialNumber && db.assets.some((asset) => asset.id !== row.id && !asset.deletedAt && asset.serialNumber && asset.serialNumber.toLowerCase() === String(body.serialNumber).toLowerCase())) {
       return send(res, 409, { error: "Serial number already exists" });
+    }
+    if (resource === "employees" && body.employeeNo !== undefined) {
+      const employeeNo = normalizeEmployeeNo(body.employeeNo);
+      if (!employeeNo) return send(res, 400, { error: "Employee number is required" });
+      if (db.employees.some((person) => person.id !== row.id && !person.deletedAt && normalizeEmployeeNo(person.employeeNo) === employeeNo)) {
+        return send(res, 409, { error: `Employee number ${body.employeeNo} already exists` });
+      }
     }
     if (resource === "assets" && body.assetNumber && db.assets.some((asset) => asset.id !== row.id && !asset.deletedAt && String(asset.assetNumber || "").toLowerCase() === String(body.assetNumber).toLowerCase())) {
       return send(res, 409, { error: "Asset number already exists" });

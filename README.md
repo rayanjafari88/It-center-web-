@@ -22,7 +22,7 @@ IT Command Center V1 is an enterprise IT operations prototype for managing emplo
 | --- | --- | --- |
 | System Admin | `admin` | `admin123` |
 | IT Manager | `manager` | `manager123` |
-| IT Staff | `staff` | `manager123` |
+| IT Staff | `staff` | `staff123` |
 | Employee | `employee` | `admin123` |
 
 ## Getting Started

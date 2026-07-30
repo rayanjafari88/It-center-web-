@@ -1,3 +1,11 @@
-node_modules/
+﻿node_modules/
 qa/reports/playwright-artifacts/
 qa/reports/playwright-html/
+
+# localisation audit output
+i18n-report.json
+i18n-needs.json
+i18n-needs.txt
+i18n-modals.txt
+.shots/
+*.xlsx

@@ -9,7 +9,7 @@ test("people workspace create, view, edit, search and employee restriction", asy
   const created = await api(page, "/api/employees", {
     method: "POST",
     userId: users.manager.id,
-    body: { fullName: "QA_AUTO Browser Person", name: "QA_AUTO Browser Person", email: "qa.auto.browser.person@example.test", department: "QA", jobTitle: "Tester", status: "active", personType: "Employee" }
+    body: { fullName: "QA_AUTO Browser Person", name: "QA_AUTO Browser Person", employeeNo: `QA-BROWSER-${Date.now()}`, email: "qa.auto.browser.person@example.test", department: "QA", jobTitle: "Tester", status: "active", personType: "Employee" }
   });
   expect(created.status).toBe(201);
 
