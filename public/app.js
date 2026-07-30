@@ -1769,16 +1769,48 @@ const employeeNavGroups = [
   { id: "employee", label: "Workspace", items: ["employee_portal", "tickets", "assets", "tasks", "documents", "knowledge_base"] }
 ];
 
-const employeeTicketCategories = {
-  "Accounts & Access": ["Password Reset", "Account Locked", "MFA Issue", "Email Access", "Shared Folder Access"],
-  "Hardware & Devices": ["Laptop", "Desktop", "Monitor", "Printer", "Mobile Device", "Keyboard / Mouse", "Scanner", "Docking Station", "Headset", "Other Device"],
-  "Software & Applications": ["Outlook", "Teams", "ERP", "Office", "Browser", "PDF Software", "Other Application"],
-  "Network & Connectivity": ["Internet", "WiFi", "VPN", "Shared Folder", "Network Drive", "Other Network Issue"],
-  "Service Requests": ["New Laptop", "New Software", "Software Installation", "Access Request", "License Request", "Equipment Request", "Other Request"],
-  "General Questions": ["Other"]
-};
+// Ticket categories live in db.lookupItems as a two-level tree: parent rows have
+// parentCode === "", child rows carry their parent's code. Admins manage them from
+// Settings > Lookup Management without a code change.
+function ticketCategoryItems(includeInactive = false) {
+  return (state.db.lookupItems || [])
+    .filter((item) => item.type === "ticket_category" && (includeInactive || item.active !== false) && !item.archivedAt && !item.deletedAt)
+    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0) || String(a.nameEn).localeCompare(String(b.nameEn)));
+}
 
+function ticketCategoryParents() {
+  return ticketCategoryItems().filter((item) => !item.parentCode);
+}
+
+function ticketCategoryChildren(parentCode) {
+  return parentCode ? ticketCategoryItems().filter((item) => item.parentCode === parentCode) : [];
+}
+
+function ticketCategoryByCode(code, includeInactive = true) {
+  return code ? ticketCategoryItems(includeInactive).find((item) => item.code === String(code)) || null : null;
+}
+
+function ticketCategoryParentByName(name) {
+  const wanted = String(name || "").trim().toLowerCase();
+  return ticketCategoryParents().find((item) => [item.nameEn, item.nameAr].some((label) => String(label || "").trim().toLowerCase() === wanted)) || null;
+}
+
+function ticketCategoryLabel(code) {
+  const item = ticketCategoryByCode(code);
+  if (!item) return "";
+  const parent = item.parentCode ? ticketCategoryByCode(item.parentCode) : null;
+  return parent ? `${lookupLabel(parent)} / ${lookupLabel(item)}` : lookupLabel(item);
+}
+
+// Keyed by ticket_category parent code, with the pre-migration display names kept
+// as aliases so custom or renamed categories still resolve an icon.
 const employeeTicketCategoryIcons = {
+  accounts_access: "key_round",
+  hardware_devices: "laptop",
+  software_applications: "app_window",
+  network_connectivity: "network",
+  service_requests: "wrench",
+  general_questions: "circle_help",
   "Accounts & Access": "key_round",
   "Hardware & Devices": "laptop",
   "Software & Applications": "app_window",
@@ -1787,12 +1819,13 @@ const employeeTicketCategoryIcons = {
   "General Questions": "circle_help"
 };
 
+// Keyed by ticket_category child code.
 const employeeServiceRequestOptions = {
-  "Equipment Request": { title: "Equipment requested", helper: "Select everything you need. IT will receive one request.", itemLabel: "item", customFieldLabel: "Item name", addLabel: "Item", outputLabel: "Equipment requested", items: ["Laptop", "Monitor", "Keyboard", "Mouse", "USB Drive", "HDMI Cable", "Ethernet Cable", "Docking Station", "Webcam", "Headset", "Other Item"] },
-  "License Request": { title: "Licenses requested", helper: "Select every license you need in this request.", itemLabel: "license", customFieldLabel: "License name", addLabel: "License", outputLabel: "Licenses requested", items: ["Microsoft Project", "Visio", "Adobe Acrobat", "AutoCAD", "Other License"] },
-  "Software Installation": { title: "Software to install", helper: "Select all programs you need installed.", itemLabel: "software name", customFieldLabel: "Software name", addLabel: "Software", outputLabel: "Software requested", items: ["Teams", "Chrome", "Adobe Reader", "Zoom", "Other Software"] },
-  "Access Request": { title: "Access requested", helper: "Select all systems or access types you need.", itemLabel: "access type", customFieldLabel: "Access name", addLabel: "Access", outputLabel: "Access requested", items: ["Shared Folder", "VPN", "ERP", "Email Group", "Other Access"] },
-  "Other Request": { title: "Request items", helper: "Add each item or service you need in this request.", itemLabel: "request item", customFieldLabel: "Request item", addLabel: "Item", outputLabel: "Requested items", items: [], alwaysCustom: true }
+  service_requests_equipment_request: { title: "Equipment requested", helper: "Select everything you need. IT will receive one request.", itemLabel: "item", customFieldLabel: "Item name", addLabel: "Item", outputLabel: "Equipment requested", items: ["Laptop", "Monitor", "Keyboard", "Mouse", "USB Drive", "HDMI Cable", "Ethernet Cable", "Docking Station", "Webcam", "Headset", "Other Item"] },
+  service_requests_license_request: { title: "Licenses requested", helper: "Select every license you need in this request.", itemLabel: "license", customFieldLabel: "License name", addLabel: "License", outputLabel: "Licenses requested", items: ["Microsoft Project", "Visio", "Adobe Acrobat", "AutoCAD", "Other License"] },
+  service_requests_software_installation: { title: "Software to install", helper: "Select all programs you need installed.", itemLabel: "software name", customFieldLabel: "Software name", addLabel: "Software", outputLabel: "Software requested", items: ["Teams", "Chrome", "Adobe Reader", "Zoom", "Other Software"] },
+  service_requests_access_request: { title: "Access requested", helper: "Select all systems or access types you need.", itemLabel: "access type", customFieldLabel: "Access name", addLabel: "Access", outputLabel: "Access requested", items: ["Shared Folder", "VPN", "ERP", "Email Group", "Other Access"] },
+  service_requests_other_request: { title: "Request items", helper: "Add each item or service you need in this request.", itemLabel: "request item", customFieldLabel: "Request item", addLabel: "Item", outputLabel: "Requested items", items: [], alwaysCustom: true }
 };
 
 const employeeTaskBuiltInCategories = ["Work", "Personal", "Learning", "Finance", "Health"];
@@ -1877,14 +1910,14 @@ const schemas = {
   employees: [["employeeNo", "Employee no", null, { required: true, help: "Unique. Used to match rows on Excel import." }], ["name", "Name", null, { required: true }], ["personType", "Person type", "person_types", { default: "Employee" }], ["departmentId", "Department", "departments", { required: true }], ["jobTitle", "Job title", "lookup:job_title"], ["location", "Location", "lookup:location"], ["businessUnit", "Business unit", "lookup:business_unit"], ["managerId", "Manager", "employees", { advanced: true }], ["email", "Email", "email", { required: true }], ["phoneCountryCode", "Phone country code", "lookup:phone_country_code", { default: "+966" }], ["phone", "Mobile number"], ["status", "Status", "lookup:employee_status", { default: "active" }]],
   assets: [["assetNumber", "Asset number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["type", "Asset category", "lookup:asset_category", { required: true }], ["brand", "Brand", "lookup:brand"], ["model", "Model", "lookup:asset_model"], ["serialNumber", "Serial number", null, { required: true }], ["status", "Status", "asset_statuses", { default: "available" }], ["attention", "Asset attention", "asset_attention", { default: "normal" }], ["condition", "Condition", "lookup:asset_condition", { default: "good" }], ["location", "Location", "lookup:location"], ["departmentId", "Department", "departments"], ["permanentCustodianId", "Permanent custodian", "employees"], ["currentHolderType", "Current holder type", "holder_types", { default: "Person" }], ["currentOwnerId", "Current holder person", "employees"], ["currentHolderName", "Current holder name"], ["expectedReturnDate", "Expected return date", "date"], ["supplierId", "Vendor", "vendors"], ["purchaseDate", "Purchase date", "date", { advanced: true }], ["warrantyEndDate", "Warranty end date", "date", { advanced: true }], ["cost", "Purchase cost", "number", { advanced: true }], ["currentValue", "Current value", "number", { advanced: true }], ["disposalReason", "Disposal reason", "disposal_reasons", { advanced: true }], ["disposedToType", "Disposed to", "disposed_to_types", { advanced: true }], ["disposedToName", "Disposed to name", null, { advanced: true }], ["settlementStatus", "Settlement status", "settlement_statuses", { advanced: true }], ["settlementDate", "Settlement date", "date", { advanced: true }], ["disposalNotes", "Disposal notes", "textarea", { advanced: true }], ["attachmentsText", "Invoice / attachment names", "textarea", { advanced: true }], ["notes", "Notes", "textarea", { advanced: true }]],
   transfers: [["movementType", "Action", "lookup:transfer_action", { required: true }], ["assetId", "Asset", "assets", { required: true }], ["fromEmployeeId", "From employee", "employees"], ["fromLocation", "From location", "lookup:location"], ["toEmployeeId", "To employee", "employees"], ["toLocation", "To location", "lookup:location"], ["date", "Date", "date", { default: () => today() }], ["performedBy", "Performed by", "users", { default: () => state.user?.id }], ["condition", "Asset condition", "lookup:asset_condition"], ["notes", "Notes", "textarea"], ["attachmentsText", "Attachment names", "textarea", { advanced: true }], ["relatedDocumentId", "Related document", "documents", { advanced: true }]],
-  tickets: [["ticketNumber", "Ticket number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["requesterId", "Requester", "employees", { required: true }], ["category", "Category", "lookup:ticket_category", { required: true }], ["priority", "Priority", "lookup:ticket_priority", { default: "medium", required: true }], ["status", "Status", "lookup:ticket_status", { default: "open" }], ["assignedToId", "Assigned IT staff", "it_users"], ["relatedAssetId", "Related asset", "assets"], ["approvalStatus", "Approval status", "lookup:approval_status", { advanced: true, default: "Draft" }], ["description", "Description", "textarea", { required: true }], ["waitingReason", "Waiting reason", "lookup:ticket_waiting_reason", { advanced: true, itOnly: true }], ["cancelReason", "Cancel reason", "lookup:ticket_cancel_reason", { advanced: true, itOnly: true }], ["internalNotes", "Internal notes", "textarea", { advanced: true, itOnly: true }], ["attachmentsText", "Attachment names", "textarea", { advanced: true }]],
+  tickets: [["ticketNumber", "Ticket number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["requesterId", "Requester", "employees", { required: true }], ["subcategoryCode", "Category", "ticket_category_tree", { required: true }], ["priority", "Priority", "lookup:ticket_priority", { default: "medium", required: true }], ["status", "Status", "lookup:ticket_status", { default: "open" }], ["assignedToId", "Assigned IT staff", "it_users"], ["relatedAssetId", "Related asset", "assets"], ["approvalStatus", "Approval status", "lookup:approval_status", { advanced: true, default: "Draft" }], ["description", "Description", "textarea", { required: true }], ["waitingReason", "Waiting reason", "lookup:ticket_waiting_reason", { advanced: true, itOnly: true }], ["cancelReason", "Cancel reason", "lookup:ticket_cancel_reason", { advanced: true, itOnly: true }], ["internalNotes", "Internal notes", "textarea", { advanced: true, itOnly: true }], ["attachmentsText", "Attachment names", "textarea", { advanced: true }]],
   tasks: [["title", "Task title", null, { required: true }], ["taskNumber", "Task number", null, { advanced: true, placeholder: "Auto-generated when blank" }], ["taskType", "Task type", "lookup:task_type", { default: "Personal" }], ["ownerId", "Owner", "users", { required: true, default: () => state.user?.id }], ["assignedToId", "Assigned To", "users"], ["departmentId", "Department", "departments"], ["priority", "Priority", "lookup:task_priority", { default: "medium", required: true }], ["status", "Status", "lookup:task_status", { advanced: true, default: "pending" }], ["startDate", "Start date", "date"], ["dueDate", "Due date", "date", { required: true }], ["progress", "Progress %", "number"], ["estimatedHours", "Estimated hours", "number"], ["actualHours", "Actual hours", "number"], ["recurrence", "Recurrence", "lookup:task_recurrence", { default: "One Time" }], ["reminder", "Reminder", "lookup:task_reminder", { default: "None" }], ["description", "Description", "textarea", { advanced: true }], ["notes", "Notes", "textarea", { advanced: true }], ["approvalStatus", "Approval status", "lookup:approval_status", { advanced: true, default: "Draft" }], ["relatedType", "Related type", "lookup:linked_type", { advanced: true }], ["relatedId", "Related record", "linked_record:relatedType", { advanced: true }]],
   contracts: [["name", "Name", null, { required: true }], ["type", "Type", "lookup:contract_type", { required: true }], ["vendorId", "Vendor", "vendors", { required: true }], ["startDate", "Start date", "date"], ["endDate", "End date", "date", { required: true }], ["status", "Status", "lookup:contract_status", { default: "active" }], ["renewalReminderPeriod", "Renewal reminder", "lookup:renewal_reminder_period"], ["renewalReminderDate", "Renewal reminder date", "date", { advanced: true }], ["cost", "Cost", "number", { advanced: true }], ["attachmentsText", "Attachment names", "textarea", { advanced: true }], ["notes", "Notes", "textarea", { advanced: true }]],
   vendors: [["name", "Vendor name", null, { required: true }], ["contactPerson", "Contact person"], ["phone", "Phone"], ["email", "Email", "email"], ["servicesText", "Service types", "lookup_multi:vendor_service_type"], ["status", "Status", "lookup:vendor_status", { default: "active" }], ["rating", "Rating", "lookup:vendor_rating"], ["notes", "Notes", "textarea", { advanced: true }]],
   documents: [["title", "Title", null, { required: true }], ["templateType", "Template", "templates", { required: true }], ["linkedType", "Linked type", "lookup:linked_type"], ["linkedId", "Linked record", "linked_record:linkedType"], ["approvalStatus", "Approval status", "lookup:approval_status", { default: "Draft" }], ["status", "Status", "lookup:document_type", { default: "draft" }], ["signedFileName", "Signed document file", null, { advanced: true }], ["notes", "Notes", "textarea", { advanced: true }]],
   knowledge_base: [["category", "Category", "lookup:kb_category", { required: true }], ["title", "Title", null, { required: true }], ["body", "Article", "textarea", { required: true }], ["tagsText", "Tags", "textarea"], ["published", "Status", "lookup:kb_status", { default: "Draft" }]],
   form_templates: [["name", "Name", null, { required: true }], ["approvalStatus", "Approval status", "lookup:approval_status", { default: "Draft" }], ["fieldsText", "Fields", "textarea"]],
-  lookup_items: [["type", "Lookup list", "lookup_types", { required: true }], ["nameEn", "Name English", null, { required: true }], ["nameAr", "Name Arabic"], ["code", "Code", null, { required: true }], ["module", "Related module", "modules"], ["color", "Color", "color"], ["icon", "Icon", null, { advanced: true }], ["sortOrder", "Sort order", "number"], ["active", "Active", "checkbox", { default: true }]]
+  lookup_items: [["type", "Lookup list", "lookup_types", { required: true }], ["nameEn", "Name English", null, { required: true }], ["nameAr", "Name Arabic"], ["code", "Code", null, { required: true }], ["parentCode", "Parent value", "lookup_parent_codes", { help: "Nest this value under a main category. Ticket categories use this to build the routing tree." }], ["module", "Related module", "modules"], ["color", "Color", "color"], ["icon", "Icon", null, { advanced: true }], ["sortOrder", "Sort order", "number"], ["active", "Active", "checkbox", { default: true }]]
 };
 
 const columns = {
@@ -6867,7 +6900,7 @@ function ticketWorkspaceListItem(ticket, active) {
     <span class="ticket-v2-list-top"><strong>${escapeHtml(ticket.ticketNumber || ticket.id)}</strong><span class="ticket-v2-sla ${sla.tone}">${escapeHtml(sla.label)}</span></span>
     <span class="workspace-ticket-subject">${escapeHtml(ticketSubject(ticket))}</span>
     <span class="ticket-v2-requester"><span class="avatar mini">${escapeHtml(initials(requester))}</span><span>${escapeHtml(requester)}</span><small>${escapeHtml(relativeTime(ticket.updatedAt || ticket.createdAt))}</small></span>
-    <span class="ticket-v2-list-badges"><span class="badge ${badgeClass(ticket.priority)}">${escapeHtml(ticket.priority || "Medium")}</span><span class="badge ${badgeClass(ticket.status)}">${escapeHtml(labelize(ticket.status || "open"))}</span>${ticket.autoAssigned ? `<span class="badge info">Auto-assigned</span>` : ""}${comments ? `<span class="ticket-v2-unread">${comments}</span>` : ""}</span>
+    <span class="ticket-v2-list-badges"><span class="badge ${badgeClass(ticket.priority)}">${escapeHtml(ticket.priority || "Medium")}</span><span class="badge ${badgeClass(ticket.status)}">${escapeHtml(labelize(ticket.status || "open"))}</span>${ticket.autoAssigned ? `<span class="badge info">Auto-assigned</span>` : ""}${ticket.onBehalf ? `<span class="badge neutral">On behalf</span>` : ""}${comments ? `<span class="ticket-v2-unread">${comments}</span>` : ""}</span>
     ${ticketWorkspaceIndicators(ticket)}
   </button>`;
 }
@@ -6882,7 +6915,7 @@ function ticketWorkspaceIndicators(ticket) {
 
 function ticketWorkspaceInfoCards(row) {
   const cards = [
-    ["Requester", look("employees", row.requesterId) || "Unknown"],
+    ["Requester", ticketRequesterProvenance(row)],
     ["Category", row.category || "General"],
     ["Priority", `<span class="badge ${badgeClass(row.priority)}">${escapeHtml(row.priority || "Medium")}</span>`],
     ["Status", `<span class="badge ${badgeClass(row.status)}">${escapeHtml(labelize(row.status || "open"))}</span>`],
@@ -7617,17 +7650,16 @@ function ticketAssignmentSettingsPanel() {
   const settings = { enabled: false, strategy: "manual", categoryAssignees: {}, categoryRoutes: {}, fallbackAssigneeId: "", ...(state.db.settings?.ticketAssignment || {}) };
   const users = rows("users").filter((user) => ["role_staff", "role_manager"].includes(user.roleId));
   const groups = rows("assignmentGroups").filter((group) => group.active !== false && group.canReceiveTickets !== false);
-  const categories = Object.keys(employeeTicketCategories);
+  const parents = ticketCategoryParents();
   const assigneeOptions = (selected = "") => `<option value="">Use fallback</option>${users.map((user) => `<option value="${user.id}" ${selected === user.id ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("")}`;
-  const routeValue = (category) => {
-    const key = category.toLowerCase();
-    const route = settings.categoryRoutes?.[key] || null;
+  const routeValue = (code) => {
+    const route = settings.categoryRoutes?.[code] || null;
     if (route?.type && route.id) return `${route.type}:${route.id}`;
-    const userId = settings.categoryAssignees?.[key] || settings.categoryAssignees?.[category] || "";
+    const userId = settings.categoryAssignees?.[code] || "";
     return userId ? `user:${userId}` : "";
   };
-  const routeOptions = (selected = "") => `
-    <option value="" ${!selected ? "selected" : ""}>Use fallback</option>
+  const routeOptions = (selected = "", inheritLabel = "") => `
+    <option value="" ${!selected ? "selected" : ""}>${escapeHtml(inheritLabel || "Use fallback")}</option>
     <optgroup label="Specific user">
       ${users.map((user) => `<option value="user:${user.id}" ${selected === `user:${user.id}` ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("")}
     </optgroup>
@@ -7635,6 +7667,13 @@ function ticketAssignmentSettingsPanel() {
       ${groups.map((group) => `<option value="group:${group.id}" ${selected === `group:${group.id}` ? "selected" : ""}>${escapeHtml(group.name)} (${escapeHtml(group.assignmentMethod || "Least Open Tickets")})</option>`).join("")}
     </optgroup>
   `;
+  const routeSummary = (value) => {
+    if (!value) return "";
+    const [type, routeId] = value.split(":");
+    if (type === "user") return look("users", routeId) || routeId;
+    if (type === "group") return look("assignmentGroups", routeId) || routeId;
+    return "";
+  };
   const strategyOptions = [
     ["manual", "Manual Only"],
     ["category", "By Category"],
@@ -7658,15 +7697,27 @@ function ticketAssignmentSettingsPanel() {
         </div>
         <div class="assignment-map">
           <div class="assignment-map-head">
-            <div><strong>Category Assignment Rules</strong><span class="muted">Choose a specific assignee per employee request category. Leave blank to use fallback routing.</span></div>
+            <div><strong>Category Assignment Rules</strong><span class="muted">Set an owner per main category, then override individual subcategories only where they differ. Subcategories left on "Inherit" follow their main category.</span></div>
           </div>
-          ${categories.map((category) => {
-            const key = category.toLowerCase();
+          ${parents.map((parent) => {
+            const parentValue = routeValue(parent.code);
+            const children = ticketCategoryChildren(parent.code);
+            const overrides = children.filter((child) => routeValue(child.code)).length;
             return `
-              <label class="assignment-rule-row">
-                <span><strong>${escapeHtml(category)}</strong><small>Use fallback if no assignee is selected.</small></span>
-                <select name="categoryRoute:${escapeHtml(category)}">${routeOptions(routeValue(category))}</select>
-              </label>
+              <details class="assignment-category-group" ${overrides ? "open" : ""}>
+                <summary class="assignment-rule-row assignment-rule-parent">
+                  <span><strong>${escapeHtml(lookupLabel(parent))}</strong><small>${children.length} ${children.length === 1 ? "subcategory" : "subcategories"}${overrides ? ` · ${overrides} override${overrides === 1 ? "" : "s"}` : ""}</small></span>
+                  <select name="categoryRoute:${escapeHtml(parent.code)}" data-assignment-parent="${escapeHtml(parent.code)}">${routeOptions(parentValue)}</select>
+                </summary>
+                <div class="assignment-subcategories">
+                  ${children.map((child) => `
+                    <label class="assignment-rule-row assignment-rule-child">
+                      <span>${escapeHtml(lookupLabel(child))}</span>
+                      <select name="categoryRoute:${escapeHtml(child.code)}">${routeOptions(routeValue(child.code), parentValue ? `Inherit — ${routeSummary(parentValue)}` : "Inherit — use fallback")}</select>
+                    </label>
+                  `).join("") || `<p class="muted">No subcategories yet. Add them in Lookup Management.</p>`}
+                </div>
+              </details>
             `;
           }).join("")}
         </div>
@@ -8286,7 +8337,7 @@ function managerTicketDetails(row) {
   const parts = ticketCategoryParts(row.category || "");
   const fields = [
     ["Ticket Number", row.ticketNumber || row.id],
-    ["Requester", look("employees", row.requesterId) || "Unknown"],
+    ["Requester", ticketRequesterProvenance(row)],
     ["Main Category", parts.main || row.category || "General"],
     ["Subcategory", parts.sub || "Not set"],
     ["Created", row.createdAt ? new Date(row.createdAt).toLocaleString() : "-"],
@@ -9379,7 +9430,7 @@ function exportRows(name) {
 }
 
 const formPrimaryFields = {
-  tickets: ["requesterId", "category", "priority", "assignedToId", "description"],
+  tickets: ["requesterId", "subcategoryCode", "priority", "assignedToId", "description"],
   tasks: ["title", "ownerId", "assignedToId", "dueDate", "priority"],
   assets: ["type", "brand", "model", "serialNumber", "location", "currentOwnerId", "permanentCustodianId"],
   employees: ["employeeNo", "name", "personType", "departmentId", "jobTitle", "location", "businessUnit", "managerId", "email", "phoneCountryCode", "phone", "status"],
@@ -9399,6 +9450,7 @@ const formAttachmentFields = new Set(["attachmentsText", "employeeAttachment", "
 const formHelpText = {
   requesterId: "Who needs help or owns this request.",
   category: "Choose the closest option so routing and reporting stay clean.",
+  subcategoryCode: "Choose the closest option so routing and reporting stay clean.",
   priority: "Use the lowest priority that accurately reflects urgency.",
   assignedToId: "Leave blank if the team should triage first.",
   description: "Add enough context for the next person to act.",
@@ -9499,11 +9551,11 @@ function openModal(name, row = null, prefill = {}) {
   const template = $("#modalTemplate").content.cloneNode(true);
   const backdrop = $(".modal-backdrop", template);
   $(".close", template).innerHTML = icon("close");
-  const employeeTicketModal = name === "tickets" && isEmployeeUser() && !row;
+  const employeeTicketModal = usesTicketWizard(name, row);
   const employeeTaskModal = name === "tasks" && isEmployeeUser();
   const newPersonModal = name === "employees" && !row && !employeeTicketModal;
   const newServiceAccountModal = name === "users" && !row;
-  $("h3", template).textContent = employeeTicketModal ? "Submit a request" : employeeTaskModal ? (row ? "Edit Task" : "Create Task") : recordModalTitle(name, row);
+  $("h3", template).textContent = employeeTicketModal ? (isEmployeeUser() ? "Submit a request" : "Open a ticket") : employeeTaskModal ? (row ? "Edit Task" : "Create Task") : recordModalTitle(name, row);
   $(".eyebrow", template).textContent = employeeTicketModal || employeeTaskModal || newPersonModal || newServiceAccountModal ? "" : "Guided form";
   if (employeeTicketModal || employeeTaskModal || newPersonModal || newServiceAccountModal) $(".eyebrow", template).classList.add("hidden");
   const modalHeadCopy = $(".modal-head > div", template);
@@ -9565,7 +9617,10 @@ function openModal(name, row = null, prefill = {}) {
   });
   document.body.appendChild(template);
   wireModalDependencies(name);
-  if (employeeTicketModal) wireEmployeeTicketWizard();
+  if (employeeTicketModal) {
+    wireEmployeeTicketWizard();
+    wireOnBehalfRequesterStep();
+  }
   if (employeeTaskModal) wireEmployeeTaskCategory();
   if (newServiceAccountModal) wireNewAccountModal();
   wireModernSelects();
@@ -9815,9 +9870,10 @@ function employeeTicketWizardHtml() {
       <input type="hidden" name="employeeMainCategory" required>
       <input type="hidden" name="employeeSubcategory" data-ticket-subcategory>
       <input type="hidden" name="employeeSubjectMode" value="false" data-subject-mode>
+      ${onBehalfRequesterStepHtml()}
       <section class="wizard-step">
         <div class="wizard-section-title"><strong>Choose Main Category</strong></div>
-        <div class="wizard-card-grid">${Object.keys(employeeTicketCategories).map((category) => `<button type="button" class="wizard-card" data-ticket-category-card="${escapeHtml(category)}">${icon(employeeTicketCategoryIcon(category))}<span>${escapeHtml(category)}</span></button>`).join("")}</div>
+        <div class="wizard-card-grid">${ticketCategoryParents().map((category) => `<button type="button" class="wizard-card" data-ticket-category-card="${escapeHtml(category.code)}">${icon(employeeTicketCategoryIcon(category.code))}<span>${escapeHtml(lookupLabel(category))}</span></button>`).join("")}</div>
       </section>
       <section class="wizard-step" data-subcategory-step hidden>
         <div class="wizard-section-title"><strong>Choose Subcategory</strong></div>
@@ -9851,6 +9907,65 @@ function employeeTicketWizardHtml() {
       </section>
     </div>
   `;
+}
+
+// "Lina Hassan (opened by Omar IT Staff)" so it is always clear who filed a ticket.
+function ticketRequesterProvenance(ticket) {
+  const requester = look("employees", ticket.requesterId) || "Unknown";
+  if (!ticket.onBehalf || !ticket.createdById) return requester;
+  const author = look("users", ticket.createdById);
+  return author ? tpl("{requester} (opened by {author})", { requester, author }) : requester;
+}
+
+// Admin, IT Manager and IT Staff may open a ticket for someone else.
+function canCreateTicketOnBehalf() {
+  return ["role_admin", "role_manager", "role_staff"].includes(state.user?.roleId);
+}
+
+// The guided wizard is now the single ticket-creation path for every role, so
+// employees and IT raise tickets against exactly the same category tree.
+function usesTicketWizard(name, row) {
+  return name === "tickets" && !row && (isEmployeeUser() || canCreateTicketOnBehalf());
+}
+
+function onBehalfRequesterOptions(selected = "") {
+  return rows("employees")
+    .filter((employee) => String(employee.status || "active").toLowerCase() === "active")
+    .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
+    .map((employee) => `<option value="${employee.id}" ${selected === employee.id ? "selected" : ""}>${escapeHtml(employee.name || employee.employeeNo || employee.id)}${employee.departmentId ? ` — ${escapeHtml(look("departments", employee.departmentId) || "")}` : ""}</option>`)
+    .join("");
+}
+
+function onBehalfRequesterStepHtml() {
+  if (!canCreateTicketOnBehalf()) return "";
+  const self = employeeForUser();
+  return `
+    <section class="wizard-step" data-on-behalf-step>
+      <div class="wizard-section-title"><strong>${escapeHtml(trText("Who is this request for?"))} <span class="required">*</span></strong><small class="muted">${escapeHtml(trText("Open the ticket on behalf of the employee who needs help."))}</small></div>
+      <label class="on-behalf-picker"><span class="sr-only">${escapeHtml(trText("Requester"))}</span>
+        <select name="requesterId" required data-on-behalf-requester>
+          <option value="">${escapeHtml(trText("Select an employee"))}</option>
+          ${onBehalfRequesterOptions(self?.id || "")}
+        </select>
+      </label>
+      <p class="muted on-behalf-hint" data-on-behalf-hint hidden></p>
+    </section>
+  `;
+}
+
+function wireOnBehalfRequesterStep() {
+  const picker = document.querySelector(".modal [data-on-behalf-requester]");
+  const hint = document.querySelector(".modal [data-on-behalf-hint]");
+  if (!picker || !hint) return;
+  const self = employeeForUser();
+  const sync = () => {
+    const employee = rows("employees").find((item) => item.id === picker.value);
+    const onBehalf = Boolean(employee && employee.id !== self?.id);
+    hint.hidden = !onBehalf;
+    if (onBehalf) hint.textContent = tpl("This ticket will be created on behalf of {name}, who will be notified and able to follow it.", { name: employee.name || employee.id });
+  };
+  picker.addEventListener("change", sync);
+  sync();
 }
 
 function wireEmployeeTicketWizard() {
@@ -9949,26 +10064,27 @@ function wireEmployeeTicketWizard() {
   subject.addEventListener("input", renderSuggestions);
   description.addEventListener("input", renderSuggestions);
   $$("[data-ticket-category-card]").forEach((button) => button.addEventListener("click", () => {
-    const category = button.dataset.ticketCategoryCard;
-    main.value = category;
+    const categoryCode = button.dataset.ticketCategoryCard;
+    main.value = categoryCode;
     sub.value = "";
     setSubjectFlow(false);
     setServiceRequestFlow(null);
-    setMoreInformationFlow(category !== "Service Requests");
+    setMoreInformationFlow(categoryCode !== "service_requests");
     $$("[data-ticket-category-card]").forEach((item) => item.classList.toggle("active", item === button));
-    const options = employeeTicketCategories[category] || [];
-    if (category === "General Questions" || options.length <= 1 || (options.length === 1 && options[0] === "Other")) {
+    const options = ticketCategoryChildren(categoryCode);
+    // A parent with no real choice (only "Other") skips straight to a free-text subject.
+    if (!options.length || (options.length === 1 && /^other$/i.test(options[0].nameEn || ""))) {
       target.innerHTML = "";
       subcategoryStep.hidden = true;
       setSubjectFlow(true);
       renderSuggestions();
       return;
     }
-    target.innerHTML = options.map((option) => `<button type="button" class="wizard-card compact" data-ticket-subcategory-card="${escapeHtml(option)}">${icon(employeeTicketCategoryIcon(category))}<span>${escapeHtml(option)}</span></button>`).join("");
+    target.innerHTML = options.map((option) => `<button type="button" class="wizard-card compact" data-ticket-subcategory-card="${escapeHtml(option.code)}">${icon(employeeTicketCategoryIcon(categoryCode))}<span>${escapeHtml(lookupLabel(option))}</span></button>`).join("");
     subcategoryStep.hidden = false;
     $$("[data-ticket-subcategory-card]").forEach((item) => item.addEventListener("click", () => {
       const selected = item.dataset.ticketSubcategoryCard;
-      sub.value = selected === "Other" ? "" : selected;
+      sub.value = selected;
       $$("[data-ticket-subcategory-card]").forEach((card) => card.classList.toggle("active", card === item));
       setSubjectFlow(false);
       setServiceRequestFlow(employeeServiceRequestOptions[selected] || null);
@@ -10013,14 +10129,15 @@ function wireModalDependencies(name) {
   if (name === "tickets") {
     const mainCategory = document.querySelector('.modal [name="employeeMainCategory"]');
     const subcategory = document.querySelector(".modal [data-ticket-subcategory]");
-    if (mainCategory && subcategory) {
+    // The card wizard drives its own hidden inputs; only wire the select variant.
+    if (mainCategory && subcategory && mainCategory.type !== "hidden") {
       const renderSubcategories = () => {
         const selected = subcategory.value || subcategory.dataset.selected || "";
-        const options = employeeTicketCategories[mainCategory.value] || [];
+        const options = ticketCategoryChildren(mainCategory.value);
         if (subcategory.matches("select")) {
-          subcategory.innerHTML = `<option value=""></option>${options.map((option) => `<option ${selected === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}`;
+          subcategory.innerHTML = `<option value=""></option>${options.map((option) => `<option ${selected === option.code ? "selected" : ""} value="${escapeHtml(option.code)}">${escapeHtml(lookupLabel(option))}</option>`).join("")}`;
         } else {
-          replaceModernSelectOptions(subcategory, options.map((option) => ({ value: option, label: option })), selected);
+          replaceModernSelectOptions(subcategory, options.map((option) => ({ value: option.code, label: lookupLabel(option) })), selected);
         }
         subcategory.dataset.selected = "";
       };
@@ -10152,7 +10269,7 @@ async function handleModalPostSaveUploads(form, name, saved) {
 }
 
 function formSchema(name, row = null) {
-  if (name === "tickets" && isEmployeeUser() && !row) {
+  if (usesTicketWizard(name, row)) {
     return [
       ["employeeMainCategory", "Main Category", "employee_ticket_category", { required: true }],
       ["employeeSubcategory", "Subcategory", "employee_ticket_subcategory", { required: true }],
@@ -10213,7 +10330,7 @@ function fieldHtml(key, label, type, row, options = {}) {
   if (type === "checkbox") return `<label class="checkbox-field"><span>${fieldLabel(label, required)}</span><input name="${key}" type="checkbox" value="true" ${value === true || value === "true" ? "checked" : ""} /></label>`;
   if (type === "info") return `<div class="form-help full"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(options.help || "")}</span></div>`;
   if (type === "employee_ticket_category") {
-    return modernSelectHtml(key, label, value, Object.keys(employeeTicketCategories).map((option) => ({ value: option, label: option, icon: employeeTicketCategoryIcon(option) })), { required: options.required, describedBy, placeholder: "Search request categories", full });
+    return modernSelectHtml(key, label, value, ticketCategoryParents().map((option) => ({ value: option.code, label: lookupLabel(option), icon: employeeTicketCategoryIcon(option.code) })), { required: options.required, describedBy, placeholder: "Search request categories", full });
   }
   if (type === "employee_ticket_subcategory") {
     return modernSelectHtml(key, label, value, [], { required: options.required, describedBy, placeholder: "Search subcategories", attrs: `data-ticket-subcategory data-selected="${escapeHtml(value)}"`, full });
@@ -10234,6 +10351,20 @@ function fieldHtml(key, label, type, row, options = {}) {
   }
   if (type === "templates") {
     return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${(state.db.formTemplates || []).filter((tpl) => !tpl.archivedAt && !tpl.deletedAt).map((option) => `<option ${value === option.name ? "selected" : ""} value="${escapeHtml(option.name)}">${escapeHtml(option.name)}</option>`).join("")}</select>${describedBy}</label>`;
+  }
+  if (type === "ticket_category_tree") {
+    const selected = String(value || "");
+    const optionsHtml = ticketCategoryParents().map((parent) => {
+      const children = ticketCategoryChildren(parent.code);
+      if (!children.length) return `<option ${selected === parent.code ? "selected" : ""} value="${escapeHtml(parent.code)}">${escapeHtml(lookupLabel(parent))}</option>`;
+      return `<optgroup label="${escapeHtml(lookupLabel(parent))}">${children.map((child) => `<option ${selected === child.code ? "selected" : ""} value="${escapeHtml(child.code)}">${escapeHtml(lookupLabel(child))}</option>`).join("")}</optgroup>`;
+    }).join("");
+    return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${optionsHtml}</select>${describedBy}</label>`;
+  }
+  if (type === "lookup_parent_codes") {
+    const currentType = row?.type || "ticket_category";
+    const parents = (state.db.lookupItems || []).filter((item) => item.type === currentType && !item.parentCode && item.active !== false && item.code !== row?.code);
+    return `<label>${fieldLabel(label, required)}<select name="${key}"><option value="">None (this is a main value)</option>${parents.map((option) => `<option ${value === option.code ? "selected" : ""} value="${escapeHtml(option.code)}">${escapeHtml(lookupLabel(option))}</option>`).join("")}</select>${describedBy}</label>`;
   }
   if (type === "lookup_types") {
     return `<label>${fieldLabel(label, required)}<select name="${key}" ${options.required ? "required" : ""}><option value=""></option>${lookupListTypes().map((option) => `<option ${value === option ? "selected" : ""} value="${escapeHtml(option)}">${escapeHtml(labelize(option))}</option>`).join("")}</select>${describedBy}</label>`;
@@ -10358,11 +10489,12 @@ function validateForm(form, name, row = null) {
     const problem = validateAccountFields("");
     if (problem) return problem;
   }
-  if (name === "tickets" && isEmployeeUser() && !row) {
+  if (usesTicketWizard(name, row)) {
+    if (canCreateTicketOnBehalf() && !String(data.requesterId || "").trim()) return "Choose the employee this request is for.";
     if (!String(data.employeeMainCategory || "").trim()) return "Main Category is required.";
     if (data.employeeSubjectMode === "true" && !String(data.employeeSubject || "").trim()) return "Subject is required.";
     if (data.employeeSubjectMode !== "true" && !String(data.employeeSubcategory || "").trim()) return "Subcategory is required.";
-    const serviceRequest = data.employeeMainCategory === "Service Requests" ? employeeServiceRequestOptions[data.employeeSubcategory] : null;
+    const serviceRequest = employeeServiceRequestOptions[data.employeeSubcategory] || null;
     const serviceItems = new FormData(form).getAll("employeeServiceItem").map((item) => String(item).trim()).filter(Boolean);
     const customItems = serviceCustomItems(form);
     if (serviceRequest && !serviceRequest.alwaysCustom && !serviceItems.length) return `Select at least one ${serviceRequest.itemLabel}.`;
@@ -10372,7 +10504,7 @@ function validateForm(form, name, row = null) {
       if (!item.name) return `Other ${serviceRequest.itemLabel} is required.`;
       if (item.quantity && (!Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1)) return "Quantity must be at least 1.";
     }
-    if (data.employeeMainCategory !== "Service Requests" && !String(data.description || "").trim()) return "Description is required.";
+    if (data.employeeMainCategory !== "service_requests" && !String(data.description || "").trim()) return "Description is required.";
     return "";
   }
   if (name === "tasks" && isEmployeeUser()) {
@@ -10422,15 +10554,17 @@ function formToObject(form, name, row = null) {
     else if (value === "true" && schemas[name]?.find((field) => field[0] === key)?.[2] === "checkbox") body[key] = true;
     else if (value !== "") body[key] = value;
   }
-  if (name === "tickets" && isEmployeeUser()) {
+  if (usesTicketWizard(name, row)) {
     const employee = employeeForUser();
-    const ticketDetail = body.employeeSubjectMode === "true" && body.employeeMainCategory === "General Questions" ? body.employeeSubject : body.employeeSubcategory;
-    body.requesterId = employee?.id || body.requesterId;
-    body.category = [body.employeeMainCategory, ticketDetail].filter(Boolean).join(" / ") || "General Questions";
-    body.priority = "medium";
+    // Employees always file for themselves; IT picks the requester in step 0.
+    body.requesterId = canCreateTicketOnBehalf() ? body.requesterId : employee?.id || body.requesterId;
+    body.mainCategoryCode = body.employeeMainCategory || "";
+    body.subcategoryCode = body.employeeSubjectMode === "true" ? "" : body.employeeSubcategory || "";
+    body.category = ticketCategoryLabel(body.subcategoryCode || body.mainCategoryCode);
+    body.priority = body.priority || "medium";
     body.status = "open";
     if (body.employeeSubject) body.subject = body.employeeSubject;
-    const serviceRequest = body.employeeMainCategory === "Service Requests" ? employeeServiceRequestOptions[body.employeeSubcategory] : null;
+    const serviceRequest = employeeServiceRequestOptions[body.employeeSubcategory] || null;
     if (serviceRequest) {
       const serviceItems = form.getAll("employeeServiceItem").map((item) => String(item).trim()).filter(Boolean);
       const customItems = serviceCustomItems(form).map((item) => `${item.name}${item.quantity ? ` (Quantity: ${item.quantity})` : ""}`);

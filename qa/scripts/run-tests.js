@@ -275,8 +275,129 @@ function securityTests() {
   ];
 }
 
+// Restores auto assignment to its default disabled state so later tests are unaffected.
+async function resetTicketAssignment(ctx) {
+  await ctx.asManager({
+    method: "PATCH",
+    path: "/api/settings/ticket-assignment",
+    body: { enabled: false, strategy: "manual", fallbackAssigneeId: "", categoryAssignees: {}, categoryRoutes: {} }
+  });
+}
+
 function regressionTests() {
   return [
+    test("REG-TICKET-ROUTING-001", "regression", "Ticket Assignment", "IT Manager/Employee", "Critical", async (ctx) => {
+      const configured = await ctx.asManager({
+        method: "PATCH",
+        path: "/api/settings/ticket-assignment",
+        body: {
+          enabled: true,
+          strategy: "category",
+          fallbackAssigneeId: qaIds.managerUser,
+          categoryRoutes: {
+            hardware_devices: { type: "user", id: qaIds.staffUser },
+            hardware_devices_printer: { type: "user", id: qaIds.managerUser }
+          }
+        }
+      });
+      assertStatus(configured, 200, "Manager saves two-level category routing");
+      try {
+        const inherited = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} laptop routing`, subcategoryCode: "hardware_devices_laptop" } });
+        assertStatus(inherited, 201, "Employee creates ticket under a routed main category");
+        assert(inherited.data.assignedToId === qaIds.staffUser, "Subcategory with no rule inherits the main category assignee");
+        assert(inherited.data.autoAssignmentMethod === "category", "Inherited route reports the category method");
+
+        const overridden = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} printer routing`, subcategoryCode: "hardware_devices_printer" } });
+        assertStatus(overridden, 201, "Employee creates ticket under an overridden subcategory");
+        assert(overridden.data.assignedToId === qaIds.managerUser, "Subcategory rule overrides the main category rule");
+
+        assert(overridden.data.mainCategoryCode === "hardware_devices", "Ticket stores its main category code");
+        assert(overridden.data.category === "Hardware & Devices / Printer", "Ticket keeps a readable category label");
+
+        const legacyLabel = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} legacy label`, category: "Hardware & Devices / Printer" } });
+        assertStatus(legacyLabel, 201, "Legacy category label still resolves");
+        assert(legacyLabel.data.subcategoryCode === "hardware_devices_printer", "Legacy label resolves to the migrated subcategory code");
+
+        const unknown = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} bad category`, subcategoryCode: "not_a_real_category" } });
+        assertStatus(unknown, 400, "Unknown category is rejected");
+
+        const badRule = await ctx.asManager({ method: "PATCH", path: "/api/settings/ticket-assignment", body: { enabled: true, strategy: "category", categoryRoutes: { not_a_real_category: { type: "user", id: qaIds.staffUser } } } });
+        assertStatus(badRule, 400, "Routing rule for an unknown category is rejected");
+
+        const employeeAttempt = await ctx.asEmployeeA({ method: "PATCH", path: "/api/settings/ticket-assignment", body: { enabled: false } });
+        assertStatus(employeeAttempt, 403, "Employees cannot change routing rules");
+      } finally {
+        await resetTicketAssignment(ctx);
+      }
+    }),
+    test("REG-TICKET-REROUTE-001", "regression", "Ticket Assignment", "IT Manager", "High", async (ctx) => {
+      const configured = await ctx.asManager({
+        method: "PATCH",
+        path: "/api/settings/ticket-assignment",
+        body: {
+          enabled: true,
+          strategy: "category",
+          fallbackAssigneeId: qaIds.managerUser,
+          categoryRoutes: {
+            hardware_devices: { type: "user", id: qaIds.staffUser },
+            hardware_devices_printer: { type: "user", id: qaIds.managerUser }
+          }
+        }
+      });
+      assertStatus(configured, 200, "Routing configured for re-route test");
+      try {
+        const ticket = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} reroute`, subcategoryCode: "hardware_devices_laptop" } });
+        assertStatus(ticket, 201, "Ticket created for re-route test");
+        assert(ticket.data.assignedToId === qaIds.staffUser, "Ticket starts on the main category assignee");
+
+        const moved = await ctx.asManager({ method: "PATCH", path: `/api/tickets/${ticket.data.id}`, body: { subcategoryCode: "hardware_devices_printer" } });
+        assertStatus(moved, 200, "Manager recategorizes the ticket");
+        assert(moved.data.assignedToId === qaIds.managerUser, "Auto-assigned ticket re-routes on category change");
+
+        const manual = await ctx.asManager({ method: "PATCH", path: `/api/tickets/${ticket.data.id}`, body: { assignedToId: qaIds.staffUser } });
+        assertStatus(manual, 200, "Manager assigns the ticket manually");
+        assert(manual.data.autoAssigned === false, "Manual assignment clears the auto-assigned marker");
+
+        const movedAgain = await ctx.asManager({ method: "PATCH", path: `/api/tickets/${ticket.data.id}`, body: { subcategoryCode: "hardware_devices_printer" } });
+        assertStatus(movedAgain, 200, "Manager recategorizes a manually assigned ticket");
+        assert(movedAgain.data.assignedToId === qaIds.staffUser, "Re-routing never overrides a manual assignment");
+      } finally {
+        await resetTicketAssignment(ctx);
+      }
+    }),
+    test("REG-TICKET-ONBEHALF-001", "regression", "Tickets", "IT Staff/Employee", "Critical", async (ctx) => {
+      // Requester notifications honour the employee's own preference, which an
+      // earlier API test switches off - opt back in so this test is order-independent.
+      assertStatus(await ctx.asEmployeeA({ method: "PATCH", path: "/api/preferences/notifications", body: { tickets: true, tasks: true, assets: false, contracts: false, vendors: false } }), 200, "Employee A opts into ticket notifications");
+      const onBehalf = await ctx.asStaff({ method: "POST", path: "/api/tickets", body: { requesterId: qaIds.employeeA, description: `${PREFIX} opened on behalf`, subcategoryCode: "accounts_access_password_reset", priority: "high" } });
+      assertStatus(onBehalf, 201, "IT Staff opens a ticket on behalf of an employee");
+      assert(onBehalf.data.requesterId === qaIds.employeeA, "Requester is the employee, not the author");
+      assert(onBehalf.data.createdById === qaIds.staffUser, "Author is recorded on the ticket");
+      assert(onBehalf.data.onBehalf === true, "Ticket is flagged as created on behalf");
+
+      const ownTicket = await ctx.asStaff({ method: "POST", path: "/api/tickets", body: { requesterId: qaIds.staffEmployee, description: `${PREFIX} own ticket`, subcategoryCode: "hardware_devices_headset" } });
+      assertStatus(ownTicket, 201, "IT Staff can still raise a ticket for themselves");
+      assert(ownTicket.data.onBehalf === false, "A ticket for yourself is not flagged as on behalf");
+
+      const employeeState = await ctx.asEmployeeA({ path: "/api/state" });
+      const visible = employeeState.data.tickets.find((ticket) => ticket.id === onBehalf.data.id);
+      assert(Boolean(visible), "Requester sees the ticket opened for them");
+      assert(employeeState.data.notifications.some((item) => item.entityId === onBehalf.data.id && item.title === "A ticket was opened for you"), "Requester is notified that a ticket was opened for them");
+
+      const comment = await ctx.asEmployeeA({ method: "POST", path: "/api/comments", body: { entityType: "ticket", entityId: onBehalf.data.id, body: `${PREFIX} requester reply` } });
+      assertStatus(comment, 201, "Requester can comment on a ticket opened for them");
+
+      const spoofed = await ctx.asEmployeeB({ method: "POST", path: "/api/tickets", body: { requesterId: qaIds.employeeA, description: `${PREFIX} spoof attempt`, subcategoryCode: "hardware_devices_monitor" } });
+      assertStatus(spoofed, 201, "Employee ticket is accepted");
+      assert(spoofed.data.requesterId === qaIds.employeeB, "Employees cannot raise tickets for someone else");
+      assert(spoofed.data.onBehalf === false, "Employee ticket is never flagged as on behalf");
+
+      const noRequester = await ctx.asStaff({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} missing requester`, subcategoryCode: "hardware_devices_monitor" } });
+      assertStatus(noRequester, 400, "IT ticket without a requester is rejected");
+
+      const unknownRequester = await ctx.asStaff({ method: "POST", path: "/api/tickets", body: { requesterId: "emp_does_not_exist", description: `${PREFIX} unknown requester`, subcategoryCode: "hardware_devices_monitor" } });
+      assertStatus(unknownRequester, 400, "IT ticket with an unknown requester is rejected");
+    }),
     test("REG-TICKETS-001", "regression", "Tickets", "Employee/IT Manager", "Critical", async (ctx) => {
       const ticket = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} VPN regression ticket`, category: "Network & Connectivity / VPN", priority: "high", suggestedArticleIds: ["kb_001"] } });
       assertStatus(ticket, 201, "Employee creates ticket");

@@ -7,6 +7,8 @@ IT Command Center V1 is an enterprise IT operations prototype for managing emplo
 - Employee Portal for requests, tickets, tasks, assets, documents, and knowledge articles
 - IT Manager Command Center for operational awareness and priority work
 - Ticket workspace with conversation, status, assignment, attachments, timeline, and audit support
+- Automated ticket routing by category, with per-subcategory overrides and workload fallbacks
+- "Open on behalf of" ticket creation for Admin, IT Manager, and IT Staff
 - Task workspace with execution-focused task management
 - Asset lifecycle and custody tracking
 - People and user account administration
@@ -15,6 +17,26 @@ IT Command Center V1 is an enterprise IT operations prototype for managing emplo
 - Notifications, audit feed, archive center, trash bin, roles, and settings
 - English/Arabic localization with LTR/RTL support
 - Light, dark, and system appearance modes
+
+## Ticket Categories and Routing
+
+Ticket categories are stored in `data/db.json` under `lookupItems` with `type: "ticket_category"`,
+as a two-level tree: parent rows have `parentCode: ""` and child rows carry their parent's `code`.
+Add or rename categories from **Settings > Lookup Management** - no code change is required.
+
+Tickets store `mainCategoryCode` and `subcategoryCode` (routing) plus a readable `category`
+label. Routing rules are keyed by those codes, so renaming a category never breaks routing.
+
+To configure automatic assignment, open **Settings > Ticket Assignment** as IT Manager or
+System Admin, enable it, and set an owner per main category. Subcategories inherit their
+parent's owner unless you override them individually. Resolution order:
+
+1. subcategory rule
+2. main category rule
+3. strategy (least open tickets / round robin)
+4. fallback assignee, then any active IT Manager
+
+Changing a ticket's category re-routes it, unless it was assigned manually.
 
 ## Demo Accounts
 

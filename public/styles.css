@@ -3807,6 +3807,61 @@ body.rtl .comment-replies {
   font-weight: 650;
 }
 
+/* Two-level category routing: main category rule + subcategory overrides. */
+.assignment-category-group {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-solid);
+  overflow: hidden;
+}
+
+.assignment-category-group > summary.assignment-rule-parent {
+  display: grid;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.assignment-category-group > summary.assignment-rule-parent::-webkit-details-marker {
+  display: none;
+}
+
+.assignment-category-group[open] > summary.assignment-rule-parent {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-hover);
+}
+
+.assignment-subcategories {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.assignment-rule-row.assignment-rule-child {
+  padding: 8px 12px;
+  background: transparent;
+  border-style: dashed;
+}
+
+.assignment-rule-row.assignment-rule-child > span {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+/* "Create on behalf of" requester step in the ticket wizard. */
+.on-behalf-picker {
+  display: grid;
+  gap: 6px;
+  max-width: 480px;
+}
+
+.on-behalf-hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
 .ticket-assignment-actions {
   position: sticky;
   bottom: 0;

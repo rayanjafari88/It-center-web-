@@ -92,34 +92,75 @@ function permissionSet(level) {
   return permissions;
 }
 
+const legacyTicketCategoryNames = [
+  "Access & Accounts / Password reset",
+  "Access & Accounts / Email",
+  "Access & Accounts / VPN",
+  "Access & Accounts / Permissions",
+  "Access & Accounts / Account access",
+  "Hardware / Laptop",
+  "Hardware / Monitor",
+  "Hardware / Printer",
+  "Hardware / Mobile device",
+  "Hardware / Peripherals",
+  "Software / Application issue",
+  "Software / Software installation",
+  "Software / Microsoft 365",
+  "Software / License request",
+  "Network / Internet",
+  "Network / WiFi",
+  "Network / VPN",
+  "Network / Connectivity issue",
+  "New Request / New laptop",
+  "New Request / New monitor",
+  "New Request / Phone",
+  "New Request / Email account",
+  "New Request / License",
+  "General / Other requests"
+];
+
+// Single source of truth for ticket categories. Stored in db.lookupItems as
+// parent rows (parentCode === "") plus child rows (parentCode === parent code),
+// so admins can add categories from Lookup Management without a code change.
+const defaultTicketCategoryTree = {
+  "Accounts & Access": ["Password Reset", "Account Locked", "MFA Issue", "Email Access", "Shared Folder Access"],
+  "Hardware & Devices": ["Laptop", "Desktop", "Monitor", "Printer", "Mobile Device", "Keyboard / Mouse", "Scanner", "Docking Station", "Headset", "Other Device"],
+  "Software & Applications": ["Outlook", "Teams", "ERP", "Office", "Browser", "PDF Software", "Other Application"],
+  "Network & Connectivity": ["Internet", "WiFi", "VPN", "Shared Folder", "Network Drive", "Other Network Issue"],
+  "Service Requests": ["New Laptop", "New Software", "Software Installation", "Access Request", "License Request", "Equipment Request", "Other Request"],
+  "General Questions": ["Other"]
+};
+
+function lookupCode(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+}
+
+function defaultTicketCategoryLookups() {
+  const items = [];
+  let sortOrder = 0;
+  for (const [parentName, children] of Object.entries(defaultTicketCategoryTree)) {
+    const parentCode = lookupCode(parentName);
+    sortOrder += 1;
+    items.push({
+      id: `lookup_ticket_category_${parentCode}`, type: "ticket_category", module: "ticket",
+      nameEn: parentName, nameAr: parentName, code: parentCode, parentCode: "",
+      color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][sortOrder % 5], icon: "", sortOrder, active: true
+    });
+    for (const childName of children) {
+      const code = `${parentCode}_${lookupCode(childName)}`;
+      sortOrder += 1;
+      items.push({
+        id: `lookup_ticket_category_${code}`, type: "ticket_category", module: "ticket",
+        nameEn: childName, nameAr: childName, code, parentCode,
+        color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][sortOrder % 5], icon: "", sortOrder, active: true
+      });
+    }
+  }
+  return items;
+}
+
 function defaultLookupItems() {
   const groups = {
-    ticket_category: [
-      "Access & Accounts / Password reset",
-      "Access & Accounts / Email",
-      "Access & Accounts / VPN",
-      "Access & Accounts / Permissions",
-      "Access & Accounts / Account access",
-      "Hardware / Laptop",
-      "Hardware / Monitor",
-      "Hardware / Printer",
-      "Hardware / Mobile device",
-      "Hardware / Peripherals",
-      "Software / Application issue",
-      "Software / Software installation",
-      "Software / Microsoft 365",
-      "Software / License request",
-      "Network / Internet",
-      "Network / WiFi",
-      "Network / VPN",
-      "Network / Connectivity issue",
-      "New Request / New laptop",
-      "New Request / New monitor",
-      "New Request / Phone",
-      "New Request / Email account",
-      "New Request / License",
-      "General / Other requests"
-    ],
     ticket_priority: ["low", "medium", "high", "critical"],
     ticket_status: ["open", "in_progress", "waiting", "resolved", "closed", "cancelled"],
     ticket_waiting_reason: ["User", "Vendor", "Approval", "Parts", "External Company", "Other"],
@@ -155,18 +196,22 @@ function defaultLookupItems() {
     linked_type: ["employee", "asset", "ticket", "task", "contract", "vendor", "document"],
     transfer_action: ["Assign", "Return", "Reassign", "Maintenance", "Lost", "Damaged", "Retire"]
   };
-  return Object.entries(groups).flatMap(([type, values]) => values.map((name, index) => ({
-    id: `lookup_${type}_${String(index + 1).padStart(2, "0")}`,
-    type,
-    module: type.split("_")[0],
-    nameEn: name,
-    nameAr: name,
-    code: String(name).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""),
-    color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][index % 5],
-    icon: "",
-    sortOrder: index + 1,
-    active: true
-  })));
+  return [
+    ...defaultTicketCategoryLookups(),
+    ...Object.entries(groups).flatMap(([type, values]) => values.map((name, index) => ({
+      id: `lookup_${type}_${String(index + 1).padStart(2, "0")}`,
+      type,
+      module: type.split("_")[0],
+      nameEn: name,
+      nameAr: name,
+      code: lookupCode(name),
+      parentCode: "",
+      color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][index % 5],
+      icon: "",
+      sortOrder: index + 1,
+      active: true
+    })))
+  ];
 }
 
 function seed() {
@@ -393,6 +438,23 @@ function migrateDb(db) {
   const oldTicketCategories = new Set(["hardware", "software", "access", "network", "security", "other"]);
   for (const item of db.lookupItems || []) {
     if (item.type === "ticket_category" && oldTicketCategories.has(String(item.code || item.nameEn || "").toLowerCase())) item.active = false;
+  }
+  // Ticket category taxonomy migration: retire the flat pre-tree vocabulary and
+  // make every remaining ticket_category row explicit about its parent.
+  const retiredCategoryCodes = new Set(legacyTicketCategoryNames.map((name) => lookupCode(name)));
+  for (const item of db.lookupItems || []) {
+    if (item.type !== "ticket_category") continue;
+    if (retiredCategoryCodes.has(String(item.code || "").toLowerCase())) item.active = false;
+    if (item.parentCode === undefined) item.parentCode = "";
+  }
+  for (const ticket of db.tickets || []) {
+    if (ticket.mainCategoryCode) continue;
+    const resolved = resolveTicketCategory(db, ticket);
+    if (resolved) Object.assign(ticket, resolved);
+  }
+  for (const ticket of db.tickets || []) {
+    if (ticket.onBehalf === undefined) ticket.onBehalf = false;
+    if (ticket.createdById === undefined) ticket.createdById = "";
   }
   return db;
 }
@@ -731,8 +793,8 @@ function notificationPreferences(user) {
 function retainNotificationForRole(db, notification) {
   const recipient = db.users.find((user) => user.id === notification.userId);
   if (!recipient) return false;
-  if (recipient.roleId === "role_employee") return ["Comment added", "Ticket assigned", "Ticket status changed", "More information needed", "Ticket resolved", "Ticket closed", "Asset assigned", "Asset returned", "Asset custody updated"].includes(notification.title);
-  if (recipient.roleId === "role_staff") return ["Ticket assigned", "Ticket auto-assigned", "Task assigned", "Task status changed", "Task completed", "Task cancelled", "Task reminder updated", "Recurring task generated", "Asset assigned", "Asset returned", "Asset custody updated", "Asset sent to repair", "Asset moved to maintenance", "Comment added", "Knowledge comment added", "Knowledge attachment uploaded", "Article published", "Article submitted for review", "Knowledge review assigned", "Knowledge changes requested", "Knowledge review due", "Knowledge review overdue", "Knowledge helpful score dropped", "Knowledge article became popular", "Knowledge linked tickets increased", "Contract expires within 90 days", "Contract expires within 60 days", "Contract expires within 30 days", "Contract expires within 14 days", "Contract expires within 7 days", "Contract expires within 1 day", "Contract expired", "Task due today", "Task overdue"].includes(notification.title);
+  if (recipient.roleId === "role_employee") return ["Comment added", "A ticket was opened for you", "Ticket assigned", "Ticket status changed", "More information needed", "Ticket resolved", "Ticket closed", "Asset assigned", "Asset returned", "Asset custody updated"].includes(notification.title);
+  if (recipient.roleId === "role_staff") return ["Ticket assigned", "A ticket was opened for you", "Ticket auto-assigned", "Task assigned", "Task status changed", "Task completed", "Task cancelled", "Task reminder updated", "Recurring task generated", "Asset assigned", "Asset returned", "Asset custody updated", "Asset sent to repair", "Asset moved to maintenance", "Comment added", "Knowledge comment added", "Knowledge attachment uploaded", "Article published", "Article submitted for review", "Knowledge review assigned", "Knowledge changes requested", "Knowledge review due", "Knowledge review overdue", "Knowledge helpful score dropped", "Knowledge article became popular", "Knowledge linked tickets increased", "Contract expires within 90 days", "Contract expires within 60 days", "Contract expires within 30 days", "Contract expires within 14 days", "Contract expires within 7 days", "Contract expires within 1 day", "Contract expired", "Task due today", "Task overdue"].includes(notification.title);
   if (recipient.roleId === "role_manager") return ["High priority ticket created", "Ticket waiting review", "Ticket auto-assigned", "SLA breached", "Vendor waiting too long", "Vendor document uploaded", "Vendor owner assigned", "Vendor asset linked", "Vendor review scheduled", "Vendor contact added", "Vendor contact updated", "Knowledge comment added", "Knowledge attachment uploaded", "Article published", "Article archived", "Article submitted for review", "Article approved", "Article rejected", "Knowledge review assigned", "Knowledge changes requested", "Knowledge review scheduled", "Knowledge review due", "Knowledge review overdue", "Knowledge version restored", "Knowledge helpful score dropped", "Knowledge article became popular", "Knowledge linked tickets increased", "Knowledge owner changed", "Knowledge category changed", "Asset assigned", "Asset returned", "Asset custody updated", "Asset sent to repair", "Asset moved to maintenance", "Asset marked lost", "Asset marked stolen", "Asset disposed", "Contract expires within 90 days", "Contract expires within 60 days", "Contract expires within 30 days", "Contract expires within 14 days", "Contract expires within 7 days", "Contract expires within 1 day", "Contract expired", "Contract renewed", "Contract terminated", "Contract approval requested", "Task assigned", "Task status changed", "Task completed", "Task cancelled", "Task reminder updated", "Recurring task generated", "Task due today", "Task overdue", "Ticket withdrawn by employee"].includes(notification.title);
   return true;
 }
@@ -788,7 +850,8 @@ function defaultTicketAssignmentSettings() {
     strategy: "manual",
     categoryAssignees: {},
     categoryRoutes: {},
-    fallbackAssigneeId: ""
+    fallbackAssigneeId: "",
+    roundRobinIndex: 0
   };
 }
 
@@ -809,8 +872,90 @@ function openTicketCountForUser(db, userId) {
   ).length;
 }
 
-function normalizeTicketCategoryKey(value) {
-  return String(value || "").split("/")[0].trim().toLowerCase();
+// Legacy display names -> new parent codes, so tickets and routing rules created
+// before the taxonomy migration still resolve.
+const legacyTicketParentAliases = {
+  "access & accounts": "accounts_access",
+  "access": "accounts_access",
+  "accounts": "accounts_access",
+  "hardware": "hardware_devices",
+  "software": "software_applications",
+  "network": "network_connectivity",
+  "new request": "service_requests",
+  "general": "general_questions",
+  "security": "accounts_access",
+  "other": "general_questions"
+};
+
+function ticketCategoryItems(db) {
+  return (db.lookupItems || []).filter((item) => item.type === "ticket_category" && item.active !== false);
+}
+
+function ticketCategoryParents(db) {
+  return ticketCategoryItems(db).filter((item) => !item.parentCode);
+}
+
+function ticketCategoryChildren(db, parentCode) {
+  return ticketCategoryItems(db).filter((item) => item.parentCode === parentCode);
+}
+
+function findTicketCategoryByCode(db, code) {
+  if (!code) return null;
+  return ticketCategoryItems(db).find((item) => item.code === String(code)) || null;
+}
+
+function findTicketCategoryByName(db, name, parentCode = null) {
+  const wanted = String(name || "").trim().toLowerCase();
+  if (!wanted) return null;
+  return ticketCategoryItems(db).find((item) =>
+    (parentCode === null || item.parentCode === parentCode)
+    && [item.nameEn, item.nameAr].some((label) => String(label || "").trim().toLowerCase() === wanted)
+  ) || null;
+}
+
+// Splits "Main / Sub" on the FIRST separator only - subcategory names such as
+// "Keyboard / Mouse" contain a slash themselves.
+function splitTicketCategoryLabel(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return { main: "", sub: "" };
+  const index = raw.indexOf("/");
+  if (index === -1) return { main: raw, sub: "" };
+  return { main: raw.slice(0, index).trim(), sub: raw.slice(index + 1).trim() };
+}
+
+// Resolves whatever the client sent (codes, "Main / Sub" label, or the legacy
+// mainCategory/subcategory pair) into canonical codes + display label.
+function resolveTicketCategory(db, source = {}) {
+  let parent = findTicketCategoryByCode(db, source.mainCategoryCode);
+  let child = findTicketCategoryByCode(db, source.subcategoryCode);
+  if (child && !child.parentCode) child = null;
+  if (child && (!parent || parent.code !== child.parentCode)) parent = findTicketCategoryByCode(db, child.parentCode);
+  if (!parent) {
+    const label = splitTicketCategoryLabel(source.category);
+    const mainName = String(source.mainCategory || label.main || "").trim();
+    const subName = String(source.subcategory || label.sub || "").trim();
+    parent = findTicketCategoryByName(db, mainName, "")
+      || findTicketCategoryByCode(db, legacyTicketParentAliases[mainName.toLowerCase()])
+      || null;
+    if (parent && subName) child = findTicketCategoryByName(db, subName, parent.code);
+  }
+  if (!parent) return null;
+  return {
+    mainCategoryCode: parent.code,
+    subcategoryCode: child ? child.code : "",
+    mainCategory: parent.nameEn,
+    subcategory: child ? child.nameEn : "",
+    category: child ? `${parent.nameEn} / ${child.nameEn}` : parent.nameEn
+  };
+}
+
+// Writes canonical category fields onto a ticket. Returns false when the
+// category could not be resolved so callers can reject the payload.
+function applyTicketCategory(db, ticket) {
+  const resolved = resolveTicketCategory(db, ticket);
+  if (!resolved) return false;
+  Object.assign(ticket, resolved);
+  return true;
 }
 
 function pickLeastOpenStaff(db) {
@@ -897,18 +1042,46 @@ function validateAssignmentGroupPayload(db, body, existing = {}) {
   };
 }
 
+function pickRoundRobinStaff(db) {
+  const staff = db.users
+    .filter((user) => user.roleId === "role_staff" && !["inactive", "disabled", "locked"].includes(String(user.status || "active").toLowerCase()))
+    .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  if (!staff.length) return null;
+  const settings = ticketAssignmentSettings(db);
+  const index = Number(settings.roundRobinIndex || 0) % staff.length;
+  settings.roundRobinIndex = (index + 1) % staff.length;
+  return staff[index];
+}
+
+// Resolves the routing rule for a ticket: the most specific subcategory rule
+// wins, otherwise the ticket inherits its main category rule.
+function resolveCategoryRoute(db, ticket) {
+  const settings = ticketAssignmentSettings(db);
+  const keys = [ticket.subcategoryCode, ticket.mainCategoryCode].filter(Boolean);
+  for (const key of keys) {
+    const route = settings.categoryRoutes[key];
+    if (route?.type && route.id) return { route, key };
+    const legacy = settings.categoryAssignees[key];
+    if (legacy) return { route: { type: "user", id: legacy }, key };
+  }
+  return { route: null, key: "" };
+}
+
 function autoAssignTicket(db, ticket) {
   const settings = ticketAssignmentSettings(db);
   if (!settings.enabled || settings.strategy === "manual" || ticket.assignedToId) return null;
-  const categoryKey = normalizeTicketCategoryKey(ticket.category);
-  const route = settings.categoryRoutes[categoryKey] || null;
+  const { route } = resolveCategoryRoute(db, ticket);
   if (route?.type === "group" && route.id) return assignTicketToGroup(db, ticket, route.id);
-  const mappedAssigneeId = route?.type === "user" ? route.id : settings.categoryAssignees[categoryKey] || settings.categoryAssignees[ticket.category] || "";
-  let assignee = db.users.find((user) => user.id === mappedAssigneeId && isTicketAssignee(db, user.id));
+  let assignee = route?.type === "user" ? db.users.find((user) => user.id === route.id && isTicketAssignee(db, user.id)) : null;
   let method = "category";
   if (!assignee) {
-    assignee = pickLeastOpenStaff(db);
-    method = "least_open_tickets";
+    if (settings.strategy === "round_robin") {
+      assignee = pickRoundRobinStaff(db);
+      method = "round_robin";
+    } else if (settings.strategy === "least_open" || settings.strategy === "category") {
+      assignee = pickLeastOpenStaff(db);
+      method = "least_open_tickets";
+    }
   }
   if (!assignee) {
     assignee = pickManagerFallback(db, settings.fallbackAssigneeId);
@@ -2206,12 +2379,21 @@ function prepareCreateBody(db, user, resource, body) {
     next.personType = next.personType || "Employee";
   }
   if (resource === "tickets") {
+    const actorEmployee = employeeForUser(db, user);
     if (!isItUser(db, user)) {
-      const employee = employeeForUser(db, user);
-      if (!employee) return { error: "Employee profile not found", status: 403 };
-      next.requesterId = employee.id;
+      if (!actorEmployee) return { error: "Employee profile not found", status: 403 };
+      next.requesterId = actorEmployee.id;
       next.status = next.status || "open";
+    } else {
+      // IT Staff, IT Manager and System Admin may open a ticket on behalf of an employee.
+      const requester = (db.employees || []).find((employee) => employee.id === next.requesterId);
+      if (!requester) return { error: "Requester is required", status: 400 };
+      if (requester.archivedAt || requester.deletedAt) return { error: "Requester is not an active employee", status: 400 };
+      if (String(requester.status || "active").toLowerCase() !== "active") return { error: "Requester is not an active employee", status: 400 };
     }
+    next.createdById = user.id;
+    next.onBehalf = Boolean(isItUser(db, user) && next.requesterId && next.requesterId !== actorEmployee?.id);
+    if (!applyTicketCategory(db, next)) return { error: "Unsupported ticket category", status: 400 };
     if (!String(next.ticketNumber || "").trim()) next.ticketNumber = nextRecordNumber(db, "tickets", "ticketNumber", "TCK");
     if (db.tickets.some((ticket) => String(ticket.ticketNumber || "").toLowerCase() === String(next.ticketNumber).toLowerCase())) {
       return { error: "Ticket number already exists", status: 409 };
@@ -2611,17 +2793,26 @@ async function handleApi(req, res) {
     const oldValue = { ...ticketAssignmentSettings(db), categoryAssignees: { ...ticketAssignmentSettings(db).categoryAssignees }, categoryRoutes: { ...ticketAssignmentSettings(db).categoryRoutes } };
     const strategy = String(body.strategy || "manual");
     if (!["manual", "category", "least_open", "round_robin"].includes(strategy)) return send(res, 400, { error: "Unsupported assignment strategy" });
+    // Routing keys are ticket_category lookup codes - main category codes and
+    // subcategory codes are both valid, the subcategory rule being the specific one.
+    const routeKey = (value) => {
+      const direct = findTicketCategoryByCode(db, value);
+      if (direct) return direct.code;
+      const resolved = resolveTicketCategory(db, { category: value });
+      return resolved ? resolved.subcategoryCode || resolved.mainCategoryCode : "";
+    };
     const categoryAssignees = {};
     for (const [category, assigneeId] of Object.entries(body.categoryAssignees || {})) {
-      const key = normalizeTicketCategoryKey(category);
+      const key = routeKey(category);
       if (!key || !assigneeId) continue;
       if (!isTicketAssignee(db, assigneeId)) return send(res, 400, { error: "Category assignees must be IT Staff or IT Manager users" });
       categoryAssignees[key] = assigneeId;
     }
     const categoryRoutes = {};
     for (const [category, route] of Object.entries(body.categoryRoutes || {})) {
-      const key = normalizeTicketCategoryKey(category);
-      if (!key || !route?.type || !route?.id) continue;
+      const key = routeKey(category);
+      if (!key) return send(res, 400, { error: `Unknown ticket category: ${category}` });
+      if (!route?.type || !route?.id) continue;
       if (route.type === "user") {
         if (!isTicketAssignee(db, route.id)) return send(res, 400, { error: "Category user routes must point to IT Staff or IT Manager users" });
         categoryRoutes[key] = { type: "user", id: route.id };
@@ -2641,7 +2832,8 @@ async function handleApi(req, res) {
       strategy,
       categoryAssignees,
       categoryRoutes,
-      fallbackAssigneeId: body.fallbackAssigneeId || ""
+      fallbackAssigneeId: body.fallbackAssigneeId || "",
+      roundRobinIndex: Number(oldValue.roundRobinIndex || 0)
     };
     audit(db, req, "update", "settings", "ticket-assignment", oldValue, db.settings.ticketAssignment);
     writeDb(db);
@@ -2789,6 +2981,31 @@ async function handleApi(req, res) {
       const highPriority = ["high", "critical"].includes(String(row.priority || "").toLowerCase());
       const unassigned = !row.assignedToId;
       if (highPriority || unassigned) createNotification(db, { roleIds: ["role_manager"], category: "tickets", type: highPriority ? "critical" : "warning", title: highPriority ? "High priority ticket created" : "Ticket waiting review", body: `${row.ticketNumber} is ready for IT review.`, entityType: "ticket", entityId: row.id });
+      if (row.onBehalf) {
+        const requester = (db.employees || []).find((employee) => employee.id === row.requesterId);
+        const requesterUserId = userForEmployee(db, row.requesterId)?.id;
+        db.timeline.unshift({
+          id: id("tl"),
+          title: "Ticket opened on behalf of employee",
+          description: `${row.ticketNumber} was opened by ${user.name} on behalf of ${requester?.name || "an employee"}.`,
+          entityType: "tickets",
+          entityId: row.id,
+          severity: "info",
+          actorUserId: user.id,
+          createdAt: now()
+        });
+        if (requesterUserId && requesterUserId !== user.id) {
+          createNotification(db, {
+            userIds: [requesterUserId],
+            category: "tickets",
+            type: "info",
+            title: "A ticket was opened for you",
+            body: `${user.name} opened ${row.ticketNumber} on your behalf: ${row.category || "IT request"}.`,
+            entityType: "ticket",
+            entityId: row.id
+          });
+        }
+      }
       if (autoAssignment) {
         if (autoAssignment.group) {
           db.timeline.unshift({
@@ -3011,6 +3228,17 @@ async function handleApi(req, res) {
     if (resource === "tickets" && body.ticketNumber && db.tickets.some((ticket) => ticket.id !== row.id && !ticket.deletedAt && String(ticket.ticketNumber || "").toLowerCase() === String(body.ticketNumber).toLowerCase())) {
       return send(res, 409, { error: "Ticket number already exists" });
     }
+    if (resource === "tickets" && ["category", "mainCategoryCode", "subcategoryCode", "mainCategory", "subcategory"].some((field) => Object.prototype.hasOwnProperty.call(body, field))) {
+      const recategorized = { ...row, ...body };
+      // Force re-resolution from the incoming values rather than the stored codes.
+      if (Object.prototype.hasOwnProperty.call(body, "category") && !body.mainCategoryCode && !body.subcategoryCode) {
+        recategorized.mainCategoryCode = "";
+        recategorized.subcategoryCode = "";
+      }
+      const resolved = resolveTicketCategory(db, recategorized);
+      if (!resolved) return send(res, 400, { error: "Unsupported ticket category" });
+      Object.assign(body, resolved);
+    }
     if (resource === "knowledge_base" && (body.bodyHtml !== undefined || body.body !== undefined || body.title !== undefined || body.tagsText !== undefined || body.category !== undefined)) {
       body.keywords = knowledgeSearchKeywords({ ...row, ...body }, body);
       body.readingTime = knowledgeReadingTimeLabel(`${body.body || row.body || ""} ${htmlToText(body.bodyHtml || row.bodyHtml || "")}`);
@@ -3025,6 +3253,35 @@ async function handleApi(req, res) {
     const oldValue = { ...row };
     Object.assign(row, body, { updatedAt: now() });
     if (resource === "transfers") applyTransferSideEffects(db, row);
+    // An explicit assignment is a manual decision - drop the auto-assigned marker so
+    // later category changes cannot silently steal the ticket back.
+    if (resource === "tickets" && Object.prototype.hasOwnProperty.call(body, "assignedToId")) {
+      row.autoAssigned = false;
+      row.autoAssignmentMethod = "";
+    }
+    // Re-route when the category changes, but never override a manual assignment.
+    let recategorizedAssignment = null;
+    if (resource === "tickets"
+      && (row.mainCategoryCode !== oldValue.mainCategoryCode || row.subcategoryCode !== oldValue.subcategoryCode)
+      && !Object.prototype.hasOwnProperty.call(body, "assignedToId")
+      && (!row.assignedToId || row.autoAssigned)) {
+      const previousAssigneeId = row.assignedToId;
+      row.assignedToId = "";
+      recategorizedAssignment = autoAssignTicket(db, row);
+      if (!recategorizedAssignment) row.assignedToId = previousAssigneeId;
+      else if (recategorizedAssignment.assignee) {
+        db.timeline.unshift({
+          id: id("tl"),
+          title: "Ticket re-routed after category change",
+          description: `${row.ticketNumber} moved to ${row.category} and was assigned to ${recategorizedAssignment.assignee.name}.`,
+          entityType: "tickets",
+          entityId: row.id,
+          severity: "info",
+          actorUserId: user.id,
+          createdAt: now()
+        });
+      }
+    }
     if (resource === "tickets" && row.assignedToId && row.assignedToId !== oldValue.assignedToId) createNotification(db, {
       userIds: [isStaff(db, row.assignedToId) ? row.assignedToId : "", userForEmployee(db, row.requesterId)?.id].filter((idValue) => idValue && idValue !== user.id), category: "tickets", type: "info", title: "Ticket assigned",
       body: `${row.ticketNumber} was assigned to ${lookUserName(db, row.assignedToId)}.`, entityType: "ticket", entityId: row.id
