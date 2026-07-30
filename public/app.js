@@ -1615,6 +1615,56 @@ Object.assign(uiTextAr, {
   "PDF, image, Word, or Excel file": "ملف PDF أو صورة أو Word أو Excel"
 });
 
+// Ticket assignment routing and "open on behalf of".
+Object.assign(uiTextAr, {
+  "Who is this request for?": "لمن هذا الطلب؟",
+  "Open the ticket on behalf of the employee who needs help.": "افتح التذكرة نيابةً عن الموظف الذي يحتاج المساعدة.",
+  "Search employees": "ابحث عن موظف",
+  "Open a ticket": "فتح تذكرة",
+  "On behalf": "نيابةً عن",
+  "Opened by IT on behalf of the requester": "فتحها فريق تقنية المعلومات نيابةً عن مقدم الطلب",
+  "{requester} (opened by {author})": "{requester} (فتحها {author})",
+  "This ticket will be created on behalf of {name}, who will be notified and able to follow it.": "سيتم إنشاء هذه التذكرة نيابةً عن {name}، وسيتم إشعاره وسيتمكن من متابعتها.",
+  "A ticket was opened for you": "تم فتح تذكرة لك",
+  "Auto assignment routing": "التوجيه التلقائي للإسناد",
+  "Automatically route new employee tickets to the right IT user based on category, workload, or fallback rules.": "توجيه تذاكر الموظفين الجديدة تلقائيًا إلى الشخص المناسب في تقنية المعلومات حسب التصنيف أو حجم العمل أو قواعد الاحتياط.",
+  "Enable Auto Assignment": "تشغيل الإسناد التلقائي",
+  "Assignment Strategy": "استراتيجية الإسناد",
+  "Fallback Assignee": "المسؤول الاحتياطي",
+  "Used when no category rule or active IT Staff match is available.": "يُستخدم عند عدم وجود قاعدة تصنيف أو موظف تقنية معلومات نشط مطابق.",
+  "Category Assignment Rules": "قواعد إسناد التصنيفات",
+  "Set an owner per main category, then override individual subcategories only where they differ. Subcategories left on \"Inherit\" follow their main category.": "حدد مسؤولًا لكل تصنيف رئيسي، ثم استثنِ التصنيفات الفرعية التي تختلف فقط. التصنيفات الفرعية المتروكة على \"موروث\" تتبع تصنيفها الرئيسي.",
+  "Use fallback": "استخدام الاحتياطي",
+  "Specific user": "مستخدم محدد",
+  "Assignment group": "مجموعة إسناد",
+  "Inherit — {owner}": "موروث — {owner}",
+  "Inherit — use fallback": "موروث — استخدام الاحتياطي",
+  "Manual Only": "يدوي فقط",
+  "By Category": "حسب التصنيف",
+  "Least Open Tickets": "الأقل تذاكر مفتوحة",
+  "Round Robin": "بالتناوب",
+  "Save Ticket Assignment": "حفظ إسناد التذاكر",
+  "Reset to Manual Only": "إعادة التعيين إلى يدوي فقط",
+  "Auto-assigned": "مُسند تلقائيًا",
+  "{n} subcategory": "تصنيف فرعي واحد",
+  "{n} subcategories": "{n} تصنيفات فرعية",
+  "{n} override": "استثناء واحد",
+  "{n} overrides": "{n} استثناءات",
+  "No subcategories yet. Add them in Lookup Management.": "لا توجد تصنيفات فرعية بعد. أضفها من إدارة القوائم.",
+  "{routed} of {total} main categories routed": "تم توجيه {routed} من {total} تصنيفات رئيسية",
+  "{n} subcategory override": "استثناء واحد لتصنيف فرعي",
+  "{n} subcategory overrides": "{n} استثناءات لتصنيفات فرعية",
+  "Auto assignment is off": "الإسناد التلقائي متوقف",
+  "No rules yet — every ticket uses the fallback": "لا توجد قواعد بعد — كل تذكرة تستخدم الاحتياطي",
+  "Parent value": "القيمة الرئيسية",
+  "Nest this value under a main category. Ticket categories use this to build the routing tree.": "أدرج هذه القيمة تحت تصنيف رئيسي. تستخدم تصنيفات التذاكر ذلك لبناء شجرة التوجيه.",
+  "None (this is a main value)": "بدون (هذه قيمة رئيسية)",
+  "Unsaved changes": "تغييرات غير محفوظة",
+  "Saving...": "جارٍ الحفظ...",
+  "Saved": "تم الحفظ",
+  "Not saved": "لم يتم الحفظ"
+});
+
 function trText(value) {
   const text = String(value ?? "");
   if (state.lang !== "ar") return text;
@@ -6900,7 +6950,7 @@ function ticketWorkspaceListItem(ticket, active) {
     <span class="ticket-v2-list-top"><strong>${escapeHtml(ticket.ticketNumber || ticket.id)}</strong><span class="ticket-v2-sla ${sla.tone}">${escapeHtml(sla.label)}</span></span>
     <span class="workspace-ticket-subject">${escapeHtml(ticketSubject(ticket))}</span>
     <span class="ticket-v2-requester"><span class="avatar mini">${escapeHtml(initials(requester))}</span><span>${escapeHtml(requester)}</span><small>${escapeHtml(relativeTime(ticket.updatedAt || ticket.createdAt))}</small></span>
-    <span class="ticket-v2-list-badges"><span class="badge ${badgeClass(ticket.priority)}">${escapeHtml(ticket.priority || "Medium")}</span><span class="badge ${badgeClass(ticket.status)}">${escapeHtml(labelize(ticket.status || "open"))}</span>${ticket.autoAssigned ? `<span class="badge info">Auto-assigned</span>` : ""}${ticket.onBehalf ? `<span class="badge neutral">On behalf</span>` : ""}${comments ? `<span class="ticket-v2-unread">${comments}</span>` : ""}</span>
+    <span class="ticket-v2-list-badges"><span class="badge ${badgeClass(ticket.priority)}">${escapeHtml(ticket.priority || "Medium")}</span><span class="badge ${badgeClass(ticket.status)}">${escapeHtml(labelize(ticket.status || "open"))}</span>${ticket.autoAssigned ? `<span class="badge info">Auto-assigned</span>` : ""}${ticket.onBehalf ? `<span class="badge neutral" title="Opened by IT on behalf of the requester">On behalf</span>` : ""}${comments ? `<span class="ticket-v2-unread">${comments}</span>` : ""}</span>
     ${ticketWorkspaceIndicators(ticket)}
   </button>`;
 }
@@ -7645,6 +7695,41 @@ function lookupManagementSettingsPanel() {
   `;
 }
 
+// Shared save-state indicator for editable forms: "Unsaved changes" / "Saving..." /
+// "Saved" / "Not saved", per design system section 15.
+const formSaveStateText = {
+  dirty: "Unsaved changes",
+  saving: "Saving...",
+  saved: "Saved",
+  error: "Not saved"
+};
+
+function setFormSaveState(node, state) {
+  if (!node) return;
+  const label = formSaveStateText[state];
+  node.textContent = label ? trText(label) : "";
+  node.dataset.state = label ? state : "";
+  if (state === "saved") {
+    window.clearTimeout(node.dataset.timer);
+    node.dataset.timer = String(window.setTimeout(() => {
+      if (node.dataset.state === "saved") setFormSaveState(node, "");
+    }, 4000));
+  }
+}
+
+// One line telling an admin how much of the taxonomy is actually routed, so gaps are
+// visible without opening all six groups.
+function assignmentCoverageSummary(settings, parents) {
+  const routeFor = (code) => settings.categoryRoutes?.[code] || (settings.categoryAssignees?.[code] ? { type: "user", id: settings.categoryAssignees[code] } : null);
+  const routedParents = parents.filter((parent) => routeFor(parent.code)).length;
+  const overrides = parents.reduce((total, parent) => total + ticketCategoryChildren(parent.code).filter((child) => routeFor(child.code)).length, 0);
+  const parts = [tpl("{routed} of {total} main categories routed", { routed: routedParents, total: parents.length })];
+  if (overrides) parts.push(tpl(overrides === 1 ? "{n} subcategory override" : "{n} subcategory overrides", { n: overrides }));
+  if (!settings.enabled) parts.push(trText("Auto assignment is off"));
+  else if (!routedParents && !overrides) parts.push(trText("No rules yet — every ticket uses the fallback"));
+  return parts.join(" · ");
+}
+
 function ticketAssignmentSettingsPanel() {
   if (!["role_manager", "role_admin"].includes(state.user?.roleId)) return "";
   const settings = { enabled: false, strategy: "manual", categoryAssignees: {}, categoryRoutes: {}, fallbackAssigneeId: "", ...(state.db.settings?.ticketAssignment || {}) };
@@ -7698,6 +7783,7 @@ function ticketAssignmentSettingsPanel() {
         <div class="assignment-map">
           <div class="assignment-map-head">
             <div><strong>Category Assignment Rules</strong><span class="muted">Set an owner per main category, then override individual subcategories only where they differ. Subcategories left on "Inherit" follow their main category.</span></div>
+            <p class="assignment-coverage">${escapeHtml(assignmentCoverageSummary(settings, parents))}</p>
           </div>
           ${parents.map((parent) => {
             const parentValue = routeValue(parent.code);
@@ -7706,14 +7792,17 @@ function ticketAssignmentSettingsPanel() {
             return `
               <details class="assignment-category-group" ${overrides ? "open" : ""}>
                 <summary class="assignment-rule-row assignment-rule-parent">
-                  <span><strong>${escapeHtml(lookupLabel(parent))}</strong><small>${children.length} ${children.length === 1 ? "subcategory" : "subcategories"}${overrides ? ` · ${overrides} override${overrides === 1 ? "" : "s"}` : ""}</small></span>
+                  <span><strong>${escapeHtml(lookupLabel(parent))}</strong><small>${escapeHtml([
+                    tpl(children.length === 1 ? "{n} subcategory" : "{n} subcategories", { n: children.length }),
+                    overrides ? tpl(overrides === 1 ? "{n} override" : "{n} overrides", { n: overrides }) : ""
+                  ].filter(Boolean).join(" · "))}</small></span>
                   <select name="categoryRoute:${escapeHtml(parent.code)}" data-assignment-parent="${escapeHtml(parent.code)}">${routeOptions(parentValue)}</select>
                 </summary>
                 <div class="assignment-subcategories">
                   ${children.map((child) => `
                     <label class="assignment-rule-row assignment-rule-child">
                       <span>${escapeHtml(lookupLabel(child))}</span>
-                      <select name="categoryRoute:${escapeHtml(child.code)}">${routeOptions(routeValue(child.code), parentValue ? `Inherit — ${routeSummary(parentValue)}` : "Inherit — use fallback")}</select>
+                      <select name="categoryRoute:${escapeHtml(child.code)}">${routeOptions(routeValue(child.code), parentValue ? tpl("Inherit — {owner}", { owner: routeSummary(parentValue) }) : trText("Inherit — use fallback"))}</select>
                     </label>
                   `).join("") || `<p class="muted">No subcategories yet. Add them in Lookup Management.</p>`}
                 </div>
@@ -7722,8 +7811,9 @@ function ticketAssignmentSettingsPanel() {
           }).join("")}
         </div>
         <div class="settings-actions ticket-assignment-actions">
+          <p class="form-save-state" data-assignment-save-state role="status" aria-live="polite"></p>
           <button class="btn btn-secondary" type="button" data-reset-ticket-assignment>Reset to Manual Only</button>
-          <button class="btn btn-primary" type="submit">Save Ticket Assignment</button>
+          <button class="btn btn-primary" type="submit" data-assignment-submit>Save Ticket Assignment</button>
         </div>
       </form>
     </section>
@@ -8923,6 +9013,14 @@ function bindPageActions() {
         }
       }
     }
+    const submit = $("[data-assignment-submit]", form);
+    const saveState = $("[data-assignment-save-state]", form);
+    const submitLabel = submit?.textContent || "";
+    setFormSaveState(saveState, "saving");
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = trText("Saving...");
+    }
     try {
       await api("/api/settings/ticket-assignment", {
         method: "PATCH",
@@ -8934,12 +9032,25 @@ function bindPageActions() {
           categoryRoutes
         })
       });
+      form.dataset.dirty = "false";
       toast("Ticket assignment saved", "New tickets will follow the updated V1 assignment rules.");
       await loadState();
       render();
+      setFormSaveState($("[data-assignment-save-state]"), "saved");
     } catch (error) {
+      if (submit) {
+        submit.disabled = false;
+        submit.textContent = submitLabel;
+      }
+      setFormSaveState(saveState, "error");
       toast("Could not save assignment settings", error.message);
     }
+  });
+  // Design system section 15: a form that can be edited must say whether it is saved.
+  $("[data-ticket-assignment-form]")?.addEventListener("input", (event) => {
+    const form = event.currentTarget;
+    form.dataset.dirty = "true";
+    setFormSaveState($("[data-assignment-save-state]", form), "dirty");
   });
   $("[data-reset-ticket-assignment]")?.addEventListener("click", async () => {
     try {
@@ -9871,15 +9982,15 @@ function employeeTicketWizardHtml() {
       <input type="hidden" name="employeeSubcategory" data-ticket-subcategory>
       <input type="hidden" name="employeeSubjectMode" value="false" data-subject-mode>
       ${onBehalfRequesterStepHtml()}
-      <section class="wizard-step">
-        <div class="wizard-section-title"><strong>Choose Main Category</strong></div>
-        <div class="wizard-card-grid">${ticketCategoryParents().map((category) => `<button type="button" class="wizard-card" data-ticket-category-card="${escapeHtml(category.code)}">${icon(employeeTicketCategoryIcon(category.code))}<span>${escapeHtml(lookupLabel(category))}</span></button>`).join("")}</div>
+      <section class="wizard-step" data-wizard-numbered>
+        <div class="wizard-section-title"><strong>Choose Main Category <span class="required">*</span></strong></div>
+        <div class="wizard-card-grid">${ticketCategoryParents().map((category) => `<button type="button" class="wizard-card" aria-pressed="false" data-ticket-category-card="${escapeHtml(category.code)}">${icon(employeeTicketCategoryIcon(category.code))}<span>${escapeHtml(lookupLabel(category))}</span></button>`).join("")}</div>
       </section>
-      <section class="wizard-step" data-subcategory-step hidden>
+      <section class="wizard-step" data-wizard-numbered data-subcategory-step hidden>
         <div class="wizard-section-title"><strong>Choose Subcategory</strong></div>
         <div class="wizard-card-grid" data-subcategory-cards></div>
       </section>
-      <section class="wizard-step" data-service-request-step hidden>
+      <section class="wizard-step" data-wizard-numbered data-service-request-step hidden>
         <div class="wizard-section-title"><strong data-service-request-title></strong><small class="muted" data-service-request-helper></small></div>
         <div class="equipment-request-options" data-service-request-options></div>
         <div class="equipment-other-fields" data-service-request-other-step hidden>
@@ -9888,11 +9999,11 @@ function employeeTicketWizardHtml() {
           <button class="btn btn-secondary service-add-item" type="button" data-add-service-custom>+ Add Another Item</button>
         </div>
       </section>
-      <section class="wizard-step" data-subject-step hidden>
+      <section class="wizard-step" data-wizard-numbered data-subject-step hidden>
         <div class="wizard-section-title"><strong>Subject <span class="required">*</span></strong><small class="muted">Write a short title for your question or request.</small></div>
         <input name="employeeSubject" disabled placeholder="How do I connect to the meeting room screen?">
       </section>
-      <section class="wizard-step" data-more-information-step hidden>
+      <section class="wizard-step" data-wizard-numbered data-more-information-step hidden>
         <details class="more-information" data-more-information>
           <summary><span>More Information</span> <span>(Optional)</span></summary>
           <div class="more-information-fields">
@@ -9928,27 +10039,27 @@ function usesTicketWizard(name, row) {
   return name === "tickets" && !row && (isEmployeeUser() || canCreateTicketOnBehalf());
 }
 
-function onBehalfRequesterOptions(selected = "") {
+// Searchable picker rather than a raw select: an employee list grows past the point
+// where scrolling a dropdown is usable, and it matches the category picker's behaviour.
+function onBehalfRequesterOptions() {
   return rows("employees")
     .filter((employee) => String(employee.status || "active").toLowerCase() === "active")
     .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
-    .map((employee) => `<option value="${employee.id}" ${selected === employee.id ? "selected" : ""}>${escapeHtml(employee.name || employee.employeeNo || employee.id)}${employee.departmentId ? ` — ${escapeHtml(look("departments", employee.departmentId) || "")}` : ""}</option>`)
-    .join("");
+    .map((employee) => {
+      const department = employee.departmentId ? look("departments", employee.departmentId) : "";
+      const name = employee.name || employee.employeeNo || employee.id;
+      return { value: employee.id, label: department ? `${name} — ${department}` : name, icon: "employees" };
+    });
 }
 
 function onBehalfRequesterStepHtml() {
   if (!canCreateTicketOnBehalf()) return "";
   const self = employeeForUser();
   return `
-    <section class="wizard-step" data-on-behalf-step>
-      <div class="wizard-section-title"><strong>${escapeHtml(trText("Who is this request for?"))} <span class="required">*</span></strong><small class="muted">${escapeHtml(trText("Open the ticket on behalf of the employee who needs help."))}</small></div>
-      <label class="on-behalf-picker"><span class="sr-only">${escapeHtml(trText("Requester"))}</span>
-        <select name="requesterId" required data-on-behalf-requester>
-          <option value="">${escapeHtml(trText("Select an employee"))}</option>
-          ${onBehalfRequesterOptions(self?.id || "")}
-        </select>
-      </label>
-      <p class="muted on-behalf-hint" data-on-behalf-hint hidden></p>
+    <section class="wizard-step" data-on-behalf-step data-wizard-numbered>
+      <div class="wizard-section-title"><strong>Who is this request for? <span class="required">*</span></strong><small class="muted">Open the ticket on behalf of the employee who needs help.</small></div>
+      ${modernSelectHtml("requesterId", "Requester", self?.id || "", onBehalfRequesterOptions(), { required: true, placeholder: "Search employees", attrs: 'data-on-behalf-requester', full: "full" })}
+      <p class="muted on-behalf-hint" data-on-behalf-hint role="status" aria-live="polite" hidden></p>
     </section>
   `;
 }
@@ -10070,7 +10181,10 @@ function wireEmployeeTicketWizard() {
     setSubjectFlow(false);
     setServiceRequestFlow(null);
     setMoreInformationFlow(categoryCode !== "service_requests");
-    $$("[data-ticket-category-card]").forEach((item) => item.classList.toggle("active", item === button));
+    $$("[data-ticket-category-card]").forEach((item) => {
+      item.classList.toggle("active", item === button);
+      item.setAttribute("aria-pressed", String(item === button));
+    });
     const options = ticketCategoryChildren(categoryCode);
     // A parent with no real choice (only "Other") skips straight to a free-text subject.
     if (!options.length || (options.length === 1 && /^other$/i.test(options[0].nameEn || ""))) {
@@ -10080,12 +10194,15 @@ function wireEmployeeTicketWizard() {
       renderSuggestions();
       return;
     }
-    target.innerHTML = options.map((option) => `<button type="button" class="wizard-card compact" data-ticket-subcategory-card="${escapeHtml(option.code)}">${icon(employeeTicketCategoryIcon(categoryCode))}<span>${escapeHtml(lookupLabel(option))}</span></button>`).join("");
+    target.innerHTML = options.map((option) => `<button type="button" class="wizard-card compact" aria-pressed="false" data-ticket-subcategory-card="${escapeHtml(option.code)}">${icon(employeeTicketCategoryIcon(categoryCode))}<span>${escapeHtml(lookupLabel(option))}</span></button>`).join("");
     subcategoryStep.hidden = false;
     $$("[data-ticket-subcategory-card]").forEach((item) => item.addEventListener("click", () => {
       const selected = item.dataset.ticketSubcategoryCard;
       sub.value = selected;
-      $$("[data-ticket-subcategory-card]").forEach((card) => card.classList.toggle("active", card === item));
+      $$("[data-ticket-subcategory-card]").forEach((card) => {
+        card.classList.toggle("active", card === item);
+        card.setAttribute("aria-pressed", String(card === item));
+      });
       setSubjectFlow(false);
       setServiceRequestFlow(employeeServiceRequestOptions[selected] || null);
       renderSuggestions();

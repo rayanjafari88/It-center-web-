@@ -122,37 +122,81 @@ const legacyTicketCategoryNames = [
 // Single source of truth for ticket categories. Stored in db.lookupItems as
 // parent rows (parentCode === "") plus child rows (parentCode === parent code),
 // so admins can add categories from Lookup Management without a code change.
-const defaultTicketCategoryTree = {
-  "Accounts & Access": ["Password Reset", "Account Locked", "MFA Issue", "Email Access", "Shared Folder Access"],
-  "Hardware & Devices": ["Laptop", "Desktop", "Monitor", "Printer", "Mobile Device", "Keyboard / Mouse", "Scanner", "Docking Station", "Headset", "Other Device"],
-  "Software & Applications": ["Outlook", "Teams", "ERP", "Office", "Browser", "PDF Software", "Other Application"],
-  "Network & Connectivity": ["Internet", "WiFi", "VPN", "Shared Folder", "Network Drive", "Other Network Issue"],
-  "Service Requests": ["New Laptop", "New Software", "Software Installation", "Access Request", "License Request", "Equipment Request", "Other Request"],
-  "General Questions": ["Other"]
-};
+// Both languages live here so nameAr is real data, not the English string repeated.
+const defaultTicketCategoryTree = [
+  ["Accounts & Access", "الحسابات والصلاحيات", [
+    ["Password Reset", "إعادة تعيين كلمة المرور"],
+    ["Account Locked", "حساب مقفل"],
+    ["MFA Issue", "مشكلة في التحقق بخطوتين"],
+    ["Email Access", "الوصول إلى البريد الإلكتروني"],
+    ["Shared Folder Access", "الوصول إلى مجلد مشترك"]
+  ]],
+  ["Hardware & Devices", "الأجهزة والمعدات", [
+    ["Laptop", "حاسب محمول"],
+    ["Desktop", "حاسب مكتبي"],
+    ["Monitor", "شاشة"],
+    ["Printer", "طابعة"],
+    ["Mobile Device", "جهاز جوال"],
+    ["Keyboard / Mouse", "لوحة مفاتيح / فأرة"],
+    ["Scanner", "ماسح ضوئي"],
+    ["Docking Station", "قاعدة توصيل"],
+    ["Headset", "سماعة رأس"],
+    ["Other Device", "جهاز آخر"]
+  ]],
+  ["Software & Applications", "البرمجيات والتطبيقات", [
+    ["Outlook", "أوتلوك"],
+    ["Teams", "تيمز"],
+    ["ERP", "نظام تخطيط الموارد"],
+    ["Office", "أوفيس"],
+    ["Browser", "متصفح"],
+    ["PDF Software", "برنامج PDF"],
+    ["Other Application", "تطبيق آخر"]
+  ]],
+  ["Network & Connectivity", "الشبكة والاتصال", [
+    ["Internet", "الإنترنت"],
+    ["WiFi", "الشبكة اللاسلكية"],
+    ["VPN", "الشبكة الافتراضية الخاصة"],
+    ["Shared Folder", "مجلد مشترك"],
+    ["Network Drive", "قرص شبكي"],
+    ["Other Network Issue", "مشكلة شبكة أخرى"]
+  ]],
+  ["Service Requests", "طلبات الخدمة", [
+    ["New Laptop", "حاسب محمول جديد"],
+    ["New Software", "برنامج جديد"],
+    ["Software Installation", "تثبيت برنامج"],
+    ["Access Request", "طلب صلاحية"],
+    ["License Request", "طلب ترخيص"],
+    ["Equipment Request", "طلب أجهزة"],
+    ["Other Request", "طلب آخر"]
+  ]],
+  ["General Questions", "أسئلة عامة", [
+    ["Other", "أخرى"]
+  ]]
+];
 
 function lookupCode(value) {
   return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 }
 
 function defaultTicketCategoryLookups() {
+  const palette = ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"];
   const items = [];
   let sortOrder = 0;
-  for (const [parentName, children] of Object.entries(defaultTicketCategoryTree)) {
-    const parentCode = lookupCode(parentName);
+  for (const [parentEn, parentAr, children] of defaultTicketCategoryTree) {
+    const parentCode = lookupCode(parentEn);
     sortOrder += 1;
     items.push({
       id: `lookup_ticket_category_${parentCode}`, type: "ticket_category", module: "ticket",
-      nameEn: parentName, nameAr: parentName, code: parentCode, parentCode: "",
-      color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][sortOrder % 5], icon: "", sortOrder, active: true
+      nameEn: parentEn, nameAr: parentAr, code: parentCode, parentCode: "",
+      color: palette[sortOrder % palette.length], icon: "", sortOrder, active: true
     });
-    for (const childName of children) {
-      const code = `${parentCode}_${lookupCode(childName)}`;
+    for (const [childEn, childAr] of children) {
+      const code = `${parentCode}_${lookupCode(childEn)}`;
       sortOrder += 1;
       items.push({
         id: `lookup_ticket_category_${code}`, type: "ticket_category", module: "ticket",
-        nameEn: childName, nameAr: childName, code, parentCode,
-        color: ["#2563eb", "#64748b", "#f59e0b", "#ef4444", "#10b981"][sortOrder % 5], icon: "", sortOrder, active: true
+        nameEn: childEn, nameAr: childAr, code, parentCode,
+        color: palette[sortOrder % palette.length], icon: "", sortOrder, active: true
       });
     }
   }
@@ -446,6 +490,14 @@ function migrateDb(db) {
     if (item.type !== "ticket_category") continue;
     if (retiredCategoryCodes.has(String(item.code || "").toLowerCase())) item.active = false;
     if (item.parentCode === undefined) item.parentCode = "";
+  }
+  // Earlier builds of the category tree copied nameEn into nameAr. Fill in the real
+  // Arabic where the admin has not typed their own translation.
+  const defaultCategoryAr = new Map(defaultTicketCategoryLookups().map((item) => [item.code, item.nameAr]));
+  for (const item of db.lookupItems || []) {
+    if (item.type !== "ticket_category") continue;
+    const arabic = defaultCategoryAr.get(item.code);
+    if (arabic && (!item.nameAr || item.nameAr === item.nameEn)) item.nameAr = arabic;
   }
   for (const ticket of db.tickets || []) {
     if (ticket.mainCategoryCode) continue;
