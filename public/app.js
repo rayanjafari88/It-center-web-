@@ -1664,6 +1664,7 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "No code? Check the address is the one your workplace has on file, or ask IT to confirm you are registered.": "لم يصلك رمز؟ تأكد أن البريد هو المسجّل لدى جهة عملك، أو راجع تقنية المعلومات للتأكد من تسجيلك.",
   "Overview": "نظرة عامة",
   "What needs attention": "ما يحتاج إلى انتباه",
   "Service Desk": "مكتب الخدمة",
@@ -11352,6 +11353,10 @@ $("#loginForm").addEventListener("submit", async (event) => {
       showLoginStep("code");
       const sentTo = $("[data-code-sent-to]");
       if (sentTo) sentTo.textContent = tpl("If {email} has an account, a 6-digit code is on its way. It expires in 10 minutes.", { email });
+      // The response is deliberately identical for unknown addresses, so nothing
+      // above distinguishes a typo from an address IT has not registered.
+      const noCode = $("[data-no-code-help]");
+      if (noCode) noCode.hidden = false;
       return;
     }
     if (loginState.step === "code") {

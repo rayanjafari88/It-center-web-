@@ -12152,3 +12152,10 @@ html[dir="ltr"] .modal-backdrop {
 .auth-link:hover {
   color: var(--text);
 }
+
+/* Shown after a code is requested. The response is identical for unknown
+   addresses by design, so this is the only cue that the address may be wrong. */
+.auth-no-code {
+  margin-top: 10px;
+  text-align: center;
+}
