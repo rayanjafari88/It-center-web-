@@ -17,7 +17,8 @@
     "test:all": "node qa/scripts/run-browser-tests.js --with-node",
     "qa:seed": "node qa/scripts/seed.js",
     "qa:cleanup": "node qa/scripts/cleanup.js",
-    "qa:report": "node qa/scripts/report.js"
+    "qa:report": "node qa/scripts/report.js",
+    "mail:test": "node qa/scripts/mail-test.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {
