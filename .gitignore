@@ -18,3 +18,7 @@ i18n-modals.txt
 # Local deployment config
 .env
 certs/
+
+# Live data. Holds real employee records once imported - must never be committed,
+# and this repository is public. A fresh clone generates demo data on first boot.
+data/db.json

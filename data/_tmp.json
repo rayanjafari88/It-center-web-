@@ -873,7 +873,7 @@
       "name": "صالح ",
       "username": "saleh",
       "email": "S@m.com",
-      "password": "123",
+      "password": "scrypt$c56c84921d391a0e5d40476381fbc9fb$4284038a4bcd3f9c03fb611e51ff90c78ee2964b5f335275dcfb6b4c83241c5cece8d5c2b923c0627952a688709bc5b2c1220e06ab8807094ee490d779566528",
       "roleId": "role_employee",
       "status": "active",
       "accountType": "Employee",
@@ -889,14 +889,15 @@
         "contracts": false,
         "vendors": false
       },
-      "lastLoginAt": "2026-07-13T11:57:21.032Z"
+      "lastLoginAt": "2026-07-13T11:57:21.032Z",
+      "passwordHashedAt": "2026-08-09T10:56:15.114Z"
     },
     {
       "id": "user_admin",
       "name": "System Admin",
       "username": "admin",
       "email": "admin@itcc.local",
-      "password": "admin123",
+      "password": "scrypt$7fe7aaa6902b5ea1224601044a9f9cbb$f6cb71ebaee1a95d9c67c52109c59884a05bdbee1ec9a44c0e6226af1a4bf025b5527e2763b40c2374338df90a335371d5be7f35173c335d24291d2d7e9a5e0c",
       "roleId": "role_admin",
       "status": "active",
       "accountType": "Employee",
@@ -908,14 +909,15 @@
         "contracts": true,
         "vendors": true
       },
-      "lastLoginAt": "2026-07-13T11:32:44.833Z"
+      "lastLoginAt": "2026-07-13T11:32:44.833Z",
+      "passwordHashedAt": "2026-08-09T10:56:15.209Z"
     },
     {
       "id": "user_manager",
       "name": "Amina IT Manager",
       "username": "manager",
       "email": "manager@itcc.local",
-      "password": "manager123",
+      "password": "scrypt$59b9f088727f04eafc284a2ac8e20b96$38cae612ee02f412e050f1bf01fce8050a19483bf9e43f1188f45ce460b8d4026204dd378e72b140a157c3e4710741e959f816771499131bf03cb7211d13b598",
       "roleId": "role_manager",
       "status": "active",
       "accountType": "Employee",
@@ -928,14 +930,15 @@
         "contracts": true,
         "vendors": true
       },
-      "lastLoginAt": "2026-07-13T11:57:30.475Z"
+      "lastLoginAt": "2026-07-13T11:57:30.475Z",
+      "passwordHashedAt": "2026-08-09T10:56:15.305Z"
     },
     {
       "id": "user_staff",
       "name": "Omar IT Staff",
       "username": "staff",
       "email": "staff@itcc.local",
-      "password": "staff123",
+      "password": "scrypt$94c04fbae4b16aed1916141e8248d86e$4c67de2654371f163825e906adec43ec167d2d3d752f870e267fd7a9caab75b32420f2eada477fbd08c380abae276607cf4e815e14a30f5ab5bdcb1f49afe3e5",
       "roleId": "role_staff",
       "status": "active",
       "accountType": "Employee",
@@ -950,14 +953,15 @@
       },
       "lastLoginAt": "2026-07-13T11:32:44.804Z",
       "requirePasswordChange": true,
-      "updatedAt": "2026-07-12T12:43:55.099Z"
+      "updatedAt": "2026-07-12T12:43:55.099Z",
+      "passwordHashedAt": "2026-08-09T10:56:15.400Z"
     },
     {
       "id": "user_employee",
       "name": "Lina Employee",
       "username": "employee",
       "email": "employee@itcc.local",
-      "password": "admin123",
+      "password": "scrypt$6a3ddac803101f06a3d9c52a2e0999da$4c720ee0772d83c61049a87e8b7c6abbebfcd0c5d0fb7212bcdec4d546242d9acb0bc43a39ef7f12ae190b8626a3759d9f995282ecd15a32aca9f9edcb874e35",
       "roleId": "role_employee",
       "status": "active",
       "accountType": "Employee",
@@ -971,7 +975,8 @@
         "vendors": false
       },
       "lastLoginAt": "2026-07-13T11:32:44.863Z",
-      "updatedAt": "2026-07-01T09:18:15.706Z"
+      "updatedAt": "2026-07-01T09:18:15.706Z",
+      "passwordHashedAt": "2026-08-09T10:56:15.480Z"
     }
   ],
   "departments": [
@@ -1345,7 +1350,13 @@
       "ticketNumber": "TCK-1014",
       "createdAt": "2026-07-13T08:18:03.122Z",
       "updatedAt": "2026-07-13T08:18:03.122Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "software_applications",
+      "subcategoryCode": "software_applications_erp",
+      "mainCategory": "Software & Applications",
+      "subcategory": "ERP",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_f9d2cf5e08e0",
@@ -1364,7 +1375,13 @@
       "ticketNumber": "TCK-1013",
       "createdAt": "2026-07-12T12:53:52.924Z",
       "updatedAt": "2026-07-12T12:53:52.924Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "hardware_devices",
+      "subcategoryCode": "hardware_devices_scanner",
+      "mainCategory": "Hardware & Devices",
+      "subcategory": "Scanner",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_8cbdd8329713",
@@ -1383,7 +1400,13 @@
       "ticketNumber": "TCK-1012",
       "createdAt": "2026-07-12T12:50:41.140Z",
       "updatedAt": "2026-07-12T12:50:41.140Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "accounts_access",
+      "subcategoryCode": "accounts_access_mfa_issue",
+      "mainCategory": "Accounts & Access",
+      "subcategory": "MFA Issue",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_2871269cc155",
@@ -1404,7 +1427,13 @@
       "updatedAt": "2026-07-12T12:48:59.512Z",
       "approvalStatus": "Draft",
       "withdrawalReason": "Problem solved",
-      "cancelReason": "Requester"
+      "cancelReason": "Requester",
+      "mainCategoryCode": "software_applications",
+      "subcategoryCode": "software_applications_outlook",
+      "mainCategory": "Software & Applications",
+      "subcategory": "Outlook",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_d9b548cd2301",
@@ -1423,7 +1452,13 @@
       "ticketNumber": "TCK-1010",
       "createdAt": "2026-07-09T12:13:03.944Z",
       "updatedAt": "2026-07-09T12:13:03.944Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "service_requests",
+      "subcategoryCode": "service_requests_equipment_request",
+      "mainCategory": "Service Requests",
+      "subcategory": "Equipment Request",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_33c4340cb9c8",
@@ -1443,7 +1478,13 @@
       "ticketNumber": "TCK-1009",
       "createdAt": "2026-07-09T12:11:22.878Z",
       "updatedAt": "2026-07-09T12:11:22.878Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "service_requests",
+      "subcategoryCode": "service_requests_license_request",
+      "mainCategory": "Service Requests",
+      "subcategory": "License Request",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_1a634d9c70ea",
@@ -1462,7 +1503,13 @@
       "ticketNumber": "TCK-1008",
       "createdAt": "2026-07-09T12:10:51.539Z",
       "updatedAt": "2026-07-09T12:10:51.539Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "service_requests",
+      "subcategoryCode": "service_requests_equipment_request",
+      "mainCategory": "Service Requests",
+      "subcategory": "Equipment Request",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "tick_b84427b7c815",
@@ -1481,7 +1528,13 @@
       "ticketNumber": "TCK-1007",
       "createdAt": "2026-07-09T11:55:23.710Z",
       "updatedAt": "2026-07-09T11:55:23.710Z",
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "accounts_access",
+      "subcategoryCode": "accounts_access_password_reset",
+      "mainCategory": "Accounts & Access",
+      "subcategory": "Password Reset",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_001",
@@ -1505,7 +1558,11 @@
         "Ticket created",
         "Assigned to Omar IT Staff"
       ],
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "service_requests",
+      "subcategoryCode": "service_requests_new_laptop",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_002",
@@ -1532,7 +1589,11 @@
         "Assigned to Omar IT Staff",
         "Status changed to In Progress"
       ],
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "network_connectivity",
+      "subcategoryCode": "network_connectivity_vpn",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_003",
@@ -1559,7 +1620,11 @@
         "Assigned to Omar IT Staff",
         "Status changed to Waiting"
       ],
-      "approvalStatus": "Pending approval"
+      "approvalStatus": "Pending approval",
+      "mainCategoryCode": "hardware_devices",
+      "subcategoryCode": "hardware_devices_printer",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_004",
@@ -1584,7 +1649,11 @@
         "Assigned to Amina IT Manager",
         "Status changed to Resolved"
       ],
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "service_requests",
+      "subcategoryCode": "service_requests_license_request",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_005",
@@ -1606,7 +1675,11 @@
       "history": [
         "Ticket created"
       ],
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "accounts_access",
+      "subcategoryCode": "accounts_access_shared_folder_access",
+      "onBehalf": false,
+      "createdById": ""
     },
     {
       "id": "ticket_006",
@@ -1629,7 +1702,11 @@
       "history": [
         "Ticket created"
       ],
-      "approvalStatus": "Draft"
+      "approvalStatus": "Draft",
+      "mainCategoryCode": "software_applications",
+      "subcategoryCode": "software_applications_outlook",
+      "onBehalf": false,
+      "createdById": ""
     }
   ],
   "tasks": [
@@ -11451,11 +11528,11 @@
       "entityId": "doc_employee_handbook",
       "filename": "employee-handbook.pdf",
       "mimeType": "application/pdf",
-      "size": 512000,
+      "size": 27,
       "uploaderId": "user_manager",
       "uploadedAt": "2026-01-15T08:00:00.000Z",
-      "content": "Employee handbook demo file",
-      "createdAt": "2026-01-15T08:00:00.000Z"
+      "createdAt": "2026-01-15T08:00:00.000Z",
+      "storagePath": "att_handbook.bin"
     },
     {
       "id": "att_it_policy",
@@ -11463,11 +11540,11 @@
       "entityId": "doc_it_policy",
       "filename": "it-policies.docx",
       "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "size": 186000,
+      "size": 19,
       "uploaderId": "user_manager",
       "uploadedAt": "2026-02-01T08:00:00.000Z",
-      "content": "IT policy demo file",
-      "createdAt": "2026-02-01T08:00:00.000Z"
+      "createdAt": "2026-02-01T08:00:00.000Z",
+      "storagePath": "att_it_policy.bin"
     },
     {
       "id": "att_vpn_guide",
@@ -11475,11 +11552,11 @@
       "entityId": "doc_vpn_guide",
       "filename": "vpn-guide.pdf",
       "mimeType": "application/pdf",
-      "size": 220000,
+      "size": 19,
       "uploaderId": "user_staff",
       "uploadedAt": "2026-03-01T08:00:00.000Z",
-      "content": "VPN guide demo file",
-      "createdAt": "2026-03-01T08:00:00.000Z"
+      "createdAt": "2026-03-01T08:00:00.000Z",
+      "storagePath": "att_vpn_guide.bin"
     }
   ],
   "comments": [
@@ -11569,6 +11646,18 @@
     }
   ],
   "notifications": [
+    {
+      "id": "not_1147d9cf5ea5",
+      "userId": "user_manager",
+      "type": "critical",
+      "title": "Contract expires within 7 days",
+      "body": "Microsoft 365 Business Premium expires in 6 days.",
+      "entityType": "contract",
+      "entityId": "contract_m365",
+      "category": "contracts",
+      "unread": true,
+      "createdAt": "2026-08-09T10:56:15.493Z"
+    },
     {
       "id": "not_c9af9d22203c",
       "userId": "user_staff",
@@ -12228,7 +12317,8 @@
       "color": "#2563eb",
       "icon": "",
       "sortOrder": 1,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_02",
@@ -12240,7 +12330,8 @@
       "color": "#64748b",
       "icon": "",
       "sortOrder": 2,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_03",
@@ -12252,7 +12343,8 @@
       "color": "#f59e0b",
       "icon": "",
       "sortOrder": 3,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_04",
@@ -12264,7 +12356,8 @@
       "color": "#ef4444",
       "icon": "",
       "sortOrder": 4,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_05",
@@ -12276,7 +12369,8 @@
       "color": "#10b981",
       "icon": "",
       "sortOrder": 5,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_06",
@@ -12288,7 +12382,8 @@
       "color": "#2563eb",
       "icon": "",
       "sortOrder": 6,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_07",
@@ -12300,7 +12395,8 @@
       "color": "#64748b",
       "icon": "",
       "sortOrder": 7,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_08",
@@ -12312,7 +12408,8 @@
       "color": "#f59e0b",
       "icon": "",
       "sortOrder": 8,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_09",
@@ -12324,7 +12421,8 @@
       "color": "#ef4444",
       "icon": "",
       "sortOrder": 9,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_10",
@@ -12336,7 +12434,8 @@
       "color": "#10b981",
       "icon": "",
       "sortOrder": 10,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_11",
@@ -12348,7 +12447,8 @@
       "color": "#2563eb",
       "icon": "",
       "sortOrder": 11,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_12",
@@ -12360,7 +12460,8 @@
       "color": "#64748b",
       "icon": "",
       "sortOrder": 12,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_13",
@@ -12372,7 +12473,8 @@
       "color": "#f59e0b",
       "icon": "",
       "sortOrder": 13,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_14",
@@ -12384,7 +12486,8 @@
       "color": "#ef4444",
       "icon": "",
       "sortOrder": 14,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_15",
@@ -12396,7 +12499,8 @@
       "color": "#10b981",
       "icon": "",
       "sortOrder": 15,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_16",
@@ -12408,7 +12512,8 @@
       "color": "#2563eb",
       "icon": "",
       "sortOrder": 16,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_17",
@@ -12420,7 +12525,8 @@
       "color": "#64748b",
       "icon": "",
       "sortOrder": 17,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_18",
@@ -12432,7 +12538,8 @@
       "color": "#f59e0b",
       "icon": "",
       "sortOrder": 18,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_19",
@@ -12444,7 +12551,8 @@
       "color": "#ef4444",
       "icon": "",
       "sortOrder": 19,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_20",
@@ -12456,7 +12564,8 @@
       "color": "#10b981",
       "icon": "",
       "sortOrder": 20,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_21",
@@ -12468,7 +12577,8 @@
       "color": "#2563eb",
       "icon": "",
       "sortOrder": 21,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_22",
@@ -12480,7 +12590,8 @@
       "color": "#64748b",
       "icon": "",
       "sortOrder": 22,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_23",
@@ -12492,7 +12603,8 @@
       "color": "#f59e0b",
       "icon": "",
       "sortOrder": 23,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_category_24",
@@ -12504,7 +12616,8 @@
       "color": "#ef4444",
       "icon": "",
       "sortOrder": 24,
-      "active": true
+      "active": false,
+      "parentCode": ""
     },
     {
       "id": "lookup_ticket_priority_01",
@@ -14521,6 +14634,552 @@
       "icon": "",
       "sortOrder": 3,
       "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Accounts & Access",
+      "nameAr": "الحسابات والصلاحيات",
+      "code": "accounts_access",
+      "parentCode": "",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 1,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access_password_reset",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Password Reset",
+      "nameAr": "إعادة تعيين كلمة المرور",
+      "code": "accounts_access_password_reset",
+      "parentCode": "accounts_access",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 2,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access_account_locked",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Account Locked",
+      "nameAr": "حساب مقفل",
+      "code": "accounts_access_account_locked",
+      "parentCode": "accounts_access",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 3,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access_mfa_issue",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "MFA Issue",
+      "nameAr": "مشكلة في التحقق بخطوتين",
+      "code": "accounts_access_mfa_issue",
+      "parentCode": "accounts_access",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 4,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access_email_access",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Email Access",
+      "nameAr": "الوصول إلى البريد الإلكتروني",
+      "code": "accounts_access_email_access",
+      "parentCode": "accounts_access",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 5,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_accounts_access_shared_folder_access",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Shared Folder Access",
+      "nameAr": "الوصول إلى مجلد مشترك",
+      "code": "accounts_access_shared_folder_access",
+      "parentCode": "accounts_access",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 6,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Hardware & Devices",
+      "nameAr": "الأجهزة والمعدات",
+      "code": "hardware_devices",
+      "parentCode": "",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 7,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_laptop",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Laptop",
+      "nameAr": "حاسب محمول",
+      "code": "hardware_devices_laptop",
+      "parentCode": "hardware_devices",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 8,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_desktop",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Desktop",
+      "nameAr": "حاسب مكتبي",
+      "code": "hardware_devices_desktop",
+      "parentCode": "hardware_devices",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 9,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_monitor",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Monitor",
+      "nameAr": "شاشة",
+      "code": "hardware_devices_monitor",
+      "parentCode": "hardware_devices",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 10,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_printer",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Printer",
+      "nameAr": "طابعة",
+      "code": "hardware_devices_printer",
+      "parentCode": "hardware_devices",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 11,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_mobile_device",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Mobile Device",
+      "nameAr": "جهاز جوال",
+      "code": "hardware_devices_mobile_device",
+      "parentCode": "hardware_devices",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 12,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_keyboard_mouse",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Keyboard / Mouse",
+      "nameAr": "لوحة مفاتيح / فأرة",
+      "code": "hardware_devices_keyboard_mouse",
+      "parentCode": "hardware_devices",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 13,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_scanner",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Scanner",
+      "nameAr": "ماسح ضوئي",
+      "code": "hardware_devices_scanner",
+      "parentCode": "hardware_devices",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 14,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_docking_station",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Docking Station",
+      "nameAr": "قاعدة توصيل",
+      "code": "hardware_devices_docking_station",
+      "parentCode": "hardware_devices",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 15,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_headset",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Headset",
+      "nameAr": "سماعة رأس",
+      "code": "hardware_devices_headset",
+      "parentCode": "hardware_devices",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 16,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_hardware_devices_other_device",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Other Device",
+      "nameAr": "جهاز آخر",
+      "code": "hardware_devices_other_device",
+      "parentCode": "hardware_devices",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 17,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Software & Applications",
+      "nameAr": "البرمجيات والتطبيقات",
+      "code": "software_applications",
+      "parentCode": "",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 18,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_outlook",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Outlook",
+      "nameAr": "أوتلوك",
+      "code": "software_applications_outlook",
+      "parentCode": "software_applications",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 19,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_teams",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Teams",
+      "nameAr": "تيمز",
+      "code": "software_applications_teams",
+      "parentCode": "software_applications",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 20,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_erp",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "ERP",
+      "nameAr": "نظام تخطيط الموارد",
+      "code": "software_applications_erp",
+      "parentCode": "software_applications",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 21,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_office",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Office",
+      "nameAr": "أوفيس",
+      "code": "software_applications_office",
+      "parentCode": "software_applications",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 22,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_browser",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Browser",
+      "nameAr": "متصفح",
+      "code": "software_applications_browser",
+      "parentCode": "software_applications",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 23,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_pdf_software",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "PDF Software",
+      "nameAr": "برنامج PDF",
+      "code": "software_applications_pdf_software",
+      "parentCode": "software_applications",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 24,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_software_applications_other_application",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Other Application",
+      "nameAr": "تطبيق آخر",
+      "code": "software_applications_other_application",
+      "parentCode": "software_applications",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 25,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Network & Connectivity",
+      "nameAr": "الشبكة والاتصال",
+      "code": "network_connectivity",
+      "parentCode": "",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 26,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_internet",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Internet",
+      "nameAr": "الإنترنت",
+      "code": "network_connectivity_internet",
+      "parentCode": "network_connectivity",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 27,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_wifi",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "WiFi",
+      "nameAr": "الشبكة اللاسلكية",
+      "code": "network_connectivity_wifi",
+      "parentCode": "network_connectivity",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 28,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_vpn",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "VPN",
+      "nameAr": "الشبكة الافتراضية الخاصة",
+      "code": "network_connectivity_vpn",
+      "parentCode": "network_connectivity",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 29,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_shared_folder",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Shared Folder",
+      "nameAr": "مجلد مشترك",
+      "code": "network_connectivity_shared_folder",
+      "parentCode": "network_connectivity",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 30,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_network_drive",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Network Drive",
+      "nameAr": "قرص شبكي",
+      "code": "network_connectivity_network_drive",
+      "parentCode": "network_connectivity",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 31,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_network_connectivity_other_network_issue",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Other Network Issue",
+      "nameAr": "مشكلة شبكة أخرى",
+      "code": "network_connectivity_other_network_issue",
+      "parentCode": "network_connectivity",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 32,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Service Requests",
+      "nameAr": "طلبات الخدمة",
+      "code": "service_requests",
+      "parentCode": "",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 33,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_new_laptop",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "New Laptop",
+      "nameAr": "حاسب محمول جديد",
+      "code": "service_requests_new_laptop",
+      "parentCode": "service_requests",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 34,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_new_software",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "New Software",
+      "nameAr": "برنامج جديد",
+      "code": "service_requests_new_software",
+      "parentCode": "service_requests",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 35,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_software_installation",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Software Installation",
+      "nameAr": "تثبيت برنامج",
+      "code": "service_requests_software_installation",
+      "parentCode": "service_requests",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 36,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_access_request",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Access Request",
+      "nameAr": "طلب صلاحية",
+      "code": "service_requests_access_request",
+      "parentCode": "service_requests",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 37,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_license_request",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "License Request",
+      "nameAr": "طلب ترخيص",
+      "code": "service_requests_license_request",
+      "parentCode": "service_requests",
+      "color": "#ef4444",
+      "icon": "",
+      "sortOrder": 38,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_equipment_request",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Equipment Request",
+      "nameAr": "طلب أجهزة",
+      "code": "service_requests_equipment_request",
+      "parentCode": "service_requests",
+      "color": "#10b981",
+      "icon": "",
+      "sortOrder": 39,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_service_requests_other_request",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Other Request",
+      "nameAr": "طلب آخر",
+      "code": "service_requests_other_request",
+      "parentCode": "service_requests",
+      "color": "#2563eb",
+      "icon": "",
+      "sortOrder": 40,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_general_questions",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "General Questions",
+      "nameAr": "أسئلة عامة",
+      "code": "general_questions",
+      "parentCode": "",
+      "color": "#64748b",
+      "icon": "",
+      "sortOrder": 41,
+      "active": true
+    },
+    {
+      "id": "lookup_ticket_category_general_questions_other",
+      "type": "ticket_category",
+      "module": "ticket",
+      "nameEn": "Other",
+      "nameAr": "أخرى",
+      "code": "general_questions_other",
+      "parentCode": "general_questions",
+      "color": "#f59e0b",
+      "icon": "",
+      "sortOrder": 42,
+      "active": true
     }
   ],
   "assignmentGroups": [],
@@ -14534,5 +15193,8 @@
       "categoryRoutes": {},
       "fallbackAssigneeId": ""
     }
-  }
+  },
+  "sessions": [],
+  "loginCodes": [],
+  "authAttempts": []
 }
