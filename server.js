@@ -3931,11 +3931,11 @@ server.listen(PORT, () => {
   console.log(`IT Command Center V1 running at http://localhost:${PORT}`);
   // Silence here is the reason people think sign-in is broken: codes are written
   // to this console instead of being emailed until a transport is configured.
-  if (mailerTransport() !== "smtp") {
+  if (!["smtp", "graph"].includes(mailerTransport())) {
     console.log("");
     console.log("  ! MAIL IS NOT BEING SENT.");
     console.log("    Sign-in codes are printed to this console, not emailed.");
-    console.log("    To send real email set MAIL_TRANSPORT=smtp plus SMTP_HOST/USER/PASS.");
+    console.log("    To send real email set MAIL_TRANSPORT=smtp (or =graph for Microsoft 365).");
     console.log("    Check your settings first with:  npm run mail:test -- you@example.com");
     console.log("    See docs/DEPLOYMENT.md and docs/EMAIL_SETUP.md.");
     console.log("");

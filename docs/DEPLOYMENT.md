@@ -17,11 +17,13 @@ All configuration is environment variables. Nothing secret belongs in `data/db.j
 | `PORT` | `4173` | Port the application listens on |
 | `COOKIE_SECURE` | `false` | **Set to `true` in production.** Marks the session cookie `Secure` so it is only ever sent over HTTPS |
 | `STRICT_TRANSPORT` | `true` | Sends HSTS when `COOKIE_SECURE` is also on |
-| `MAIL_TRANSPORT` | `log` | `log` writes sign-in codes to the server log; `smtp` sends real email |
+| `MAIL_TRANSPORT` | `log` | `log` writes sign-in codes to the server log; `smtp` sends real email; `graph` sends via Microsoft Graph |
 | `SMTP_HOST` | `smtp.office365.com` | Mail server |
 | `SMTP_PORT` | `587` | `587` uses STARTTLS, `465` uses implicit TLS |
 | `SMTP_USER` / `SMTP_PASS` | – | Mailbox credentials used to send |
 | `SMTP_FROM` | `SMTP_USER` | The From address staff will see |
+| `GRAPH_TENANT_ID` / `GRAPH_CLIENT_ID` / `GRAPH_CLIENT_SECRET` | – | App registration used by the `graph` transport |
+| `GRAPH_SENDER` | – | Licensed mailbox the `graph` transport sends from |
 | `MAX_UPLOAD_BYTES` | `10485760` | Attachment size limit (10 MB) |
 | `BACKUP_INTERVAL_MS` | `900000` | Minimum gap between database snapshots (15 min) |
 | `BACKUP_KEEP` | `48` | Snapshots retained before the oldest is pruned |
