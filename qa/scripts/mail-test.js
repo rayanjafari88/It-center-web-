@@ -95,9 +95,11 @@ async function main() {
       console.log("  apps > tick 'Authenticated SMTP'. It can take an hour to apply.");
     } else if (/5\.7\.57|must issue a STARTTLS|authentication required/i.test(message)) {
       console.log("  The server refused unauthenticated sending. Check SMTP_USER and SMTP_PASS.");
-    } else if (/535|5\.7\.3|authentication unsuccessful|invalid credentials/i.test(message)) {
-      console.log("  The username or password was rejected. If the mailbox has MFA enabled, a");
-      console.log("  normal password will not work - create an app password and use that.");
+    } else if (/535|5\.7\.3|authentication unsuccessful|invalid credentials|Username and Password not accepted/i.test(message)) {
+      console.log("  The username or password was rejected.");
+      console.log("  Gmail: you must use a 16-character app password, not your normal password,");
+      console.log("  and 2-Step Verification has to be on first. https://myaccount.google.com/apppasswords");
+      console.log("  Microsoft 365: same idea - create an app password if the mailbox has MFA.");
     } else if (/ENOTFOUND|EAI_AGAIN/i.test(message)) {
       console.log("  The mail server hostname could not be resolved. Check SMTP_HOST.");
     } else if (/ECONNREFUSED|ETIMEDOUT|timeout/i.test(message)) {

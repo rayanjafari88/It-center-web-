@@ -12130,3 +12130,25 @@ html[dir="ltr"] .modal-backdrop {
   gap: 6px;
   max-width: 280px;
 }
+
+/* Secondary sign-in paths. These are escape hatches, not choices to weigh against
+   the primary action, so they read as quiet links rather than buttons. */
+.auth-link {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.auth-link:hover {
+  color: var(--text);
+}

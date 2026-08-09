@@ -54,7 +54,7 @@
             </label>
             <button class="btn btn-primary" type="submit" data-login-submit>Email me a sign-in code</button>
             <p class="hint">We will send a 6-digit code to your work email. No password needed.</p>
-            <button class="btn btn-secondary auth-alt" type="button" data-use-password>Use a password instead</button>
+            <button class="auth-link" type="button" data-use-password>Use a password instead</button>
           </div>
 
           <!-- Step 2: the code. -->
@@ -65,7 +65,7 @@
               <input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" />
             </label>
             <button class="btn btn-primary" type="submit" data-login-submit>Sign in</button>
-            <button class="btn btn-secondary auth-alt" type="button" data-login-back>Use a different email</button>
+            <button class="auth-link" type="button" data-login-back>Use a different email</button>
           </div>
 
           <!-- Password sign-in, for accounts that still use one. -->
@@ -79,7 +79,7 @@
               <input name="password" type="password" autocomplete="current-password" />
             </label>
             <button class="btn btn-primary" type="submit" data-login-submit>Sign in</button>
-            <button class="btn btn-secondary auth-alt" type="button" data-use-email-code>Email me a code instead</button>
+            <button class="auth-link" type="button" data-use-email-code>Email me a code instead</button>
           </div>
 
           <!-- Second factor for privileged accounts. -->
@@ -90,7 +90,7 @@
               <input name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" />
             </label>
             <button class="btn btn-primary" type="submit" data-login-submit>Verify</button>
-            <button class="btn btn-secondary auth-alt" type="button" data-login-back>Start over</button>
+            <button class="auth-link" type="button" data-login-back>Start over</button>
           </div>
         </form>
       </section>

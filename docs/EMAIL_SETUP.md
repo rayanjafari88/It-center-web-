@@ -16,6 +16,32 @@ Your sign-in code is 387060
 That is the working sign-in code. This is fine for your own testing and useless
 for staff.
 
+## Fastest way to get codes arriving (about 5 minutes)
+
+Use a Gmail account as the sender. No admin console, no app registration. Good
+enough to pilot with real people today; move to a company mailbox later.
+
+1. On the Google account you will send from, turn on **2-Step Verification**
+   (required before app passwords exist): <https://myaccount.google.com/security>
+2. Create an app password: <https://myaccount.google.com/apppasswords> — pick
+   "Mail", copy the 16-character value.
+3. Run:
+
+```powershell
+$env:MAIL_TRANSPORT='smtp'
+$env:SMTP_HOST='smtp.gmail.com'
+$env:SMTP_PORT='587'
+$env:SMTP_USER='youraccount@gmail.com'
+$env:SMTP_PASS='<the 16-character app password>'
+$env:SMTP_FROM='youraccount@gmail.com'
+npm run mail:test -- youraccount@gmail.com
+```
+
+If that says SENT, run `npm start` in the same window and sign-in codes will
+arrive by email.
+
+Gmail allows roughly 500 messages a day, which is ample for sign-in codes.
+
 ## Turning on real email
 
 ### Step 1 — check SMTP AUTH is allowed
