@@ -980,7 +980,12 @@ function splitTicketCategoryLabel(value) {
 function resolveTicketCategory(db, source = {}) {
   let parent = findTicketCategoryByCode(db, source.mainCategoryCode);
   let child = findTicketCategoryByCode(db, source.subcategoryCode);
-  if (child && !child.parentCode) child = null;
+  // A caller may send a main category code on its own; treat it as the parent
+  // rather than rejecting the ticket.
+  if (child && !child.parentCode) {
+    parent = parent || child;
+    child = null;
+  }
   if (child && (!parent || parent.code !== child.parentCode)) parent = findTicketCategoryByCode(db, child.parentCode);
   if (!parent) {
     const label = splitTicketCategoryLabel(source.category);
