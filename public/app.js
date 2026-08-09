@@ -1664,6 +1664,7 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "Mail is not set up yet, so here is your code:": "لم يتم إعداد البريد بعد، لذا هذا هو رمزك:",
   "No code? Check the address is the one your workplace has on file, or ask IT to confirm you are registered.": "لم يصلك رمز؟ تأكد أن البريد هو المسجّل لدى جهة عملك، أو راجع تقنية المعلومات للتأكد من تسجيلك.",
   "Overview": "نظرة عامة",
   "What needs attention": "ما يحتاج إلى انتباه",
@@ -11348,11 +11349,22 @@ $("#loginForm").addEventListener("submit", async (event) => {
     if (loginState.step === "email") {
       const email = String(data.get("email") || "").trim();
       if (!email) throw new Error("Enter your work email.");
-      await api("/api/auth/request-code", { method: "POST", body: JSON.stringify({ email }) });
+      const requested = await api("/api/auth/request-code", { method: "POST", body: JSON.stringify({ email }) });
       loginState.email = email;
       showLoginStep("code");
       const sentTo = $("[data-code-sent-to]");
       if (sentTo) sentTo.textContent = tpl("If {email} has an account, a 6-digit code is on its way. It expires in 10 minutes.", { email });
+      // Only present while no mail transport is configured; the server withholds it
+      // entirely once smtp or graph is set up.
+      const devBox = $("[data-dev-code]");
+      if (devBox) {
+        devBox.hidden = !requested.devCode;
+        if (requested.devCode) {
+          devBox.innerHTML = `<strong>${escapeHtml(trText("Mail is not set up yet, so here is your code:"))}</strong><span class="dev-code-value">${escapeHtml(requested.devCode)}</span>`;
+          const field = $('[data-login-step="code"] input[name="code"]');
+          if (field) field.value = requested.devCode;
+        }
+      }
       // The response is deliberately identical for unknown addresses, so nothing
       // above distinguishes a typo from an address IT has not registered.
       const noCode = $("[data-no-code-help]");

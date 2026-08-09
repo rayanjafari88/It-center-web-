@@ -12159,3 +12159,28 @@ html[dir="ltr"] .modal-backdrop {
   margin-top: 10px;
   text-align: center;
 }
+
+/* Shown only while no mail transport is configured, so the system can be tried
+   before SMTP exists. The server withholds the code once mail is set up. */
+.dev-code-box {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px dashed var(--warning);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warning) 8%, transparent);
+  color: var(--warning);
+  font-size: 13px;
+  text-align: center;
+}
+
+.dev-code-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: var(--text);
+  user-select: all;
+}

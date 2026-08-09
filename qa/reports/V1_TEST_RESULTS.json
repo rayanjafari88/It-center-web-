@@ -1,20 +1,20 @@
 {
   "meta": {
-    "generatedAt": "2026-07-21T06:00:16.148Z",
-    "gitBranch": "qa/full-v1-regression",
-    "gitCommit": "defb373",
-    "environment": "Node v22.22.3 on win32",
-    "serverUrl": "http://127.0.0.1:4321",
-    "browserStatus": "Executed with Playwright Chromium. Browser tests: 24.",
+    "generatedAt": "2026-08-09T11:51:52.853Z",
+    "gitBranch": "feat/dev-code-display",
+    "gitCommit": "1b767c5",
+    "environment": "Node v24.18.0 on win32",
+    "serverUrl": "http://127.0.0.1:4317",
+    "browserStatus": "Manual checklist generated; automated browser tool not invoked by this Node runner.",
     "cleanupRemaining": false
   },
   "summary": {
-    "total": 52,
-    "passed": 52,
+    "total": 44,
+    "passed": 43,
     "failed": 0,
-    "blocked": 0,
+    "blocked": 1,
     "notExecuted": 0,
-    "recommendation": "GO"
+    "recommendation": "CONDITIONAL GO"
   },
   "results": [
     {
@@ -117,6 +117,105 @@
       "message": "Executed"
     },
     {
+      "id": "SEC-AUTH-001",
+      "suite": "security",
+      "module": "Authentication",
+      "role": "Anonymous",
+      "severity": "Blocker",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-AUTH-002",
+      "suite": "security",
+      "module": "Authentication",
+      "role": "Anonymous",
+      "severity": "Blocker",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-AUTH-003",
+      "suite": "security",
+      "module": "Authentication",
+      "role": "All",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-AUTH-004",
+      "suite": "security",
+      "module": "Authentication",
+      "role": "All",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-AUTH-005",
+      "suite": "security",
+      "module": "Authentication",
+      "role": "All",
+      "severity": "High",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-DEVCODE-001",
+      "suite": "security",
+      "module": "Sign-in",
+      "role": "All",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "UI-LOGIN-STEPS-001",
+      "suite": "regression",
+      "module": "Sign-in",
+      "role": "All",
+      "severity": "High",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-HEADERS-001",
+      "suite": "security",
+      "module": "Transport",
+      "role": "All",
+      "severity": "High",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "SEC-ERRORS-001",
+      "suite": "security",
+      "module": "Error handling",
+      "role": "All",
+      "severity": "Medium",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "PLAT-ATTACH-001",
+      "suite": "regression",
+      "module": "Attachments",
+      "role": "IT Manager",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "PLAT-MFA-001",
+      "suite": "security",
+      "module": "Two-step sign-in",
+      "role": "System Admin",
+      "severity": "High",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
       "id": "SEC-EMPLOYEE-ISOLATION-001",
       "suite": "security",
       "module": "Tickets",
@@ -198,6 +297,33 @@
       "message": "Executed"
     },
     {
+      "id": "REG-TICKET-ROUTING-001",
+      "suite": "regression",
+      "module": "Ticket Assignment",
+      "role": "IT Manager/Employee",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "REG-TICKET-REROUTE-001",
+      "suite": "regression",
+      "module": "Ticket Assignment",
+      "role": "IT Manager",
+      "severity": "High",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
+      "id": "REG-TICKET-ONBEHALF-001",
+      "suite": "regression",
+      "module": "Tickets",
+      "role": "IT Staff/Employee",
+      "severity": "Critical",
+      "status": "passed",
+      "message": "Executed"
+    },
+    {
       "id": "REG-TICKETS-001",
       "suite": "regression",
       "module": "Tickets",
@@ -270,292 +396,25 @@
       "message": "Executed"
     },
     {
-      "id": "PW-001",
+      "id": "BROWSER-STATIC-001",
       "suite": "browser",
-      "module": "Accessibility",
-      "role": "Browser",
-      "severity": "High",
+      "module": "Browser Readiness",
+      "role": "All",
+      "severity": "Medium",
       "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: accessibility.spec.js",
-      "expected": "Browser workflow completes without errors."
+      "message": "Executed"
     },
     {
-      "id": "PW-002",
+      "id": "BROWSER-MANUAL-001",
       "suite": "browser",
-      "module": "Admin Centers",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: admin-centers.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-003",
-      "suite": "browser",
-      "module": "Admin Centers",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: admin-centers.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-004",
-      "suite": "browser",
-      "module": "Assets",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: assets.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-005",
-      "suite": "browser",
-      "module": "Auth",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: auth.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-006",
-      "suite": "browser",
-      "module": "Auth",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: auth.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-007",
-      "suite": "browser",
-      "module": "Contracts Vendors",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: contracts-vendors.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-008",
-      "suite": "browser",
-      "module": "Documents",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: documents.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-009",
-      "suite": "browser",
-      "module": "Employee Portal",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: employee-portal.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-010",
-      "suite": "browser",
-      "module": "Employee Portal",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: employee-portal.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-011",
-      "suite": "browser",
-      "module": "Knowledge Base",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: knowledge-base.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-012",
-      "suite": "browser",
-      "module": "Localization",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: localization.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-013",
-      "suite": "browser",
-      "module": "Modals",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: modals.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-014",
-      "suite": "browser",
-      "module": "People",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: people.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-015",
-      "suite": "browser",
-      "module": "Responsive",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: responsive.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-016",
-      "suite": "browser",
-      "module": "Responsive",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: responsive.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-017",
-      "suite": "browser",
-      "module": "Responsive",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: responsive.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-018",
-      "suite": "browser",
-      "module": "Responsive",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: responsive.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-019",
-      "suite": "browser",
-      "module": "Settings Notifications Search",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: settings-notifications-search.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-020",
-      "suite": "browser",
-      "module": "Settings Notifications Search",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: settings-notifications-search.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-021",
-      "suite": "browser",
-      "module": "Settings Notifications Search",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: settings-notifications-search.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-022",
-      "suite": "browser",
-      "module": "Tasks",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: tasks.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-023",
-      "suite": "browser",
-      "module": "Tasks",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: tasks.spec.js",
-      "expected": "Browser workflow completes without errors."
-    },
-    {
-      "id": "PW-024",
-      "suite": "browser",
-      "module": "Tickets",
-      "role": "Browser",
-      "severity": "High",
-      "status": "passed",
-      "message": "Executed by Playwright.",
-      "evidence": "",
-      "steps": "Playwright spec: tickets.spec.js",
-      "expected": "Browser workflow completes without errors."
+      "module": "Manual Browser Checklist",
+      "role": "All",
+      "severity": "Medium",
+      "expected": "Manual checklist generated when browser automation is unavailable.",
+      "suggestedFix": "Run Playwright/in-app browser manually and update report evidence.",
+      "status": "blocked",
+      "message": "Automated browser actions were not executed by the Node QA runner. Use V1_MANUAL_BROWSER_CHECKLIST.md.",
+      "evidence": "Error: Automated browser actions were not executed by the Node QA runner. Use V1_MANUAL_BROWSER_CHECKLIST.md.\n    at test.expected [as fn] (C:\\Users\\sdsd0\\IT-Command-Center\\qa\\scripts\\run-tests.js:683:13)\n    at run (C:\\Users\\sdsd0\\IT-Command-Center\\qa\\scripts\\run-tests.js:49:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
     }
   ]
 }

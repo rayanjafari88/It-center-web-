@@ -845,6 +845,7 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
     recordAttempt(db, `req:${email}`);
     recordAttempt(db, `ip:${ip}`);
     const account = accountForIdentifier(db, email) || autoProvisionFromEmployee(db, email);
+    let devCode = "";
     if (account && !accountBlockedReason(account)) {
       const code = auth.generateLoginCode();
       const salt = auth.randomToken(8);
@@ -868,10 +869,19 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
       } catch (error) {
         console.error("[mail] delivery failed:", error.message);
       }
+      // With no mail transport configured the code is only written to the server
+      // console, which makes the system impossible to try. Return it so the sign-in
+      // screen can show it. This is gated strictly on the "log" transport: as soon
+      // as smtp or graph is configured the code never leaves the server.
+      if (mailerTransport() === "log") devCode = code;
     }
     writeDb(db);
     // Never reveal whether an address is registered.
-    return send(res, 200, { sent: true, expiresInSeconds: auth.CODE_TTL_MS / 1000 }), true;
+    return send(res, 200, {
+      sent: true,
+      expiresInSeconds: auth.CODE_TTL_MS / 1000,
+      ...(devCode ? { devCode, devNotice: "Mail is not configured, so the code is shown here instead of being emailed." } : {})
+    }), true;
   }
 
   // Step 2: exchange the code for a session.
@@ -3934,7 +3944,10 @@ server.listen(PORT, () => {
   if (!["smtp", "graph"].includes(mailerTransport())) {
     console.log("");
     console.log("  ! MAIL IS NOT BEING SENT.");
-    console.log("    Sign-in codes are printed to this console, not emailed.");
+    console.log("    Sign-in codes are printed to this console and shown on the sign-in");
+    console.log("    screen, so the system can be tried before mail exists.");
+    console.log("    This mode also lets anyone tell which addresses are registered.");
+    console.log("    TESTING ONLY - configure mail before real users sign in.");
     console.log("    To send real email set MAIL_TRANSPORT=smtp (or =graph for Microsoft 365).");
     console.log("    Check your settings first with:  npm run mail:test -- you@example.com");
     console.log("    See docs/DEPLOYMENT.md and docs/EMAIL_SETUP.md.");

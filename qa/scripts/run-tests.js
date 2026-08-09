@@ -339,7 +339,16 @@ function authTests() {
       assertStatus(known, 200, "Code request accepted for a real address");
       const unknown = await ctx.anonymous({ method: "POST", path: "/api/auth/request-code", body: { email: "qa.auto.nobody@example.test" } });
       assertStatus(unknown, 200, "Unknown address returns the same status");
-      assert(JSON.stringify(known.data) === JSON.stringify(unknown.data), "Unknown address returns an identical body");
+      // In "log" mode the code is returned so the system can be used before mail
+      // exists, which necessarily makes a known address distinguishable. That is a
+      // testing affordance; the guarantee applies once a real transport is set.
+      const transport = (await ctx.anonymous({ path: "/api/auth/config" })).data.transport;
+      if (transport === "log") {
+        const strip = (body) => JSON.stringify({ ...(body || {}), devCode: undefined, devNotice: undefined });
+        assert(strip(known.data) === strip(unknown.data), "Apart from the test-mode code, the bodies are identical");
+      } else {
+        assert(JSON.stringify(known.data) === JSON.stringify(unknown.data), "Unknown address returns an identical body");
+      }
 
       const wrong = await ctx.anonymous({ method: "POST", path: "/api/auth/verify-code", body: { email: "qa.auto.employee.a@example.test", code: "000000" } });
       assert(wrong.status === 401 || wrong.status === 429, "A wrong code never signs anyone in");
@@ -360,6 +369,22 @@ function authTests() {
 
 function platformTests() {
   return [
+    test("SEC-DEVCODE-001", "security", "Sign-in", "All", "Critical", async (ctx) => {
+      // While no mail transport is configured the sign-in code is returned so the
+      // system can be used at all. That must be impossible once mail is real -
+      // otherwise anyone could request a code for any address and read it.
+      const res = await ctx.anonymous({ method: "POST", path: "/api/auth/request-code", body: { email: "qa.auto.employee.a@example.test" } });
+      assert(res.status === 200 || res.status === 429, "Code request answered");
+      const transport = (await ctx.anonymous({ path: "/api/auth/config" })).data.transport;
+      if (transport === "log") {
+        assert("devCode" in (res.data || {}) || res.status === 429, "In log mode the code is surfaced for testing");
+      } else {
+        assert(!("devCode" in (res.data || {})), "The code is never returned once a mail transport is configured");
+      }
+      // Whatever the transport, the stored record must stay hashed.
+      const admin = await ctx.asAdmin({ path: "/api/state" });
+      assert(!("loginCodes" in admin.data), "Login codes are not exposed through application state");
+    }),
     test("UI-LOGIN-STEPS-001", "regression", "Sign-in", "All", "High", async (ctx) => {
       // The sign-in form is multi-step. A required input on a hidden step still takes
       // part in HTML validation, which silently blocked submission of every other

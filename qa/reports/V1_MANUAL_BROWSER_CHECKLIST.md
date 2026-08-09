@@ -1,6 +1,6 @@
 # V1 Manual Browser Checklist
 
-Automated browser execution status: Executed with Playwright Chromium. Browser tests: 24.
+Automated browser execution status: Manual checklist generated; automated browser tool not invoked by this Node runner.
 
 Use this checklist when browser automation is unavailable or blocked.
 
