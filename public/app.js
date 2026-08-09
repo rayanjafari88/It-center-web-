@@ -5865,7 +5865,79 @@ function preferencesPage() {
         <div class="settings-actions">${formSaveStateHtml()}<button class="btn btn-primary" type="submit">Save Preferences</button></div>
       </form>
     </section>
+    ${twoFactorPanel()}
   `;
+}
+
+// Self-service second factor. It keeps working when email delivery does not, which
+// is why IT accounts in particular should turn it on.
+function twoFactorPanel() {
+  const enabled = Boolean(state.user?.mfaEnabled);
+  return `
+    <section class="surface-card employee-settings-page two-factor-panel">
+      <div class="settings-page-head">
+        <div>
+          <p class="eyebrow">Security</p>
+          <h3>Two-step sign-in</h3>
+          <p class="muted">Use an authenticator app as a second step. It works even when email is unavailable, so IT accounts should always have it on.</p>
+        </div>
+        <span class="badge ${enabled ? "success" : "neutral"}">${enabled ? "On" : "Off"}</span>
+      </div>
+      ${enabled ? `
+        <div class="two-factor-actions">
+          <p class="muted">Two-step sign-in is on for this account.</p>
+          <label class="two-factor-code"><span>Enter a current code to turn it off</span><input data-totp-disable-token inputmode="numeric" maxlength="6" placeholder="123456"></label>
+          <button class="btn btn-secondary" type="button" data-totp-disable>Turn off</button>
+        </div>
+      ` : `
+        <div class="two-factor-actions" data-totp-setup-area>
+          <button class="btn btn-primary" type="button" data-totp-start>Set up two-step sign-in</button>
+        </div>
+      `}
+    </section>
+  `;
+}
+
+function wireTwoFactorPanel() {
+  $("[data-totp-start]")?.addEventListener("click", async () => {
+    try {
+      const result = await api("/api/auth/totp-setup", { method: "POST", body: "{}" });
+      const area = $("[data-totp-setup-area]");
+      if (!area) return;
+      area.innerHTML = `
+        <ol class="two-factor-steps">
+          <li>Open your authenticator app and add an account.</li>
+          <li>Enter this setup key: <code class="two-factor-secret">${escapeHtml(result.secret)}</code></li>
+          <li>Type the 6-digit code it shows to confirm.</li>
+        </ol>
+        <label class="two-factor-code"><span>Code from your app</span><input data-totp-token inputmode="numeric" maxlength="6" placeholder="123456"></label>
+        <button class="btn btn-primary" type="button" data-totp-confirm>Confirm and turn on</button>
+      `;
+      localizeRenderedUi(area);
+      $("[data-totp-confirm]")?.addEventListener("click", async () => {
+        try {
+          await api("/api/auth/totp-confirm", { method: "POST", body: JSON.stringify({ token: $("[data-totp-token]")?.value || "" }) });
+          await loadSession();
+          render();
+          toast("Two-step sign-in is on", "You will be asked for a code from your app at each sign-in.");
+        } catch (error) {
+          toast("Could not turn it on", error.message);
+        }
+      });
+    } catch (error) {
+      toast("Could not start setup", error.message);
+    }
+  });
+  $("[data-totp-disable]")?.addEventListener("click", async () => {
+    try {
+      await api("/api/auth/totp-disable", { method: "POST", body: JSON.stringify({ token: $("[data-totp-disable-token]")?.value || "" }) });
+      await loadSession();
+      render();
+      toast("Two-step sign-in is off", "Your account now signs in with a single step.");
+    } catch (error) {
+      toast("Could not turn it off", error.message);
+    }
+  });
 }
 
 function notificationPreferencesPage() {
@@ -8640,7 +8712,7 @@ function documentAttachments(row) {
 
 function attachmentCard(item) {
   const isImage = String(item.mimeType || "").startsWith("image/");
-  return `<article class="record-card"><div class="record-card-head"><div class="record-icon">${icon("attachments")}</div><div><strong>${escapeHtml(item.filename)}</strong><span>${escapeHtml(look("users", item.uploaderId))} | ${new Date(item.uploadedAt).toLocaleString()} | ${formatSize(item.size)}</span></div></div>${isImage && item.content ? `<img class="attachment-preview" src="${escapeHtml(item.content)}" alt="${escapeHtml(item.filename)}">` : `<div class="attachment-preview">${escapeHtml(item.mimeType || "file preview")}</div>`}<div class="record-card-actions"><button class="btn btn-secondary" data-preview-attachment="${item.id}">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-attachment="${item.id}">${icon("download")}Download</button></div></article>`;
+  return `<article class="record-card"><div class="record-card-head"><div class="record-icon">${icon("attachments")}</div><div><strong>${escapeHtml(item.filename)}</strong><span>${escapeHtml(look("users", item.uploaderId))} | ${new Date(item.uploadedAt).toLocaleString()} | ${formatSize(item.size)}</span></div></div>${isImage ? `<img class="attachment-preview" loading="lazy" src="/api/attachments/${encodeURIComponent(item.id)}/download" alt="${escapeHtml(item.filename)}">` : `<div class="attachment-preview">${escapeHtml(item.mimeType || "file preview")}</div>`}<div class="record-card-actions"><button class="btn btn-secondary" data-preview-attachment="${item.id}">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-attachment="${item.id}">${icon("download")}Download</button></div></article>`;
 }
 
 function relatedFor(name, row) {
@@ -9080,6 +9152,7 @@ function bindPageActions() {
   $$("[data-task-workflow]").forEach((button) => button.addEventListener("click", () => openTaskWorkflowDialog(button.dataset.taskWorkflow, button.dataset.workflow)));
   $$("[data-task-subtask-form]").forEach((form) => form.addEventListener("submit", submitTaskSubtask));
   $$("[data-task-notes-form]").forEach((form) => form.addEventListener("submit", submitTaskNotes));
+  wireTwoFactorPanel();
   wireFormSaveState($("[data-preferences-form]"));
   $("[data-preferences-form]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -10898,10 +10971,20 @@ function readFileData(file) {
 function downloadAttachment(id) {
   const item = state.db.attachments.find((attachment) => attachment.id === id);
   if (!item) return;
+  // Attachment bytes are served from the API, not carried in application state.
   const link = document.createElement("a");
-  link.href = item.content && String(item.content).startsWith("data:") ? item.content : URL.createObjectURL(new Blob([item.content || item.filename], { type: item.mimeType || "text/plain" }));
-  link.download = item.filename;
+  link.href = `/api/attachments/${encodeURIComponent(id)}/download`;
+  link.download = item.filename || id;
+  document.body.appendChild(link);
   link.click();
+  link.remove();
+}
+
+// Preview needs the bytes in the page, so pull them as a blob URL on demand.
+async function attachmentObjectUrl(id) {
+  const response = await fetch(`/api/attachments/${encodeURIComponent(id)}/download`, { credentials: "same-origin" });
+  if (!response.ok) throw new Error(trText("Could not load attachment"));
+  return URL.createObjectURL(await response.blob());
 }
 
 function downloadNamedFile(filename) {
@@ -10926,10 +11009,12 @@ function previewAttachment(id) {
   const isImage = String(item.mimeType || "").startsWith("image/");
   const isPdf = String(item.mimeType || "").includes("pdf");
   const isOffice = /word|excel|spreadsheet|msword|officedocument/.test(String(item.mimeType || ""));
-  const preview = isImage && item.content
-    ? `<img class="attachment-preview large" src="${escapeHtml(item.content)}" alt="${escapeHtml(item.filename)}">`
-    : isPdf && item.content?.startsWith("data:")
-      ? `<iframe class="attachment-frame" src="${escapeHtml(item.content)}"></iframe>`
+  // Images and PDFs stream from the download route; the session cookie authorises it.
+  const src = `/api/attachments/${encodeURIComponent(item.id)}/download`;
+  const preview = isImage
+    ? `<img class="attachment-preview large" src="${src}" alt="${escapeHtml(item.filename)}">`
+    : isPdf
+      ? `<iframe class="attachment-frame" src="${src}" title="${escapeHtml(item.filename)}"></iframe>`
       : isOffice
         ? `<div class="attachment-preview large"><strong>${escapeHtml(item.filename)}</strong><span class="muted">Office documents cannot be rendered inline in this V1 browser preview. Use Download to open the file.</span><button class="btn btn-secondary" data-download-attachment="${item.id}">Download</button></div>`
         : `<div class="attachment-preview large">${escapeHtml(item.mimeType || "Preview unavailable for this demo file")}</div>`;

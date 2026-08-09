@@ -1,4 +1,9 @@
 ﻿node_modules/
+
+# Runtime data: uploaded files, database snapshots, and the atomic-write temp file.
+data/files/
+data/backups/
+data/db.json.tmp
 qa/reports/playwright-artifacts/
 qa/reports/playwright-html/
 

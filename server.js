@@ -14,9 +14,17 @@ const PORT = Number(process.env.PORT || 4173);
 // Secure cookies require TLS, which breaks plain-http local testing. Deployments
 // terminate TLS in front of this process and set COOKIE_SECURE=true.
 const COOKIE_SECURE = String(process.env.COOKIE_SECURE || "") === "true";
+const STRICT_TRANSPORT = String(process.env.STRICT_TRANSPORT || "true") === "true";
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, "public");
 const DATA_FILE = path.join(ROOT, "data", "db.json");
+// Attachment bytes live on disk, not inside db.json: the database is parsed on
+// every request, so inlining uploads made every request pay for every file.
+const FILES_DIR = path.join(ROOT, "data", "files");
+const BACKUP_DIR = path.join(ROOT, "data", "backups");
+const BACKUP_INTERVAL_MS = Number(process.env.BACKUP_INTERVAL_MS || 15 * 60 * 1000);
+const BACKUP_KEEP = Number(process.env.BACKUP_KEEP || 48);
+const MAX_UPLOAD_BYTES = Number(process.env.MAX_UPLOAD_BYTES || 10 * 1024 * 1024);
 
 const modules = [
   "dashboard",
@@ -388,7 +396,32 @@ function seed() {
 function ensureData() {
   if (!fs.existsSync(DATA_FILE)) {
     fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-    fs.writeFileSync(DATA_FILE, JSON.stringify(seed(), null, 2));
+    writeDb(seed());
+  }
+  fs.mkdirSync(FILES_DIR, { recursive: true });
+  fs.mkdirSync(BACKUP_DIR, { recursive: true });
+}
+
+// Keeps a rolling window of snapshots. The database is a single file, so a bad
+// write or a corrupted disk would otherwise take the whole company's history.
+function backupDb() {
+  try {
+    if (!fs.existsSync(DATA_FILE)) return;
+    const snapshots = () => fs.readdirSync(BACKUP_DIR).filter((name) => name.startsWith("db-")).sort();
+    const newest = snapshots().pop();
+    const due = !newest || Date.now() - fs.statSync(path.join(BACKUP_DIR, newest)).mtimeMs >= BACKUP_INTERVAL_MS;
+    if (due) {
+      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+      fs.copyFileSync(DATA_FILE, path.join(BACKUP_DIR, `db-${stamp}.json`));
+    }
+    // Prune on every write, not only when a snapshot was taken, so the directory
+    // cannot grow unbounded after a restart or a clock change.
+    const keep = snapshots();
+    for (const name of keep.slice(0, Math.max(0, keep.length - BACKUP_KEEP))) {
+      fs.unlinkSync(path.join(BACKUP_DIR, name));
+    }
+  } catch (error) {
+    console.error("[backup] failed:", error.message);
   }
 }
 
@@ -398,8 +431,70 @@ function readDb() {
   return migrateDb(db);
 }
 
+// Attachment ids are generated server-side, but the filename is still built
+// defensively so a crafted id can never escape the files directory.
+function attachmentPath(name) {
+  const safe = path.basename(String(name || ""));
+  const full = path.join(FILES_DIR, safe);
+  if (!full.startsWith(FILES_DIR)) throw new Error("Invalid attachment path");
+  return full;
+}
+
+// Maps an attachment's entityType onto the collection that should hold its parent.
+function attachmentParentExists(db, entityType, entityId) {
+  if (!entityId) return false;
+  const collection = {
+    ticket: "tickets", tickets: "tickets",
+    task: "tasks", tasks: "tasks",
+    asset: "assets", assets: "assets",
+    employee: "employees", employees: "employees",
+    document: "documents", documents: "documents",
+    contract: "contracts", contracts: "contracts",
+    vendor: "vendors", vendors: "vendors",
+    knowledge_base: "knowledgeBase", knowledgeBase: "knowledgeBase"
+  }[String(entityType || "")];
+  // Unknown types are left alone rather than blocked, so this cannot break a
+  // caller that attaches to something this map does not know about yet.
+  if (!collection) return true;
+  return (db[collection] || []).some((row) => row.id === entityId);
+}
+
+function writeAttachmentFile(attachmentId, content) {
+  fs.mkdirSync(FILES_DIR, { recursive: true });
+  const name = `${attachmentId}.bin`;
+  const buffer = Buffer.from(String(content), "base64");
+  // Not valid base64? Store the raw text rather than silently losing it.
+  const payload = buffer.toString("base64").replace(/=+$/, "") === String(content).replace(/=+$/, "")
+    ? buffer
+    : Buffer.from(String(content), "utf8");
+  fs.writeFileSync(attachmentPath(name), payload);
+  return { name, bytes: payload.length };
+}
+
+function readAttachmentFile(row) {
+  if (!row?.storagePath) return null;
+  const full = attachmentPath(row.storagePath);
+  if (!fs.existsSync(full)) return null;
+  return fs.readFileSync(full);
+}
+
+function deleteAttachmentFile(row) {
+  try {
+    if (!row?.storagePath) return;
+    const full = attachmentPath(row.storagePath);
+    if (fs.existsSync(full)) fs.unlinkSync(full);
+  } catch (error) {
+    console.error("[attachments] cleanup failed:", error.message);
+  }
+}
+
+// Write to a temporary file and rename over the target. Rename is atomic on the
+// same filesystem, so a crash mid-write can no longer truncate the database.
 function writeDb(db) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2));
+  const tmp = `${DATA_FILE}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
+  fs.renameSync(tmp, DATA_FILE);
+  backupDb();
 }
 
 function migrateDb(db) {
@@ -442,6 +537,21 @@ function migrateDb(db) {
       role.permissions.lookup_items.edit = true;
       role.permissions.lookup_items.archive = true;
       role.permissions.lookup_items.export = true;
+    }
+  }
+  // Attachments used to inline their bytes in this file. Move any that remain onto
+  // disk so the database stops carrying them.
+  for (const attachment of db.attachments || []) {
+    if (attachment.content === undefined) continue;
+    try {
+      if (String(attachment.content || "")) {
+        const stored = writeAttachmentFile(attachment.id, attachment.content);
+        attachment.storagePath = stored.name;
+        attachment.size = stored.bytes;
+      }
+      delete attachment.content;
+    } catch (error) {
+      console.error("[attachments] migration failed for", attachment.id, error.message);
     }
   }
   // Auth storage introduced with sessions.
@@ -828,12 +938,60 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
     return send(res, 200, { ok: true }, { "Set-Cookie": clearedCookieHeader() }), true;
   }
 
+  // --- second-factor enrolment, for the signed-in account only ----------------
+  // Enrolment is deliberately self-service: nobody, including an administrator,
+  // can set or read another account's secret.
+  if (route === "totp-setup" && req.method === "POST") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Authentication required" }), true;
+    const secret = auth.generateTotpSecret();
+    account.pendingTotpSecret = secret;
+    writeDb(db);
+    return send(res, 200, {
+      secret,
+      // The app can render this as a QR code, or the secret can be typed in.
+      uri: auth.totpUri(secret, account.email || account.username)
+    }), true;
+  }
+
+  if (route === "totp-confirm" && req.method === "POST") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Authentication required" }), true;
+    const body = await readBody(req);
+    if (!account.pendingTotpSecret) return send(res, 400, { error: "Start setup first" }), true;
+    if (!auth.verifyTotp(account.pendingTotpSecret, body.token)) {
+      return send(res, 401, { error: "That code did not match. Check your authenticator app." }), true;
+    }
+    account.totpSecret = account.pendingTotpSecret;
+    delete account.pendingTotpSecret;
+    account.totpEnrolledAt = now();
+    audit(db, req, "enable_mfa", "users", account.id, null, { totpEnrolledAt: account.totpEnrolledAt }, account);
+    writeDb(db);
+    return send(res, 200, { enabled: true }), true;
+  }
+
+  if (route === "totp-disable" && req.method === "POST") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Authentication required" }), true;
+    const body = await readBody(req);
+    // Removing a factor is a security-relevant act; require a current code.
+    if (!account.totpSecret || !auth.verifyTotp(account.totpSecret, body.token)) {
+      return send(res, 401, { error: "Enter a current code to turn off two-factor sign-in." }), true;
+    }
+    delete account.totpSecret;
+    delete account.pendingTotpSecret;
+    delete account.totpEnrolledAt;
+    audit(db, req, "disable_mfa", "users", account.id, null, null, account);
+    writeDb(db);
+    return send(res, 200, { enabled: false }), true;
+  }
+
   // Who am I? The only way the client learns its own identity.
   if (route === "session" && req.method === "GET") {
     const account = sessionUser(db, req);
     if (!account) return send(res, 401, { error: "Not signed in" }), true;
     return send(res, 200, {
-      user: stripInternal(account),
+      user: { ...stripInternal(account), mfaEnabled: Boolean(account.totpSecret) },
       role: db.roles.find((role) => role.id === account.roleId)
     }), true;
   }
@@ -988,6 +1146,7 @@ function stripInternal(row) {
   delete copy.password;
   // Secrets that must never reach a client, even for the account's own record.
   delete copy.totpSecret;
+  delete copy.pendingTotpSecret;
   delete copy.tokenHash;
   delete copy.codeHash;
   delete copy.salt;
@@ -2929,12 +3088,45 @@ async function handleApi(req, res) {
     return send(res, 200, { notificationPreferences: user.notificationPreferences });
   }
 
+  // Attachment bytes are served here rather than shipped inside /api/state.
+  if (req.method === "GET" && resource === "attachments" && resourceId && action === "download") {
+    const row = (db.attachments || []).find((item) => item.id === resourceId);
+    if (!row) return send(res, 404, { error: "Attachment not found" });
+    if (!canAccessEntity(db, user, row.entityType, row.entityId)) return send(res, 403, { error: "Forbidden" });
+    if (row.internal && !isItUser(db, user)) return send(res, 403, { error: "Forbidden" });
+    const buffer = readAttachmentFile(row);
+    if (!buffer) return send(res, 404, { error: "Attachment file is missing" });
+    res.writeHead(200, {
+      "Content-Type": row.mimeType || "application/octet-stream",
+      // Always an attachment: never render user-supplied files inline.
+      "Content-Disposition": `attachment; filename="${path.basename(String(row.filename || row.id)).replace(/"/g, "")}"`,
+      "Content-Length": buffer.length,
+      "X-Content-Type-Options": "nosniff"
+    });
+    return res.end(buffer);
+  }
+
   if (req.method === "POST" && resource === "attachments") {
     if (!can(db, user, "attachments", "create")) return send(res, 403, { error: "Forbidden" });
     const body = await readBody(req);
     const allowed = isItUser(db, user) ? canAccessEntity(db, user, body.entityType, body.entityId) : canEmployeeCreateAttachment(db, user, body.entityType, body.entityId);
     if (!allowed) return send(res, 403, { error: "Forbidden" });
+    // Refuse orphans: an attachment must hang off a record that actually exists.
+    if (!attachmentParentExists(db, body.entityType, body.entityId)) {
+      return send(res, 400, { error: "The record this attachment belongs to was not found" });
+    }
+    const content = String(body.content || "");
+    if (Buffer.byteLength(content, "utf8") > MAX_UPLOAD_BYTES) {
+      return send(res, 413, { error: `Attachments are limited to ${Math.floor(MAX_UPLOAD_BYTES / 1048576)} MB` });
+    }
     const row = { id: id("att"), ...body, uploaderId: user.id, uploadedAt: now(), createdAt: now(), updatedAt: now() };
+    // The bytes go to disk; the record keeps only a pointer.
+    delete row.content;
+    if (content) {
+      const stored = writeAttachmentFile(row.id, content);
+      row.storagePath = stored.name;
+      row.size = stored.bytes;
+    }
     db.attachments.unshift(row);
     const parentType = singularResource(body.entityType);
     audit(db, req, "upload", parentType === "ticket" ? "tickets" : "attachments", parentType === "ticket" ? row.entityId : row.id, null, row);
@@ -3699,9 +3891,36 @@ async function handleApi(req, res) {
   return send(res, 405, { error: "Method not allowed" });
 }
 
+// Applied to every response. frame-ancestors blocks click-jacking, nosniff stops
+// content-type guessing, and the CSP keeps the page from loading third-party code.
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "same-origin",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    "img-src 'self' data: blob:",
+    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline'",
+    "frame-src 'self' blob:",
+    "connect-src 'self'",
+    "form-action 'self'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'"
+  ].join("; ")
+};
+
 const server = http.createServer((req, res) => {
+  for (const [header, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(header, value);
+  if (STRICT_TRANSPORT && COOKIE_SECURE) res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   if (req.url.startsWith("/api/")) {
-    handleApi(req, res).catch((error) => send(res, 500, { error: error.message }));
+    handleApi(req, res).catch((error) => {
+      // Log the detail, return none: internal messages have leaked paths and
+      // stack context to clients in the past.
+      console.error("[api]", req.method, req.url, error.stack || error.message);
+      send(res, 500, { error: "Something went wrong. Please try again." });
+    });
     return;
   }
   serveStatic(req, res);

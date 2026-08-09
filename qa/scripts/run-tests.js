@@ -101,6 +101,7 @@ function allTests() {
   return [
     ...apiTests(),
     ...authTests(),
+    ...platformTests(),
     ...securityTests(),
     ...regressionTests(),
     ...browserTests()
@@ -206,7 +207,10 @@ function securityTests() {
       const denied = await ctx.asEmployeeA({ path: `/api/tickets/${ticketB.data.id}` });
       assertStatus(denied, 403, "Employee A cannot open Employee B ticket");
       const stateA = await ctx.asEmployeeA({ path: "/api/state" });
-      assert(!includesQaPrefix(stateA.data.tickets), "Employee A state does not include Employee B QA ticket");
+      // Assert about Employee B's ticket specifically. Employee A legitimately owns
+      // QA tickets of their own, so "no QA ticket at all" is the wrong question.
+      assert(!(stateA.data.tickets || []).some((ticket) => ticket.id === ticketB.data.id), "Employee A state does not include Employee B ticket");
+      assert(!JSON.stringify(stateA.data.tickets || []).includes("Employee B private ticket"), "Employee B ticket content does not leak into Employee A state");
     }),
     test("SEC-ASSET-ISOLATION-001", "security", "Assets", "Employee", "Critical", async (ctx) => {
       const asset = await ctx.asManager({ method: "POST", path: "/api/assets", body: { assetName: `${PREFIX} Employee B Phone`, name: `${PREFIX} Employee B Phone`, category: "Mobile", serialNumber: `${PREFIX}ASSETB001`, status: "assigned", currentOwnerId: qaIds.employeeB } });
@@ -350,6 +354,75 @@ function authTests() {
       assert(!("authAttempts" in state.data), "Auth attempts are not exposed");
       assert(!/tokenHash|codeHash|totpSecret/.test(raw), "No auth secrets appear in the payload");
       assert(!/scrypt\$/.test(raw), "No password hashes appear in the payload");
+    })
+  ];
+}
+
+function platformTests() {
+  return [
+    test("SEC-HEADERS-001", "security", "Transport", "All", "High", async (ctx) => {
+      const res = await ctx.anonymous({ path: "/" });
+      const headers = res.headers;
+      assert(headers["x-content-type-options"] === "nosniff", "nosniff header is set");
+      assert(String(headers["x-frame-options"] || "").toUpperCase() === "DENY", "Framing is denied");
+      assert(/frame-ancestors 'none'/.test(String(headers["content-security-policy"] || "")), "CSP forbids framing");
+      assert(/default-src 'self'/.test(String(headers["content-security-policy"] || "")), "CSP defaults to same origin");
+    }),
+    test("SEC-ERRORS-001", "security", "Error handling", "All", "Medium", async (ctx) => {
+      // A failure must not hand internal detail back to the caller.
+      const res = await ctx.asManager({ method: "POST", path: "/api/attachments", body: { entityType: "ticket", entityId: "does-not-exist" } });
+      assert(res.status >= 400, "Bad attachment request fails");
+      const body = JSON.stringify(res.data || {});
+      const leaks = ["node:internal", "at Object.", "/home/", "\\Users\\"];
+      assert(!leaks.some((needle) => body.includes(needle)), "Error body carries no stack or filesystem path");
+    }),
+    test("PLAT-ATTACH-001", "regression", "Attachments", "IT Manager", "Critical", async (ctx) => {
+      const ticket = await ctx.asEmployeeA({ method: "POST", path: "/api/tickets", body: { description: `${PREFIX} attachment host`, subcategoryCode: "hardware_devices_laptop" } });
+      assertStatus(ticket, 201, "Ticket created to hold an attachment");
+      const content = Buffer.from(`${PREFIX} attachment payload`).toString("base64");
+      const created = await ctx.asManager({ method: "POST", path: "/api/attachments", body: { entityType: "ticket", entityId: ticket.data.id, filename: `${PREFIX}note.txt`, mimeType: "text/plain", content } });
+      assertStatus(created, 201, "Attachment uploaded");
+      assert(!("content" in created.data), "Attachment bytes are not echoed back into the record");
+      assert(Boolean(created.data.storagePath), "Attachment records where the bytes are stored");
+
+      // The whole point of moving files out: state must stay small.
+      const state = await ctx.asManager({ path: "/api/state" });
+      assertStatus(state, 200, "State loads");
+      assert(!JSON.stringify(state.data.attachments || []).includes(content), "Attachment bytes never travel in application state");
+
+      const download = await ctx.asManager({ path: `/api/attachments/${created.data.id}/download` });
+      assertStatus(download, 200, "Attachment downloads");
+      assert(String(download.raw).includes("attachment payload"), "Downloaded bytes match what was uploaded");
+
+      const anonymous = await ctx.anonymous({ path: `/api/attachments/${created.data.id}/download` });
+      assertStatus(anonymous, 401, "Anonymous download is refused");
+      const unrelated = await ctx.asEmployeeB({ path: `/api/attachments/${created.data.id}/download` });
+      assert(unrelated.status === 403 || unrelated.status === 401, "An unrelated employee cannot download it");
+    }),
+    test("PLAT-MFA-001", "security", "Two-step sign-in", "System Admin", "High", async (ctx) => {
+      const setup = await ctx.asAdmin({ method: "POST", path: "/api/auth/totp-setup", body: {} });
+      assertStatus(setup, 200, "Enrolment starts");
+      assert(/^[A-Z2-7]{16,}$/.test(setup.data.secret || ""), "A base32 secret is issued");
+      assert(String(setup.data.uri || "").startsWith("otpauth://totp/"), "An otpauth URI is issued");
+
+      const wrong = await ctx.asAdmin({ method: "POST", path: "/api/auth/totp-confirm", body: { token: "000000" } });
+      assertStatus(wrong, 401, "A wrong code does not enable the factor");
+
+      const { totpAt } = require("../../lib/auth");
+      const code = totpAt(setup.data.secret, Math.floor(Date.now() / 30000));
+      const confirmed = await ctx.asAdmin({ method: "POST", path: "/api/auth/totp-confirm", body: { token: code } });
+      assertStatus(confirmed, 200, "A correct code enables the factor");
+
+      const signIn = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: "qa_auto_admin", password: ctx.password } });
+      assertStatus(signIn, 200, "Password step still succeeds");
+      assert(signIn.data.mfaRequired === true, "Password alone no longer completes sign-in");
+      assert(!(signIn.headers["set-cookie"] || []).length, "No session is issued before the second factor");
+
+      const session = await ctx.asAdmin({ path: "/api/auth/session" });
+      assert(!JSON.stringify(session.data).includes(setup.data.secret), "The secret is never returned to a client");
+
+      const off = await ctx.asAdmin({ method: "POST", path: "/api/auth/totp-disable", body: { token: totpAt(setup.data.secret, Math.floor(Date.now() / 30000)) } });
+      assertStatus(off, 200, "The factor can be turned off with a current code");
     })
   ];
 }
