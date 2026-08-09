@@ -44,16 +44,54 @@
             <h2>Welcome back</h2>
             <p class="muted">Sign in to your V1 operations workspace.</p>
           </div>
-          <label>
-            Username or Email
-            <input name="email" value="manager@itcc.local" autocomplete="username" />
-          </label>
-          <label>
-            Password
-            <input name="password" type="password" value="manager123" autocomplete="current-password" />
-          </label>
-          <button class="btn btn-primary" type="submit">Login</button>
-          <p class="hint">Demo accounts: admin/admin123, manager/manager123, staff/staff123, employee/admin123.</p>
+          <div class="form-error" data-login-error hidden></div>
+
+          <!-- Step 1: email. -->
+          <div data-login-step="email">
+            <label>
+              Work email
+              <input name="email" type="email" autocomplete="username" placeholder="you@company.com" required />
+            </label>
+            <button class="btn btn-primary" type="submit" data-login-submit>Email me a sign-in code</button>
+            <p class="hint">We will send a 6-digit code to your work email. No password needed.</p>
+            <button class="btn btn-secondary auth-alt" type="button" data-use-password>Use a password instead</button>
+          </div>
+
+          <!-- Step 2: the code. -->
+          <div data-login-step="code" hidden>
+            <p class="muted" data-code-sent-to></p>
+            <label>
+              Sign-in code
+              <input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" />
+            </label>
+            <button class="btn btn-primary" type="submit" data-login-submit>Sign in</button>
+            <button class="btn btn-secondary auth-alt" type="button" data-login-back>Use a different email</button>
+          </div>
+
+          <!-- Password sign-in, for accounts that still use one. -->
+          <div data-login-step="password" hidden>
+            <label>
+              Username or email
+              <input name="passwordEmail" autocomplete="username" />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" autocomplete="current-password" />
+            </label>
+            <button class="btn btn-primary" type="submit" data-login-submit>Sign in</button>
+            <button class="btn btn-secondary auth-alt" type="button" data-use-email-code>Email me a code instead</button>
+          </div>
+
+          <!-- Second factor for privileged accounts. -->
+          <div data-login-step="totp" hidden>
+            <p class="muted">Enter the 6-digit code from your authenticator app.</p>
+            <label>
+              Authentication code
+              <input name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" />
+            </label>
+            <button class="btn btn-primary" type="submit" data-login-submit>Verify</button>
+            <button class="btn btn-secondary auth-alt" type="button" data-login-back>Start over</button>
+          </div>
         </form>
       </section>
     </div>

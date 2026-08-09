@@ -100,6 +100,7 @@ function safeCommand(cmd, args) {
 function allTests() {
   return [
     ...apiTests(),
+    ...authTests(),
     ...securityTests(),
     ...regressionTests(),
     ...browserTests()
@@ -282,6 +283,75 @@ async function resetTicketAssignment(ctx) {
     path: "/api/settings/ticket-assignment",
     body: { enabled: false, strategy: "manual", fallbackAssigneeId: "", categoryAssignees: {}, categoryRoutes: {} }
   });
+}
+
+function authTests() {
+  return [
+    test("SEC-AUTH-001", "security", "Authentication", "Anonymous", "Blocker", async (ctx) => {
+      // The pre-session build served the whole dataset to anyone who asked.
+      const state = await ctx.anonymous({ path: "/api/state" });
+      assertStatus(state, 401, "Anonymous request cannot read application state");
+      const tickets = await ctx.anonymous({ path: "/api/tickets" });
+      assertStatus(tickets, 401, "Anonymous request cannot list tickets");
+      const employees = await ctx.anonymous({ path: "/api/employees" });
+      assertStatus(employees, 401, "Anonymous request cannot list people");
+    }),
+    test("SEC-AUTH-002", "security", "Authentication", "Anonymous", "Blocker", async (ctx) => {
+      // A forged identity header must carry no authority at all.
+      const forged = await ctx.anonymous({
+        method: "POST",
+        path: "/api/users",
+        headers: { "x-user-id": qaIds.adminUser },
+        body: { name: `${PREFIX} Forged`, username: "qa_auto_forged", email: "qa.auto.forged@example.test", password: "QA_AUTO_forged123!", roleId: "role_admin", status: "active", accountType: "Temporary" }
+      });
+      assertStatus(forged, 401, "Forged x-user-id header cannot create an account");
+      const forgedRead = await ctx.anonymous({ path: "/api/state", headers: { "x-user-id": qaIds.adminUser } });
+      assertStatus(forgedRead, 401, "Forged x-user-id header cannot read state");
+    }),
+    test("SEC-AUTH-003", "security", "Authentication", "All", "Critical", async (ctx) => {
+      const bad = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: "qa_auto_manager", password: "wrong-password" } });
+      assertStatus(bad, 401, "Wrong password is rejected");
+      const good = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: "qa_auto_manager", password: ctx.password } });
+      assertStatus(good, 200, "Correct password signs in");
+      const cookie = [].concat(good.headers["set-cookie"] || []).map((value) => String(value).split(";")[0]).join("; ");
+      assert(Boolean(cookie), "Sign-in returns a session cookie");
+      const raw = [].concat(good.headers["set-cookie"] || []).join(";");
+      assert(/HttpOnly/i.test(raw), "Session cookie is HttpOnly");
+      assert(/SameSite=Strict/i.test(raw), "Session cookie is SameSite=Strict");
+      assert(!JSON.stringify(good.data).includes(ctx.password), "Sign-in response never echoes the password");
+
+      const withSession = await ctx.anonymous({ path: "/api/state", headers: { cookie } });
+      assertStatus(withSession, 200, "Session cookie grants access");
+
+      const loggedOut = await ctx.anonymous({ method: "POST", path: "/api/auth/logout", body: {}, headers: { cookie } });
+      assertStatus(loggedOut, 200, "Logout succeeds");
+      const afterLogout = await ctx.anonymous({ path: "/api/state", headers: { cookie } });
+      assertStatus(afterLogout, 401, "Session is dead server-side after logout");
+    }),
+    test("SEC-AUTH-004", "security", "Authentication", "All", "Critical", async (ctx) => {
+      // Codes must be single use, and an unknown address must look identical to a
+      // known one so the endpoint cannot be used to enumerate staff.
+      const known = await ctx.anonymous({ method: "POST", path: "/api/auth/request-code", body: { email: "qa.auto.employee.a@example.test" } });
+      assertStatus(known, 200, "Code request accepted for a real address");
+      const unknown = await ctx.anonymous({ method: "POST", path: "/api/auth/request-code", body: { email: "qa.auto.nobody@example.test" } });
+      assertStatus(unknown, 200, "Unknown address returns the same status");
+      assert(JSON.stringify(known.data) === JSON.stringify(unknown.data), "Unknown address returns an identical body");
+
+      const wrong = await ctx.anonymous({ method: "POST", path: "/api/auth/verify-code", body: { email: "qa.auto.employee.a@example.test", code: "000000" } });
+      assert(wrong.status === 401 || wrong.status === 429, "A wrong code never signs anyone in");
+    }),
+    test("SEC-AUTH-005", "security", "Authentication", "All", "High", async (ctx) => {
+      // Secrets must never reach a client, even an administrator's own payload.
+      const state = await ctx.asAdmin({ path: "/api/state" });
+      assertStatus(state, 200, "Admin can read state");
+      const raw = JSON.stringify(state.data);
+      assert(!("sessions" in state.data), "Sessions are not exposed");
+      assert(!("loginCodes" in state.data), "Login codes are not exposed");
+      assert(!("authAttempts" in state.data), "Auth attempts are not exposed");
+      assert(!/tokenHash|codeHash|totpSecret/.test(raw), "No auth secrets appear in the payload");
+      assert(!/scrypt\$/.test(raw), "No password hashes appear in the payload");
+    })
+  ];
 }
 
 function regressionTests() {

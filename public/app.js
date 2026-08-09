@@ -2107,18 +2107,47 @@ function breadcrumbFor(module, row = null) {
 }
 
 async function api(path, options = {}) {
-  const headers = { "Content-Type": "application/json", "x-user-id": state.user?.id || localStorage.getItem("itcc.userId") || "user_manager", ...(options.headers || {}) };
-  const response = await fetch(path, { ...options, headers });
-  const data = await response.json();
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  const response = await fetch(path, { ...options, headers, credentials: "same-origin" });
+  const data = await response.json().catch(() => ({}));
+  if (response.status === 401 && !path.startsWith("/api/auth/")) {
+    handleSessionExpired();
+    throw new Error(trText("Your session has ended. Please sign in again."));
+  }
   if (!response.ok) throw new Error(trText(data.error || "Request failed"));
   return data;
 }
 
+// A session can end while the page is open - expiry, logout elsewhere, or the
+// account being disabled. Return to the sign-in screen rather than failing oddly.
+function handleSessionExpired() {
+  state.user = null;
+  state.role = null;
+  $("#app")?.classList.add("hidden");
+  $("#login")?.classList.remove("hidden");
+}
+
 async function loadState() {
   state.db = await api("/api/state");
-  const sessionUserId = state.user?.id || localStorage.getItem("itcc.userId");
-  state.user = sessionUserId ? state.db.users.find((user) => user.id === sessionUserId) : null;
-  state.role = state.user ? state.db.roles.find((role) => role.id === state.user.roleId) : null;
+  if (state.user) {
+    // Keep the cached copy in step with the freshly loaded collections.
+    state.user = state.db.users.find((user) => user.id === state.user.id) || state.user;
+    state.role = state.db.roles.find((role) => role.id === state.user.roleId) || state.role;
+  }
+}
+
+// Asks the server who we are. The client cannot answer this itself any more.
+async function loadSession() {
+  try {
+    const result = await api("/api/auth/session");
+    state.user = result.user;
+    state.role = result.role;
+    return true;
+  } catch (_) {
+    state.user = null;
+    state.role = null;
+    return false;
+  }
 }
 
 const systemThemeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
@@ -2156,11 +2185,18 @@ function resetStaticShellLabels() {
   if (loginForm) {
     $("h2", loginForm) && ($("h2", loginForm).textContent = uiLabel("Welcome back"));
     $(".muted", loginForm) && ($(".muted", loginForm).textContent = uiLabel("Sign in to your V1 operations workspace."));
-    const loginLabels = $$("label", loginForm);
-    if (loginLabels[0]?.firstChild) loginLabels[0].firstChild.nodeValue = `${uiLabel("Username or Email")}\n            `;
-    if (loginLabels[1]?.firstChild) loginLabels[1].firstChild.nodeValue = `${uiLabel("Password")}\n            `;
-    $("button[type='submit']", loginForm) && ($("button[type='submit']", loginForm).textContent = uiLabel("Login"));
-    $(".hint", loginForm) && ($(".hint", loginForm).textContent = uiLabel("Demo accounts: admin/admin123, manager/manager123, staff/staff123, employee/admin123."));
+    // Sign-in is a multi-step flow now, so translate whatever each step actually
+    // contains instead of overwriting a fixed set of labels.
+    $$("label", loginForm).forEach((label) => {
+      const first = label.firstChild;
+      if (!first || first.nodeType !== Node.TEXT_NODE) return;
+      const trimmed = first.nodeValue.trim();
+      if (trimmed) first.nodeValue = first.nodeValue.replace(trimmed, uiLabel(trimmed));
+    });
+    $$("button, .hint", loginForm).forEach((node) => {
+      const trimmed = node.textContent.trim();
+      if (trimmed) node.textContent = uiLabel(trimmed);
+    });
   }
 }
 
@@ -6097,7 +6133,7 @@ function peopleListActions() {
 /* Excel import/export use the same workbook layout as the customer template:
    Sheet1 carries the records, dropdown_list_items the allowed values. */
 function exportPeopleWorkbook() {
-  const headers = { "x-user-id": state.user?.id || localStorage.getItem("itcc.userId") || "user_manager" };
+  const headers = {};
   fetch("/api/employees/export", { headers })
     .then((response) => {
       if (!response.ok) throw new Error("Export failed");
@@ -11142,23 +11178,97 @@ function closeTopOverlay() {
   return false;
 }
 
+// Sign-in runs as a small state machine: email -> code -> (optional) TOTP.
+// A password path remains for accounts that still have one.
+const loginState = { step: "email", email: "", userId: "" };
+
+function showLoginStep(step) {
+  loginState.step = step;
+  $$("[data-login-step]").forEach((node) => { node.hidden = node.dataset.loginStep !== step; });
+  const error = $("[data-login-error]");
+  if (error) { error.hidden = true; error.textContent = ""; }
+  const focusTarget = $(`[data-login-step="${step}"] input`);
+  if (focusTarget) setTimeout(() => focusTarget.focus(), 0);
+}
+
+function loginError(message) {
+  const error = $("[data-login-error]");
+  if (!error) return;
+  error.textContent = trText(message);
+  error.hidden = false;
+}
+
+async function enterWorkspace(result) {
+  state.user = result.user;
+  state.role = result.role;
+  await loadState();
+  applyRouteFromLocation();
+  if (window.location.pathname === "/") state.page = userPreferences().landing;
+  $("#login").classList.add("hidden");
+  $("#app").classList.remove("hidden");
+  render();
+  toast("Signed in", tpl("Welcome back, {name}.", { name: state.user.name }));
+}
+
+$("[data-use-password]")?.addEventListener("click", () => showLoginStep("password"));
+$("[data-use-email-code]")?.addEventListener("click", () => showLoginStep("email"));
+$$("[data-login-back]").forEach((button) => button.addEventListener("click", () => showLoginStep("email")));
+
 $("#loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const submit = $(`[data-login-step="${loginState.step}"] [data-login-submit]`);
+  const submitLabel = submit?.textContent || "";
+  if (submit) { submit.disabled = true; submit.textContent = trText("Please wait..."); }
   try {
-    const result = await api("/api/login", { method: "POST", body: JSON.stringify(data) });
-    state.user = result.user;
-    state.role = result.role;
-    localStorage.setItem("itcc.userId", state.user.id);
-    await loadState();
-    applyRouteFromLocation();
-    if (window.location.pathname === "/") state.page = userPreferences().landing;
-    $("#login").classList.add("hidden");
-    $("#app").classList.remove("hidden");
-    render();
-    toast("Signed in", `Welcome back, ${state.user.name}.`);
+    if (loginState.step === "email") {
+      const email = String(data.get("email") || "").trim();
+      if (!email) throw new Error("Enter your work email.");
+      await api("/api/auth/request-code", { method: "POST", body: JSON.stringify({ email }) });
+      loginState.email = email;
+      showLoginStep("code");
+      const sentTo = $("[data-code-sent-to]");
+      if (sentTo) sentTo.textContent = tpl("If {email} has an account, a 6-digit code is on its way. It expires in 10 minutes.", { email });
+      return;
+    }
+    if (loginState.step === "code") {
+      const result = await api("/api/auth/verify-code", {
+        method: "POST",
+        body: JSON.stringify({ email: loginState.email, code: String(data.get("code") || "").trim() })
+      });
+      if (result.mfaRequired) {
+        loginState.userId = result.userId;
+        showLoginStep("totp");
+        return;
+      }
+      await enterWorkspace(result);
+      return;
+    }
+    if (loginState.step === "password") {
+      const result = await api("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ email: String(data.get("passwordEmail") || "").trim(), password: String(data.get("password") || "") })
+      });
+      if (result.mfaRequired) {
+        loginState.userId = result.userId;
+        showLoginStep("totp");
+        return;
+      }
+      await enterWorkspace(result);
+      return;
+    }
+    if (loginState.step === "totp") {
+      const result = await api("/api/auth/verify-totp", {
+        method: "POST",
+        body: JSON.stringify({ userId: loginState.userId, token: String(data.get("totp") || "").trim() })
+      });
+      await enterWorkspace(result);
+    }
   } catch (error) {
-    toast("Login failed", error.message);
+    loginError(error.message);
+  } finally {
+    if (submit) { submit.disabled = false; submit.textContent = submitLabel; }
   }
 });
 
@@ -11201,8 +11311,12 @@ $("#profileButton").addEventListener("click", (event) => {
     setHomeRoute();
     render();
   }));
-  $("[data-logout]")?.addEventListener("click", () => {
-    localStorage.removeItem("itcc.userId");
+  $("[data-logout]")?.addEventListener("click", async () => {
+    try {
+      await api("/api/auth/logout", { method: "POST", body: "{}" });
+    } catch (_) {
+      // The session may already be gone; sign out locally regardless.
+    }
     state.user = null;
     state.role = null;
     state.detail = null;
@@ -11210,7 +11324,8 @@ $("#profileButton").addEventListener("click", (event) => {
     $("#menuHost").innerHTML = "";
     $("#app").classList.add("hidden");
     $("#login").classList.remove("hidden");
-    toast("Logged out", "Your local session was cleared.");
+    showLoginStep("email");
+    toast("Logged out", "Your session was ended.");
   });
 });
 
@@ -11240,20 +11355,21 @@ window.addEventListener("scroll", () => {
   updateReadingProgress();
 }, { passive: true });
 
-loadState().then(() => {
+loadSession().then(async (signedIn) => {
+  if (signedIn) await loadState();
   applyPreferences();
   watchOverlayLocalization();
   document.body.classList.remove("auth-loading");
   $("#authSplash")?.classList.add("hidden");
-  if (localStorage.getItem("itcc.userId") && state.user) {
+  if (signedIn) {
     applyRouteFromLocation();
     $("#login").classList.add("hidden");
     $("#app").classList.remove("hidden");
     render();
   } else {
-    localStorage.removeItem("itcc.userId");
     $("#app").classList.add("hidden");
     $("#login").classList.remove("hidden");
+    showLoginStep("email");
   }
 }).catch((error) => {
   document.body.classList.remove("auth-loading");

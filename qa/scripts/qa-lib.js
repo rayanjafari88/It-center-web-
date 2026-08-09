@@ -128,11 +128,50 @@ function isQaRelatedRow(key, row, qaRecordIds, qaUserIds) {
   return false;
 }
 
+// Identity now comes from a session cookie, so each role signs in once and its
+// cookie is reused for the rest of the run.
+const sessionCookies = new Map();
+const qaUsernames = {
+  [qaIds.adminUser]: "qa_auto_admin",
+  [qaIds.managerUser]: "qa_auto_manager",
+  [qaIds.staffUser]: "qa_auto_staff",
+  [qaIds.employeeAUser]: "qa_auto_employee_a",
+  [qaIds.employeeBUser]: "qa_auto_employee_b"
+};
+
+async function cookieFor(baseUrl, userId) {
+  if (sessionCookies.has(userId)) return sessionCookies.get(userId);
+  const username = qaUsernames[userId];
+  if (!username) throw new Error(`No QA credentials for ${userId}`);
+  const res = await request(baseUrl, {
+    method: "POST",
+    path: "/api/login",
+    body: { email: username, password: QA_PASSWORD }
+  });
+  if (res.status !== 200) throw new Error(`QA sign-in failed for ${username}: ${res.status} ${res.raw}`);
+  const setCookie = [].concat(res.headers["set-cookie"] || []);
+  const cookie = setCookie.map((value) => String(value).split(";")[0]).join("; ");
+  if (!cookie) throw new Error(`No session cookie returned for ${username}`);
+  sessionCookies.set(userId, cookie);
+  return cookie;
+}
+
+// Signs in on demand, then issues the real request with that session.
+async function authedRequest(baseUrl, options) {
+  const { userId, ...rest } = options;
+  if (!userId) return request(baseUrl, rest);
+  const cookie = await cookieFor(baseUrl, userId);
+  return request(baseUrl, { ...rest, headers: { ...(rest.headers || {}), cookie } });
+}
+
+function resetSessions() {
+  sessionCookies.clear();
+}
+
 function request(baseUrl, { method = "GET", path: urlPath, userId, body, headers = {} }) {
   const target = new URL(urlPath, baseUrl);
   const payload = body === undefined ? null : JSON.stringify(body);
   const requestHeaders = { ...headers };
-  if (userId) requestHeaders["x-user-id"] = userId;
   if (payload) {
     requestHeaders["content-type"] = "application/json";
     requestHeaders["content-length"] = Buffer.byteLength(payload);
@@ -172,8 +211,10 @@ async function waitForServer(baseUrl, timeoutMs = 10000) {
   let lastError;
   while (Date.now() - start < timeoutMs) {
     try {
-      const res = await request(baseUrl, { path: "/api/state" });
-      if (res.status === 200) return true;
+      // /api/state now requires a session, so readiness is judged by the server
+      // answering at all - 401 means it is up and enforcing auth.
+      const res = await request(baseUrl, { path: "/api/auth/config" });
+      if (res.status === 200 || res.status === 401) return true;
     } catch (error) {
       lastError = error;
     }
@@ -191,12 +232,13 @@ function makeContext(baseUrl) {
     baseUrl,
     ids: qaIds,
     password: QA_PASSWORD,
-    api: (options) => request(baseUrl, options),
-    asAdmin: (options) => request(baseUrl, { ...options, userId: qaIds.adminUser }),
-    asManager: (options) => request(baseUrl, { ...options, userId: qaIds.managerUser }),
-    asStaff: (options) => request(baseUrl, { ...options, userId: qaIds.staffUser }),
-    asEmployeeA: (options) => request(baseUrl, { ...options, userId: qaIds.employeeAUser }),
-    asEmployeeB: (options) => request(baseUrl, { ...options, userId: qaIds.employeeBUser })
+    api: (options) => authedRequest(baseUrl, options),
+    anonymous: (options) => request(baseUrl, options),
+    asAdmin: (options) => authedRequest(baseUrl, { ...options, userId: qaIds.adminUser }),
+    asManager: (options) => authedRequest(baseUrl, { ...options, userId: qaIds.managerUser }),
+    asStaff: (options) => authedRequest(baseUrl, { ...options, userId: qaIds.staffUser }),
+    asEmployeeA: (options) => authedRequest(baseUrl, { ...options, userId: qaIds.employeeAUser }),
+    asEmployeeB: (options) => authedRequest(baseUrl, { ...options, userId: qaIds.employeeBUser })
   };
 }
 
@@ -335,6 +377,8 @@ Use this checklist when browser automation is unavailable or blocked.
 }
 
 module.exports = {
+  resetSessions,
+  authedRequest,
   ROOT,
   DATA_FILE,
   REPORT_DIR,

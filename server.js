@@ -7,8 +7,13 @@ const {
   applyImport: applyPeopleImport,
   buildExport: buildPeopleExport
 } = require("./lib/people-excel");
+const auth = require("./lib/auth");
+const { sendMail, mailerTransport } = require("./lib/mailer");
 
 const PORT = Number(process.env.PORT || 4173);
+// Secure cookies require TLS, which breaks plain-http local testing. Deployments
+// terminate TLS in front of this process and set COOKIE_SECURE=true.
+const COOKIE_SECURE = String(process.env.COOKIE_SECURE || "") === "true";
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, "public");
 const DATA_FILE = path.join(ROOT, "data", "db.json");
@@ -439,7 +444,19 @@ function migrateDb(db) {
       role.permissions.lookup_items.export = true;
     }
   }
+  // Auth storage introduced with sessions.
+  for (const key of ["sessions", "loginCodes", "authAttempts"]) {
+    if (!Array.isArray(db[key])) db[key] = [];
+  }
+  db.sessions = db.sessions.filter((item) => item.expiresAt > now());
+  db.loginCodes = db.loginCodes.filter((item) => item.expiresAt > now());
   for (const user of db.users || []) {
+    // Passwords were stored in plain text. Hash them in place on first boot; the
+    // original value is never written back.
+    if (user.password && !auth.isHashedPassword(user.password)) {
+      user.password = auth.hashPassword(user.password);
+      user.passwordHashedAt = now();
+    }
     user.username = user.username || String(user.email || user.name || user.id).split("@")[0].toLowerCase().replace(/[^a-z0-9._-]+/g, ".");
     user.accountType = user.accountType || (user.expiryDate ? "Temporary" : "Employee");
     if (user.status === "inactive") user.status = "disabled";
@@ -533,9 +550,308 @@ function readBody(req) {
   });
 }
 
+// Identity comes from a server-side session only. The client cannot assert who it
+// is: there is deliberately no header or query parameter that names a user.
 function currentUser(db, req) {
-  const userId = req.headers["x-user-id"] || "user_manager";
-  return db.users.find((user) => user.id === userId) || db.users[0];
+  return sessionUser(db, req);
+}
+
+function sessions(db) {
+  if (!Array.isArray(db.sessions)) db.sessions = [];
+  return db.sessions;
+}
+
+function pruneSessions(db) {
+  const before = sessions(db).length;
+  db.sessions = sessions(db).filter((item) => item.expiresAt > now());
+  return db.sessions.length !== before;
+}
+
+function sessionUser(db, req) {
+  const token = auth.parseCookies(req.headers.cookie)[auth.SESSION_COOKIE];
+  if (!token) return null;
+  const tokenHash = auth.hashToken(token);
+  const session = sessions(db).find((item) => item.tokenHash === tokenHash);
+  if (!session || session.expiresAt <= now()) return null;
+  const user = db.users.find((item) => item.id === session.userId);
+  if (!user || user.archivedAt) return null;
+  // A disabled or expired account must lose access immediately, not at session end.
+  if (["disabled", "locked", "inactive"].includes(String(user.status || "").toLowerCase())) return null;
+  return user;
+}
+
+function createSession(db, user, req) {
+  const token = auth.randomToken();
+  const ttl = auth.SESSION_TTL_MS[user.roleId] || auth.SESSION_TTL_MS.default;
+  sessions(db).unshift({
+    id: id("sess"),
+    userId: user.id,
+    tokenHash: auth.hashToken(token),
+    createdAt: now(),
+    expiresAt: new Date(Date.now() + ttl).toISOString(),
+    ip: req.socket.remoteAddress,
+    userAgent: String(req.headers["user-agent"] || "").slice(0, 200)
+  });
+  return { token, maxAge: ttl };
+}
+
+function destroySession(db, req) {
+  const token = auth.parseCookies(req.headers.cookie)[auth.SESSION_COOKIE];
+  if (!token) return false;
+  const tokenHash = auth.hashToken(token);
+  const before = sessions(db).length;
+  db.sessions = sessions(db).filter((item) => item.tokenHash !== tokenHash);
+  return db.sessions.length !== before;
+}
+
+// Signing in elsewhere should not silently keep old sessions alive for a
+// compromised account, so callers can drop every session a user holds.
+function destroyUserSessions(db, userId) {
+  db.sessions = sessions(db).filter((item) => item.userId !== userId);
+}
+
+// --- sign-in ---------------------------------------------------------------
+
+function loginCodes(db) {
+  if (!Array.isArray(db.loginCodes)) db.loginCodes = [];
+  return db.loginCodes;
+}
+
+function accountForIdentifier(db, identifier) {
+  const wanted = String(identifier || "").toLowerCase().trim();
+  if (!wanted) return null;
+  return db.users.find((item) =>
+    [item.email, item.username].filter(Boolean).some((value) => String(value).toLowerCase() === wanted)
+    && !item.archivedAt
+  ) || null;
+}
+
+// An employee with a mailbox but no login yet gets an account on first sign-in,
+// so the company does not have to provision hundreds of accounts up front.
+function autoProvisionFromEmployee(db, email) {
+  const wanted = String(email || "").toLowerCase().trim();
+  const employee = (db.employees || []).find((item) =>
+    String(item.email || "").toLowerCase() === wanted
+    && String(item.status || "active").toLowerCase() === "active"
+    && !item.archivedAt && !item.deletedAt
+  );
+  if (!employee) return null;
+  if (db.users.some((item) => String(item.email || "").toLowerCase() === wanted)) return null;
+  const user = {
+    id: id("user"),
+    name: employee.name || employee.email,
+    username: wanted.split("@")[0],
+    email: employee.email,
+    roleId: "role_employee",
+    status: "active",
+    accountType: "Employee",
+    employeeId: employee.id,
+    createdAt: now(),
+    notificationPreferences: notificationPreferences({ roleId: "role_employee" })
+  };
+  db.users.unshift(user);
+  employee.userId = user.id;
+  return user;
+}
+
+function accountBlockedReason(user) {
+  if (isAccountExpired(user)) return "Account expired";
+  if (["disabled", "locked", "inactive"].includes(String(user.status || "").toLowerCase())) return "Account disabled";
+  return "";
+}
+
+function completeSignIn(db, req, res, user) {
+  user.lastLoginAt = now();
+  pruneSessions(db);
+  const { token, maxAge } = createSession(db, user, req);
+  audit(db, req, "login", "users", user.id, null, { email: user.email }, user);
+  writeDb(db);
+  return send(res, 200, {
+    user: stripInternal(user),
+    role: db.roles.find((role) => role.id === user.roleId)
+  }, { "Set-Cookie": sessionCookieHeader(token, maxAge) });
+}
+
+// Throttles by identifier and by source address, so neither a single account nor a
+// single host can be hammered.
+function tooManyAttempts(db, key, limit, windowMs) {
+  if (!Array.isArray(db.authAttempts)) db.authAttempts = [];
+  const cutoff = Date.now() - windowMs;
+  db.authAttempts = db.authAttempts.filter((item) => new Date(item.at).getTime() > cutoff);
+  return db.authAttempts.filter((item) => item.key === key).length >= limit;
+}
+
+function recordAttempt(db, key) {
+  if (!Array.isArray(db.authAttempts)) db.authAttempts = [];
+  db.authAttempts.unshift({ key, at: now() });
+}
+
+async function handleAuthRoutes(db, req, res, resource, resourceId) {
+  const isAuth = resource === "auth";
+  if (!isAuth && !(req.method === "POST" && resource === "login")) return false;
+  const route = isAuth ? resourceId : "password";
+  const ip = req.socket.remoteAddress || "unknown";
+
+  // Password sign-in, kept for accounts that still use one.
+  if (route === "password") {
+    const body = await readBody(req);
+    const identifier = String(body.email || body.username || "").toLowerCase().trim();
+    if (tooManyAttempts(db, `pw:${identifier}`, 10, 15 * 60 * 1000) || tooManyAttempts(db, `ip:${ip}`, 30, 15 * 60 * 1000)) {
+      writeDb(db);
+      return send(res, 429, { error: "Too many attempts. Try again later." }), true;
+    }
+    const account = accountForIdentifier(db, identifier);
+    const ok = account && auth.verifyPassword(String(body.password || ""), account.password);
+    if (!ok) {
+      recordAttempt(db, `pw:${identifier}`);
+      recordAttempt(db, `ip:${ip}`);
+      writeDb(db);
+      return send(res, 401, { error: "Invalid login" }), true;
+    }
+    const blocked = accountBlockedReason(account);
+    if (blocked) {
+      if (blocked === "Account expired") {
+        account.status = "disabled";
+        account.disabledReason = "Expired";
+      }
+      writeDb(db);
+      return send(res, 403, { error: blocked }), true;
+    }
+    if (account.totpSecret) {
+      return send(res, 200, { mfaRequired: true, method: "totp", userId: account.id }), true;
+    }
+    completeSignIn(db, req, res, account);
+    return true;
+  }
+
+  // Step 1: ask for a code.
+  if (route === "request-code" && req.method === "POST") {
+    const body = await readBody(req);
+    const email = String(body.email || "").toLowerCase().trim();
+    if (tooManyAttempts(db, `req:${email}`, 5, 15 * 60 * 1000) || tooManyAttempts(db, `ip:${ip}`, 30, 15 * 60 * 1000)) {
+      writeDb(db);
+      return send(res, 429, { error: "Too many requests. Try again later." }), true;
+    }
+    recordAttempt(db, `req:${email}`);
+    recordAttempt(db, `ip:${ip}`);
+    const account = accountForIdentifier(db, email) || autoProvisionFromEmployee(db, email);
+    if (account && !accountBlockedReason(account)) {
+      const code = auth.generateLoginCode();
+      const salt = auth.randomToken(8);
+      db.loginCodes = loginCodes(db).filter((item) => item.userId !== account.id);
+      db.loginCodes.unshift({
+        id: id("code"),
+        userId: account.id,
+        email,
+        salt,
+        codeHash: auth.hashLoginCode(code, salt),
+        expiresAt: new Date(Date.now() + auth.CODE_TTL_MS).toISOString(),
+        attempts: 0,
+        createdAt: now()
+      });
+      try {
+        await sendMail({
+          to: account.email,
+          subject: "Your IT Command Center sign-in code",
+          text: `Your sign-in code is ${code}\n\nIt expires in 10 minutes and can be used once.\nIf you did not request it, you can ignore this message.`
+        });
+      } catch (error) {
+        console.error("[mail] delivery failed:", error.message);
+      }
+    }
+    writeDb(db);
+    // Never reveal whether an address is registered.
+    return send(res, 200, { sent: true, expiresInSeconds: auth.CODE_TTL_MS / 1000 }), true;
+  }
+
+  // Step 2: exchange the code for a session.
+  if (route === "verify-code" && req.method === "POST") {
+    const body = await readBody(req);
+    const email = String(body.email || "").toLowerCase().trim();
+    const submitted = String(body.code || "").trim();
+    const record = loginCodes(db).find((item) => item.email === email);
+    if (!record || new Date(record.expiresAt).getTime() <= Date.now()) {
+      db.loginCodes = loginCodes(db).filter((item) => item !== record);
+      writeDb(db);
+      return send(res, 401, { error: "That code is invalid or has expired." }), true;
+    }
+    if (record.attempts >= auth.CODE_MAX_ATTEMPTS) {
+      db.loginCodes = loginCodes(db).filter((item) => item !== record);
+      writeDb(db);
+      return send(res, 429, { error: "Too many incorrect attempts. Request a new code." }), true;
+    }
+    if (!auth.timingSafeEqual(auth.hashLoginCode(submitted, record.salt), record.codeHash)) {
+      record.attempts += 1;
+      writeDb(db);
+      return send(res, 401, { error: "That code is invalid or has expired." }), true;
+    }
+    const account = db.users.find((item) => item.id === record.userId);
+    const blocked = account ? accountBlockedReason(account) : "Account not found";
+    db.loginCodes = loginCodes(db).filter((item) => item !== record);
+    if (!account || blocked) {
+      writeDb(db);
+      return send(res, 403, { error: blocked || "Account not found" }), true;
+    }
+    if (account.totpSecret) {
+      return send(res, 200, { mfaRequired: true, method: "totp", userId: account.id }), true;
+    }
+    completeSignIn(db, req, res, account);
+    return true;
+  }
+
+  // Second factor for privileged accounts. Works with no email delivery at all,
+  // which is what makes it usable when mail itself is the outage.
+  if (route === "verify-totp" && req.method === "POST") {
+    const body = await readBody(req);
+    const account = db.users.find((item) => item.id === body.userId);
+    if (tooManyAttempts(db, `totp:${body.userId}`, 10, 15 * 60 * 1000)) {
+      writeDb(db);
+      return send(res, 429, { error: "Too many attempts. Try again later." }), true;
+    }
+    if (!account || !account.totpSecret || !auth.verifyTotp(account.totpSecret, body.token)) {
+      recordAttempt(db, `totp:${body.userId}`);
+      writeDb(db);
+      return send(res, 401, { error: "Invalid authentication code" }), true;
+    }
+    const blocked = accountBlockedReason(account);
+    if (blocked) {
+      writeDb(db);
+      return send(res, 403, { error: blocked }), true;
+    }
+    completeSignIn(db, req, res, account);
+    return true;
+  }
+
+  if (route === "logout" && req.method === "POST") {
+    destroySession(db, req);
+    writeDb(db);
+    return send(res, 200, { ok: true }, { "Set-Cookie": clearedCookieHeader() }), true;
+  }
+
+  // Who am I? The only way the client learns its own identity.
+  if (route === "session" && req.method === "GET") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Not signed in" }), true;
+    return send(res, 200, {
+      user: stripInternal(account),
+      role: db.roles.find((role) => role.id === account.roleId)
+    }), true;
+  }
+
+  // Lets the sign-in screen show the right options without leaking anything.
+  if (route === "config" && req.method === "GET") {
+    return send(res, 200, { emailSignIn: true, transport: mailerTransport() }), true;
+  }
+
+  return false;
+}
+
+function sessionCookieHeader(token, maxAge) {
+  return auth.serializeCookie(auth.SESSION_COOKIE, token, { maxAge, secure: COOKIE_SECURE });
+}
+
+function clearedCookieHeader() {
+  return auth.serializeCookie(auth.SESSION_COOKIE, "", { maxAge: 0, secure: COOKIE_SECURE });
 }
 
 function isAccountExpired(user) {
@@ -670,6 +986,11 @@ function stripInternal(row) {
   delete copy.cancelReason;
   delete copy.withdrawalReason;
   delete copy.password;
+  // Secrets that must never reach a client, even for the account's own record.
+  delete copy.totpSecret;
+  delete copy.tokenHash;
+  delete copy.codeHash;
+  delete copy.salt;
   return copy;
 }
 
@@ -1440,8 +1761,10 @@ function enrich(db, user = db.users[0]) {
   };
 }
 
-function audit(db, req, action, entityType, entityId, oldValue, newValue) {
-  const user = currentUser(db, req);
+// `actor` is passed explicitly when there is no session yet - signing in is itself
+// an audited action, and currentUser() is null at that moment.
+function audit(db, req, action, entityType, entityId, oldValue, newValue, actor = null) {
+  const user = actor || currentUser(db, req) || { id: "system", name: "System" };
   const createdAt = now();
   db.auditLogs.unshift({
     id: id("audit"),
@@ -2545,23 +2868,11 @@ async function handleApi(req, res) {
   const resourceId = parts[2];
   const action = parts[3];
 
-  if (req.method === "POST" && resource === "login") {
-    const body = await readBody(req);
-    const identifier = String(body.email || body.username || "").toLowerCase().trim();
-    const user = db.users.find((item) => [item.email, item.username].filter(Boolean).some((value) => String(value).toLowerCase() === identifier) && item.password === body.password && !item.archivedAt);
-    if (!user) return send(res, 401, { error: "Invalid login" });
-    if (isAccountExpired(user)) {
-      user.status = "disabled";
-      user.disabledReason = "Expired";
-      writeDb(db);
-      return send(res, 403, { error: "Account expired" });
-    }
-    if (["disabled", "locked", "inactive"].includes(String(user.status || "").toLowerCase())) return send(res, 403, { error: "Account disabled" });
-    user.lastLoginAt = now();
-    audit(db, req, "login", "users", user.id, null, { email: user.email });
-    writeDb(db);
-    return send(res, 200, { user: stripInternal(user), role: db.roles.find((role) => role.id === user.roleId) });
-  }
+  if (await handleAuthRoutes(db, req, res, resource, resourceId)) return;
+
+  // Every remaining endpoint requires a real session. There is no anonymous access
+  // and no way for a client to assert an identity.
+  if (!user) return send(res, 401, { error: "Authentication required" });
 
   // --- People Excel import / export -------------------------------------
   if (req.method === "GET" && resource === "employees" && resourceId === "export") {
@@ -2956,7 +3267,8 @@ async function handleApi(req, res) {
       account.notificationPreferences = notificationPreferences(account);
     }
     account.updatedAt = now();
-    audit(db, req, action.replace("-", "_"), "users", account.id, oldValue, { ...account, password: "***" });
+    // Mask both sides: the before-image carries the stored password hash too.
+    audit(db, req, action.replace("-", "_"), "users", account.id, { ...oldValue, password: "***" }, { ...account, password: "***" });
     writeDb(db);
     return send(res, 200, stripInternal(account));
   }
