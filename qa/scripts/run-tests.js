@@ -360,6 +360,20 @@ function authTests() {
 
 function platformTests() {
   return [
+    test("UI-LOGIN-STEPS-001", "regression", "Sign-in", "All", "High", async (ctx) => {
+      // The sign-in form is multi-step. A required input on a hidden step still takes
+      // part in HTML validation, which silently blocked submission of every other
+      // step. Assert the markup keeps inactive steps out of validation.
+      const page = await ctx.anonymous({ path: "/" });
+      assertStatus(page, 200, "Sign-in page loads");
+      const html = String(page.raw);
+      for (const step of ["email", "code", "password", "totp"]) {
+        assert(html.includes(`data-login-step="${step}"`), `Sign-in has a ${step} step`);
+      }
+      const app = await ctx.anonymous({ path: "/app.js" });
+      assertStatus(app, 200, "Application script loads");
+      assert(String(app.raw).includes("input.disabled = !active"), "Inactive sign-in steps are disabled so they cannot block validation");
+    }),
     test("SEC-HEADERS-001", "security", "Transport", "All", "High", async (ctx) => {
       const res = await ctx.anonymous({ path: "/" });
       const headers = res.headers;

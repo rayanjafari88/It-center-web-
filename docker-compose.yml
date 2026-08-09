@@ -1,0 +1,47 @@
+# Runs the application plus a TLS-terminating reverse proxy.
+#
+#   1. cp .env.example .env   and fill in the mail settings
+#   2. put your certificate in ./certs as fullchain.pem and privkey.pem
+#   3. docker compose up -d
+#
+# The app itself never speaks TLS; Caddy does, and forwards over the internal
+# network. That is why COOKIE_SECURE can safely be true here.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: 4173
+      COOKIE_SECURE: "true"
+      MAIL_TRANSPORT: ${MAIL_TRANSPORT:-log}
+      SMTP_HOST: ${SMTP_HOST:-smtp.office365.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-10485760}
+      BACKUP_KEEP: ${BACKUP_KEEP:-48}
+    volumes:
+      # Everything that must survive a redeploy.
+      - itcc-data:/app/data
+    expose:
+      - "4173"
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certs:/certs:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  itcc-data:
+  caddy-data:
+  caddy-config:

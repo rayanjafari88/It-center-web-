@@ -1,0 +1,33 @@
+# Run without Docker: install to /etc/systemd/system/itcc.service
+#
+#   sudo useradd --system --home /opt/itcc --shell /usr/sbin/nologin itcc
+#   sudo git clone https://github.com/rayanjafari88/It-center-web-.git /opt/itcc
+#   sudo chown -R itcc:itcc /opt/itcc
+#   sudo cp /opt/itcc/deploy/itcc.env /etc/itcc.env   # then edit it
+#   sudo systemctl enable --now itcc
+#
+# Still put a TLS proxy in front. COOKIE_SECURE=true requires HTTPS.
+[Unit]
+Description=IT Command Center
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=itcc
+Group=itcc
+WorkingDirectory=/opt/itcc
+EnvironmentFile=/etc/itcc.env
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+
+# Hardening: the process only ever needs to write its own data directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/itcc/data
+
+[Install]
+WantedBy=multi-user.target

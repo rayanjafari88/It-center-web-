@@ -14,3 +14,7 @@ i18n-needs.txt
 i18n-modals.txt
 .shots/
 *.xlsx
+
+# Local deployment config
+.env
+certs/

@@ -1664,6 +1664,21 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "Overview": "نظرة عامة",
+  "What needs attention": "ما يحتاج إلى انتباه",
+  "Service Desk": "مكتب الخدمة",
+  "Run the work": "إدارة العمل",
+  "People & Assets": "الموظفون والأصول",
+  "Who and what": "الأشخاص والعُهد",
+  "Knowledge & Records": "المعرفة والسجلات",
+  "Reference material": "مواد مرجعية",
+  "Suppliers": "الموردون",
+  "Contracts & vendors": "العقود والموردون",
+  "Access & setup": "الصلاحيات والإعداد",
+  "My Workspace": "مساحة عملي",
+  "Requests & tasks": "الطلبات والمهام",
+  "My Resources": "مواردي",
+  "Assets & guides": "العُهد والأدلة",
   "Try a different keyword or clear filters.": "جرّب كلمة أخرى أو امسح عوامل التصفية.",
   "Clear filters": "مسح عوامل التصفية"
 });
@@ -1807,19 +1822,31 @@ const templates = ["Asset assignment form", "Asset return form", "Asset handover
 const adminStructureModules = ["users", "roles", "settings", "audit_logs", "archive_center", "trash", "lookup_items", "form_templates", "attachments"];
 const assetContextModules = ["transfers"];
 // TODO Product Owner: Vendors remain first-level temporarily until the final Contracts/Vendors navigation decision is approved.
+// Grouped by the job being done rather than one flat list, so the sidebar reads as
+// a short set of areas instead of nine unrelated destinations.
 const navGroups = [
-  { id: "daily", label: "Daily Operations", items: ["dashboard", "tickets", "tasks", "employees", "assets", "knowledge_base", "documents", "contracts", "vendors"] },
+  { id: "overview", label: "Overview", items: ["dashboard"] },
+  { id: "service_desk", label: "Service Desk", items: ["tickets", "tasks"] },
+  { id: "people_assets", label: "People & Assets", items: ["employees", "assets"] },
+  { id: "knowledge", label: "Knowledge & Records", items: ["knowledge_base", "documents"] },
+  { id: "suppliers", label: "Suppliers", items: ["contracts", "vendors"] },
   { id: "admin", label: "Administration", items: ["settings"] }
 ];
 
 const navGroupMeta = {
-  daily: { label: "Daily Operations", helper: "Run the work" },
+  overview: { label: "Overview", helper: "What needs attention" },
+  service_desk: { label: "Service Desk", helper: "Run the work" },
+  people_assets: { label: "People & Assets", helper: "Who and what" },
+  knowledge: { label: "Knowledge & Records", helper: "Reference material" },
+  suppliers: { label: "Suppliers", helper: "Contracts & vendors" },
   admin: { label: "Administration", helper: "Access & setup" },
-  employee: { label: "Self service", helper: "Your workspace" }
+  employee: { label: "My Workspace", helper: "Requests & tasks" },
+  employee_resources: { label: "My Resources", helper: "Assets & guides" }
 };
 
 const employeeNavGroups = [
-  { id: "employee", label: "Workspace", items: ["employee_portal", "tickets", "assets", "tasks", "documents", "knowledge_base"] }
+  { id: "employee", label: "My Workspace", items: ["employee_portal", "tickets", "tasks"] },
+  { id: "employee_resources", label: "My Resources", items: ["assets", "documents", "knowledge_base"] }
 ];
 
 // Ticket categories live in db.lookupItems as a two-level tree: parent rows have
@@ -2997,8 +3024,11 @@ function comingSoonButton(label) {
   return `<button type="button" class="btn btn-secondary" data-future-action="This action is planned for a future version." aria-disabled="true" title="Coming soon">${escapeHtml(label)} <span class="badge muted">Coming soon</span></button>`;
 }
 
-function headerMoreComingSoonMenu(items = ["Advanced actions"]) {
-  return `<details class="ticket-v2-more header-more-coming-soon" title="More actions coming soon"><summary>${icon("more")}More</summary><div>${items.map(comingSoonButton).join("")}</div></details>`;
+// Every entry in this menu was a placeholder, so it advertised features that do not
+// exist. Kept as a no-op rather than removing the call sites, so a real action can
+// be added here later.
+function headerMoreComingSoonMenu() {
+  return "";
 }
 
 function assetWorkspaceDetail(asset) {
@@ -3717,7 +3747,7 @@ function contractRelatedRecordsTab(contract) {
 
 function contractDocumentsTab(contract) {
   const docs = contractDocuments(contract);
-  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Documents</p><h3>Contract files and versions</h3><p class="muted">Signed contracts, invoices, purchase orders, renewal quotes, support agreements, and certificates.</p></div><button class="btn btn-secondary" data-contract-workflow="upload_document" data-id="${contract.id}">Upload Document</button></div><div class="attachment-list">${docs.map((doc) => `<article class="file-card"><div class="file-card-main">${icon("documents")}<span><strong>${escapeHtml(doc.title || doc.filename || "Contract document")}</strong><small>${escapeHtml(doc.templateType || doc.status || "Document")} | Version ${escapeHtml(String(doc.version || 1))}</small></span></div><div class="record-card-actions"><button class="btn btn-secondary" data-future-action="Document preview is available in a future version.">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-generated="${doc.id}">${icon("download")}Download</button></div></article>`).join("") || emptyState("No documents", "Upload signed contracts, invoices, quotes, support agreements, and certificates.")}</div></section>`;
+  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Documents</p><h3>Contract files and versions</h3><p class="muted">Signed contracts, invoices, purchase orders, renewal quotes, support agreements, and certificates.</p></div><button class="btn btn-secondary" data-contract-workflow="upload_document" data-id="${contract.id}">Upload Document</button></div><div class="attachment-list">${docs.map((doc) => `<article class="file-card"><div class="file-card-main">${icon("documents")}<span><strong>${escapeHtml(doc.title || doc.filename || "Contract document")}</strong><small>${escapeHtml(doc.templateType || doc.status || "Document")} | Version ${escapeHtml(String(doc.version || 1))}</small></span></div><div class="record-card-actions"><button class="btn btn-secondary" data-download-generated="${doc.id}">${icon("download")}Download</button></div></article>`).join("") || emptyState("No documents", "Upload signed contracts, invoices, quotes, support agreements, and certificates.")}</div></section>`;
 }
 
 function contractCostsTab(contract) {
@@ -4159,7 +4189,7 @@ function vendorTicketsTab(vendor) {
 
 function vendorDocumentsTab(vendor) {
   const docs = vendorDocuments(vendor);
-  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Documents</p><h3>Vendor document library</h3><p class="muted">Contracts, price lists, NDA, certificates, warranty, support guides, invoices, quotes, purchase orders, and attachments.</p></div><button class="btn btn-secondary" data-vendor-workflow="upload_document" data-id="${vendor.id}">Upload Document</button></div><div class="attachment-list">${docs.map((doc) => `<article class="file-card"><div class="file-card-main">${icon("documents")}<span><strong>${escapeHtml(doc.title || doc.filename || "Vendor document")}</strong><small>${escapeHtml(doc.templateType || doc.type || "Document")} | ${escapeHtml(doc.updatedAt ? new Date(doc.updatedAt).toLocaleDateString() : "No date")}</small></span></div><div class="record-card-actions"><button class="btn btn-secondary" data-future-action="Document preview is available in a future version.">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-generated="${doc.id}">${icon("download")}Download</button></div></article>`).join("") || emptyState("No documents", "Upload vendor contracts, price lists, certificates, warranties, invoices, quotes, purchase orders, and support guides.")}</div></section>`;
+  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Documents</p><h3>Vendor document library</h3><p class="muted">Contracts, price lists, NDA, certificates, warranty, support guides, invoices, quotes, purchase orders, and attachments.</p></div><button class="btn btn-secondary" data-vendor-workflow="upload_document" data-id="${vendor.id}">Upload Document</button></div><div class="attachment-list">${docs.map((doc) => `<article class="file-card"><div class="file-card-main">${icon("documents")}<span><strong>${escapeHtml(doc.title || doc.filename || "Vendor document")}</strong><small>${escapeHtml(doc.templateType || doc.type || "Document")} | ${escapeHtml(doc.updatedAt ? new Date(doc.updatedAt).toLocaleDateString() : "No date")}</small></span></div><div class="record-card-actions"><button class="btn btn-secondary" data-download-generated="${doc.id}">${icon("download")}Download</button></div></article>`).join("") || emptyState("No documents", "Upload vendor contracts, price lists, certificates, warranties, invoices, quotes, purchase orders, and support guides.")}</div></section>`;
 }
 
 function vendorPerformanceTab(vendor) {
@@ -4800,7 +4830,7 @@ function knowledgeToc(article) {
 
 function knowledgeAttachmentsTab(article) {
   const attachments = knowledgeAttachments(article);
-  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Attachments</p><h3>Linked files</h3></div><button class="btn btn-secondary" data-kb-workflow="upload_attachment" data-id="${article.id}">Upload Attachment</button></div><div class="table-wrap"><table><thead><tr><th>File Name</th><th>Type</th><th>Uploaded By</th><th>Date</th><th>Size</th><th>Actions</th></tr></thead><tbody>${attachments.map((item) => `<tr><td><strong>${escapeHtml(item.filename)}</strong></td><td>${escapeHtml(item.mimeType || "File")}</td><td>${escapeHtml(look("users", item.uploaderId) || "IT")}</td><td>${escapeHtml(item.uploadedAt ? new Date(item.uploadedAt).toLocaleString() : "Not dated")}</td><td>${escapeHtml(formatSize(item.size))}</td><td><div class="record-card-actions compact"><button class="btn btn-secondary" data-preview-attachment="${item.id}">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-attachment="${item.id}">${icon("download")}Download</button><button class="btn btn-warning" type="button" data-future-action="Remove attachment is not available in V1." title="Remove attachment is not available in V1." aria-disabled="true">Remove</button></div></td></tr>`).join("") || `<tr><td colspan="6">${emptyState("No Attachments", "Upload PDFs, images, Word, or Excel files for this article.")}</td></tr>`}</tbody></table></div></section>`;
+  return `<section class="surface-card"><div class="section-title"><div><p class="eyebrow">Attachments</p><h3>Linked files</h3></div><button class="btn btn-secondary" data-kb-workflow="upload_attachment" data-id="${article.id}">Upload Attachment</button></div><div class="table-wrap"><table><thead><tr><th>File Name</th><th>Type</th><th>Uploaded By</th><th>Date</th><th>Size</th><th>Actions</th></tr></thead><tbody>${attachments.map((item) => `<tr><td><strong>${escapeHtml(item.filename)}</strong></td><td>${escapeHtml(item.mimeType || "File")}</td><td>${escapeHtml(look("users", item.uploaderId) || "IT")}</td><td>${escapeHtml(item.uploadedAt ? new Date(item.uploadedAt).toLocaleString() : "Not dated")}</td><td>${escapeHtml(formatSize(item.size))}</td><td><div class="record-card-actions compact"><button class="btn btn-secondary" data-preview-attachment="${item.id}">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-attachment="${item.id}">${icon("download")}Download</button></div></td></tr>`).join("") || `<tr><td colspan="6">${emptyState("No Attachments", "Upload PDFs, images, Word, or Excel files for this article.")}</td></tr>`}</tbody></table></div></section>`;
 }
 
 function knowledgeRelatedTab(article) {
@@ -5627,7 +5657,7 @@ function documentFilesTab(row) {
 
 function documentGeneratedFileCard(row) {
   if (row.signedFileName || row.fileName) {
-    return `<article class="record-card document-generated-file"><div class="record-card-head"><div class="record-icon">${icon("documents")}</div><div><strong>${escapeHtml(row.signedFileName || row.fileName)}</strong><span>${escapeHtml(documentFriendlyType(row))}</span></div></div><div class="record-card-actions"><button class="btn btn-secondary" data-future-action="Document preview is available in a future version.">${icon("preview")}Preview</button><button class="btn btn-secondary" data-download-generated="${row.id}">${icon("download")}Download</button></div></article>`;
+    return `<article class="record-card document-generated-file"><div class="record-card-head"><div class="record-icon">${icon("documents")}</div><div><strong>${escapeHtml(row.signedFileName || row.fileName)}</strong><span>${escapeHtml(documentFriendlyType(row))}</span></div></div><div class="record-card-actions"><button class="btn btn-secondary" data-download-generated="${row.id}">${icon("download")}Download</button></div></article>`;
   }
   return emptyState("No file attached", "Upload a PDF, Word, Excel, or image file for this document.");
 }
@@ -11269,7 +11299,14 @@ const loginState = { step: "email", email: "", userId: "" };
 
 function showLoginStep(step) {
   loginState.step = step;
-  $$("[data-login-step]").forEach((node) => { node.hidden = node.dataset.loginStep !== step; });
+  $$("[data-login-step]").forEach((node) => {
+    const active = node.dataset.loginStep === step;
+    node.hidden = !active;
+    // A hidden field still takes part in form validation, so an empty required
+    // input on an inactive step would block submission with no visible reason.
+    // Disabled controls are exempt, so inactive steps are switched off entirely.
+    $$("input", node).forEach((input) => { input.disabled = !active; });
+  });
   const error = $("[data-login-error]");
   if (error) { error.hidden = true; error.textContent = ""; }
   const focusTarget = $(`[data-login-step="${step}"] input`);

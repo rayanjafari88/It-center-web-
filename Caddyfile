@@ -1,0 +1,18 @@
+# Replace with the hostname staff will use, e.g. itcc.amjadunited.com
+{$SITE_ADDRESS:localhost} {
+	encode gzip
+
+	# Uploads are capped at 10 MB in the app; allow a little headroom for encoding.
+	request_body {
+		max_size 16MB
+	}
+
+	reverse_proxy app:4173
+}
+
+# Using your own certificate instead of automatic HTTPS? Replace the block above:
+#
+# itcc.example.com {
+# 	tls /certs/fullchain.pem /certs/privkey.pem
+# 	reverse_proxy app:4173
+# }
