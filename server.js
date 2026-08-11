@@ -1,3 +1,6 @@
+// Load .env before anything reads process.env.
+require("./lib/env").loadEnv();
+
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -867,7 +870,16 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
           text: `Your sign-in code is ${code}\n\nIt expires in 10 minutes and can be used once.\nIf you did not request it, you can ignore this message.`
         });
       } catch (error) {
-        console.error("[mail] delivery failed:", error.message);
+        // A configured-but-failing transport is the worst state to be in: no email
+        // arrives and the code is withheld, so nobody can sign in and nothing on
+        // screen explains why. Make it unmissable in the log.
+        console.error("");
+        console.error("  ! SIGN-IN EMAIL FAILED TO SEND");
+        console.error(`    to: ${account.email}`);
+        console.error(`    ${error.message}`);
+        console.error("    Nobody can sign in by email until this is fixed.");
+        console.error("    Diagnose with:  npm run mail:test -- " + account.email);
+        console.error("");
       }
       // With no mail transport configured the code is only written to the server
       // console, which makes the system impossible to try. Return it so the sign-in

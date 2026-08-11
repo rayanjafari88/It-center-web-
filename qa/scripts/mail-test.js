@@ -2,6 +2,7 @@
 // plain language, so SMTP can be diagnosed without reading the app's source.
 //
 //   npm run mail:test -- you@example.com
+require("../../lib/env").loadEnv();
 const { sendMail, mailerTransport } = require("../../lib/mailer");
 
 const to = process.argv[2];

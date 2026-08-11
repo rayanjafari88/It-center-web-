@@ -18,6 +18,28 @@ for staff.
 
 ## Fastest way to get codes arriving (about 5 minutes)
 
+One command writes the settings to a `.env` file, which loads automatically every
+time the server starts:
+
+```bash
+npm run mail:setup -- you@gmail.com "abcd efgh ijkl mnop"
+npm run mail:test  -- you@gmail.com
+npm start
+```
+
+The second argument is the 16-character app password from
+<https://myaccount.google.com/apppasswords> (2-Step Verification must be on first).
+This avoids the usual trap: environment variables set in one terminal do not exist
+in another, so setting them and then starting the server elsewhere silently leaves
+mail switched off.
+
+> If mail is configured but the password is wrong, no email arrives **and** the code
+> is no longer shown on screen, so nobody can sign in. The server log prints a loud
+> `SIGN-IN EMAIL FAILED TO SEND` block when that happens. Run `npm run mail:test`
+> to see the reason.
+
+### Doing it by hand instead
+
 Use a Gmail account as the sender. No admin console, no app registration. Good
 enough to pilot with real people today; move to a company mailbox later.
 

@@ -18,7 +18,8 @@
     "qa:seed": "node qa/scripts/seed.js",
     "qa:cleanup": "node qa/scripts/cleanup.js",
     "qa:report": "node qa/scripts/report.js",
-    "mail:test": "node qa/scripts/mail-test.js"
+    "mail:test": "node qa/scripts/mail-test.js",
+    "mail:setup": "node qa/scripts/mail-setup.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {
