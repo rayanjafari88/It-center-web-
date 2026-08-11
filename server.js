@@ -20,11 +20,14 @@ const COOKIE_SECURE = String(process.env.COOKIE_SECURE || "") === "true";
 const STRICT_TRANSPORT = String(process.env.STRICT_TRANSPORT || "true") === "true";
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, "public");
-const DATA_FILE = path.join(ROOT, "data", "db.json");
+// Overridable so a test or a second instance can run against its own copy without
+// touching live records. Containers also mount this path as a volume.
+const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
+const DATA_FILE = path.join(DATA_DIR, "db.json");
 // Attachment bytes live on disk, not inside db.json: the database is parsed on
 // every request, so inlining uploads made every request pay for every file.
-const FILES_DIR = path.join(ROOT, "data", "files");
-const BACKUP_DIR = path.join(ROOT, "data", "backups");
+const FILES_DIR = path.join(DATA_DIR, "files");
+const BACKUP_DIR = path.join(DATA_DIR, "backups");
 const BACKUP_INTERVAL_MS = Number(process.env.BACKUP_INTERVAL_MS || 15 * 60 * 1000);
 const BACKUP_KEEP = Number(process.env.BACKUP_KEEP || 48);
 const MAX_UPLOAD_BYTES = Number(process.env.MAX_UPLOAD_BYTES || 10 * 1024 * 1024);

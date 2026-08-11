@@ -160,12 +160,13 @@ a:hover {
   --surface-sunken: #f7f9fc;
   --border: #e2e7ef;
   --border-strong: #cbd3e0;
+  --field-border: #878f9c;
 
   /* Text */
   --text-primary: #10151f;
   --text-secondary: #4d5768;
   /* 4.6:1 on --surface-elevated, so uppercase micro-labels still pass AA. */
-  --text-muted: #6b7382;
+  --text-muted: #697180;
 
   /* Brand + semantics */
   --primary: #2c5ce6;
@@ -227,6 +228,7 @@ a:hover {
   --surface-sunken: #11161f;
   --border: #262f3f;
   --border-strong: #374256;
+  --field-border: #5c677b;
 
   --text-primary: #eef2f8;
   --text-secondary: #b3bece;
@@ -790,7 +792,9 @@ textarea {
   width: 100%;
   min-height: 36px;
   padding: 7px 11px !important;
-  border: 1px solid var(--border) !important;
+  /* A control's boundary is what identifies it, so this meets WCAG 1.4.11 (3:1).
+     Decorative card hairlines deliberately stay lighter. */
+  border: 1px solid var(--field-border) !important;
   border-radius: var(--r-sm) !important;
   background: var(--surface-elevated) !important;
   color: var(--text-primary) !important;

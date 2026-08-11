@@ -19,7 +19,9 @@
     "qa:cleanup": "node qa/scripts/cleanup.js",
     "qa:report": "node qa/scripts/report.js",
     "mail:test": "node qa/scripts/mail-test.js",
-    "mail:setup": "node qa/scripts/mail-setup.js"
+    "mail:setup": "node qa/scripts/mail-setup.js",
+    "clean:demo": "node qa/scripts/clean-demo.js",
+    "audit:contrast": "node qa/scripts/contrast-audit.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {
