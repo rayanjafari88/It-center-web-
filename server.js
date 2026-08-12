@@ -869,7 +869,7 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
       try {
         await sendMail({
           to: account.email,
-          subject: "Your IT Command Center sign-in code",
+          subject: "Your IT Reporting Center sign-in code",
           text: `Your sign-in code is ${code}\n\nIt expires in 10 minutes and can be used once.\nIf you did not request it, you can ignore this message.`
         });
       } catch (error) {
@@ -3953,7 +3953,7 @@ const server = http.createServer((req, res) => {
 
 ensureData();
 server.listen(PORT, () => {
-  console.log(`IT Command Center V1 running at http://localhost:${PORT}`);
+  console.log(`IT Reporting Center running at http://localhost:${PORT}`);
   // Silence here is the reason people think sign-in is broken: codes are written
   // to this console instead of being emailed until a transport is configured.
   if (!["smtp", "graph"].includes(mailerTransport())) {

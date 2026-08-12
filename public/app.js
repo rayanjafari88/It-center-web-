@@ -1665,6 +1665,13 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "Choose how the workspace looks on this device.": "اختر شكل مساحة العمل على هذا الجهاز.",
+  "Match my device": "حسب إعداد الجهاز",
+  "Theme": "المظهر",
+  "IT Reporting Center": "مركز بلاغات تقنية المعلومات",
+  "A space for submitting tickets, reports, and asset management.": "مساحة لرفع التذاكر والبلاغات وإدارة العهد.",
+  "Reports": "البلاغات",
+  "Search": "بحث",
   "Nothing has come in yet": "لم يصل أي طلب بعد",
   "Set who receives each kind of request, then tickets route themselves as staff raise them.": "حدد من يستلم كل نوع من الطلبات، وبعدها تُوجَّه التذاكر تلقائيًا عند رفعها.",
   "Set up ticket routing": "إعداد توجيه التذاكر",
@@ -2204,18 +2211,19 @@ function uiLabel(english) {
 function resetStaticShellLabels() {
   // Company first, product second - matches the sign-in screen.
   $(".brand strong") && ($(".brand strong").textContent = uiLabel("AMJAD Almutahidh"));
-  $(".brand small") && ($(".brand small").textContent = uiLabel("IT Command Center"));
+  $(".brand small") && ($(".brand small").textContent = uiLabel("IT Reporting Center"));
   $("#sidebarSearch") && ($("#sidebarSearch").placeholder = uiLabel("Jump to module..."));
   $("#sidebarSearch") && $("#sidebarSearch").setAttribute("aria-label", uiLabel("Search modules"));
-  $("#globalSearch") && ($("#globalSearch").placeholder = uiLabel("Search tickets, assets, people, vendors..."));
+  $("#globalSearch") && ($("#globalSearch").placeholder = uiLabel("Search"));
   $$(".header-create").forEach((button) => { button.textContent = uiLabel("+ Create"); });
   const loginCopy = $("#login .login-copy");
   if (loginCopy) {
     $(".eyebrow", loginCopy) && ($(".eyebrow", loginCopy).textContent = uiLabel("IT Operations Management"));
-    $("h1", loginCopy) && ($("h1", loginCopy).textContent = uiLabel("IT Command Center"));
-    $(".muted", loginCopy) && ($(".muted", loginCopy).textContent = uiLabel("A calm command workspace for assets, tickets, contracts, people, documents, and audit history."));
+    $("h1", loginCopy) && ($("h1", loginCopy).textContent = uiLabel("IT Reporting Center"));
+    const intro = $(".login-copy > .muted", loginCopy) || $(".muted", loginCopy);
+    intro && (intro.textContent = uiLabel("A space for submitting tickets, reports, and asset management."));
     const pills = $$(".login-pills span", loginCopy);
-    ["Audit-ready", "Bilingual", "Dark mode"].forEach((label, index) => { if (pills[index]) pills[index].textContent = uiLabel(label); });
+    ["Tickets", "Reports", "Assets"].forEach((label, index) => { if (pills[index]) pills[index].textContent = uiLabel(label); });
   }
   const loginForm = $("#loginForm");
   if (loginForm) {
@@ -2250,7 +2258,7 @@ function applyPreferences() {
   $("#login")?.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
   resetStaticShellLabels();
   $("#langToggle").textContent = state.lang === "en" ? "العربية" : "English";
-  $("#themeToggle").innerHTML = icon(state.theme === "system" ? "settings" : theme === "dark" ? "sun" : "moon");
+  $("#themeToggle").innerHTML = icon(theme === "dark" ? "sun" : "moon");
   const appearanceLabel = tpl("Appearance: {mode}", { mode: trText(state.theme === "system" ? "System" : labelize(state.theme)) });
   $("#themeToggle").title = appearanceLabel;
   $("#themeToggle").setAttribute("aria-label", appearanceLabel);
@@ -7825,11 +7833,29 @@ function appearanceSettingsPanel() {
   return `
     <section class="surface-card settings-section-card">
       <div class="section-title">
-        <div><p class="eyebrow">Appearance</p><h3>Workspace appearance</h3><p class="muted">Appearance preferences are available from the global header and user Preferences. This section keeps the Settings workspace organized for V1.</p></div>
+        <div><p class="eyebrow">Appearance</p><h3>Workspace appearance</h3><p class="muted">Choose how the workspace looks on this device.</p></div>
       </div>
-      <div class="settings-system-grid">
-        <article class="record-card"><div class="record-card-head"><div class="record-icon">${icon("sun")}</div><div><strong>Theme</strong><span>Current mode: ${escapeHtml(labelize(state.theme || "system"))}</span></div></div></article>
-        <article class="record-card"><div class="record-card-head"><div class="record-icon">${icon("settings")}</div><div><strong>Language</strong><span>Current language: ${state.lang === "ar" ? "Arabic" : "English"}</span></div></div></article>
+      <div class="appearance-options">
+        <fieldset class="appearance-group">
+          <legend>Theme</legend>
+          <div class="appearance-choices">
+            ${[["light", "Light", "sun"], ["dark", "Dark", "moon"], ["system", "Match my device", "settings"]].map(([value, label, glyph]) => `
+              <button class="appearance-choice ${state.theme === value ? "active" : ""}" type="button" data-set-theme="${value}" aria-pressed="${state.theme === value}">
+                ${icon(glyph)}<span>${label}</span>
+              </button>
+            `).join("")}
+          </div>
+        </fieldset>
+        <fieldset class="appearance-group">
+          <legend>Language</legend>
+          <div class="appearance-choices">
+            ${[["en", "English"], ["ar", "العربية"]].map(([value, label]) => `
+              <button class="appearance-choice ${state.lang === value ? "active" : ""}" type="button" data-set-language="${value}" aria-pressed="${state.lang === value}">
+                <span>${label}</span>
+              </button>
+            `).join("")}
+          </div>
+        </fieldset>
       </div>
     </section>
   `;
@@ -9174,6 +9200,19 @@ function bindPageActions() {
     form.querySelector("[data-ticket-composer-internal]").checked = internal;
     form.classList.toggle("is-internal", internal);
     $$("[data-ticket-composer-mode]", form).forEach((item) => item.classList.toggle("active", item === button));
+  }));
+  $$("[data-set-theme]").forEach((button) => button.addEventListener("click", () => {
+    const next = button.dataset.setTheme;
+    setAppearanceMode(next);
+    if (state.user) saveUserPreferences({ theme: next });
+    render();
+  }));
+  $$("[data-set-language]").forEach((button) => button.addEventListener("click", () => {
+    state.lang = button.dataset.setLanguage;
+    localStorage.setItem("itcc.lang", state.lang);
+    if (state.user) saveUserPreferences({ language: state.lang });
+    applyPreferences();
+    render();
   }));
   $$("[data-goto-settings]").forEach((button) => button.addEventListener("click", () => {
     state.detail = null;
@@ -11058,7 +11097,7 @@ async function attachmentObjectUrl(id) {
 function downloadNamedFile(filename) {
   if (!filename) return;
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(new Blob([`IT Command Center V1 document placeholder: ${filename}`], { type: "text/plain" }));
+  link.href = URL.createObjectURL(new Blob([`IT Reporting Center document placeholder: ${filename}`], { type: "text/plain" }));
   link.download = filename;
   link.click();
   URL.revokeObjectURL(link.href);
@@ -11448,8 +11487,9 @@ $("#loginForm").addEventListener("submit", async (event) => {
 });
 
 $("#themeToggle").addEventListener("click", () => {
-  const modes = ["light", "dark", "system"];
-  const next = modes[(modes.indexOf(state.theme) + 1) % modes.length];
+  // Two states only. "System" stays available in Preferences, where it can be
+  // labelled properly rather than shown as an ambiguous icon.
+  const next = resolvedTheme() === "dark" ? "light" : "dark";
   setAppearanceMode(next);
   if (state.user) saveUserPreferences({ theme: next });
   render();

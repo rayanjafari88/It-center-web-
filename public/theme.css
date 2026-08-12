@@ -2484,3 +2484,148 @@ body.rtl .modal-head {
     padding: 32px 26px !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Interface refinements
+   -------------------------------------------------------------------------- */
+
+/* The search field stretched to 520px on every page, which made it the loudest
+   thing in the header. It is a utility, so it now takes the width it needs and
+   grows only on focus. */
+.topbar-row {
+  grid-template-columns: minmax(200px, 1fr) auto auto !important;
+}
+
+.global-search {
+  /* Was min(520px, 48vw), which made a utility the widest thing in the header.
+     A fixed, modest width reads as a tool rather than a headline. Expanding it on
+     focus was tried and dropped: the grid track will not grow, so it half-worked. */
+  width: 260px !important;
+  min-height: 36px;
+}
+
+@media (max-width: 1200px) {
+  .global-search { width: 210px !important; }
+}
+
+@media (max-width: 900px) {
+  .topbar-row {
+    grid-template-columns: 1fr auto !important;
+  }
+  .global-search {
+    grid-column: 1 / -1;
+    width: 100% !important;
+  }
+}
+
+/* Sign-in: give the primary action room to breathe and sit lower than the field. */
+.auth-card [data-login-step] {
+  display: grid;
+  gap: 18px;
+}
+
+.auth-card [data-login-step] .btn {
+  margin-top: 10px !important;
+}
+
+.auth-card label {
+  display: grid;
+  gap: 7px;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  color: var(--text-secondary);
+}
+
+.auth-card input {
+  min-height: 44px !important;
+  font-size: var(--text-md) !important;
+}
+
+/* Softer, less boxy cards, and a clearer hover so rows feel interactive. */
+.surface-card {
+  border-radius: var(--r-lg) !important;
+}
+
+.record-card:hover,
+.list-item:hover {
+  border-color: color-mix(in srgb, var(--primary) 34%, var(--border)) !important;
+}
+
+/* Primary actions carry a little more weight so the next step is obvious. */
+.btn.btn-primary {
+  font-weight: 650;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--primary) 32%, transparent);
+}
+
+.btn.btn-primary:hover {
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 38%, transparent);
+}
+
+/* Section headings were competing with body text for attention. */
+.section-title h3 {
+  letter-spacing: -0.015em;
+}
+
+.section-title .eyebrow {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: var(--text-2xs);
+  opacity: 0.9;
+}
+
+/* Appearance settings: real choices rather than read-only cards. */
+.appearance-options {
+  display: grid;
+  gap: 22px;
+  max-width: 620px;
+}
+
+.appearance-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.appearance-group legend {
+  padding: 0 0 9px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.appearance-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.appearance-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--r-sm);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.appearance-choice svg {
+  width: 17px;
+  height: 17px;
+}
+
+.appearance-choice:hover {
+  border-color: var(--primary);
+}
+
+.appearance-choice.active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
