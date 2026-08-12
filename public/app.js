@@ -114,6 +114,7 @@ const labels = {
 
 const uiTextAr = {
   "IT Command Center": "مركز قيادة تقنية المعلومات",
+  "AMJAD Almutahidh": "أمجاد المتحدة",
   "IT OPERATIONS MANAGEMENT": "إدارة عمليات تقنية المعلومات",
   "OPERATIONS SUITE": "منصة العمليات",
   "SELF SERVICE": "الخدمة الذاتية",
@@ -1664,6 +1665,11 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "Nothing has come in yet": "لم يصل أي طلب بعد",
+  "Set who receives each kind of request, then tickets route themselves as staff raise them.": "حدد من يستلم كل نوع من الطلبات، وبعدها تُوجَّه التذاكر تلقائيًا عند رفعها.",
+  "Set up ticket routing": "إعداد توجيه التذاكر",
+  "New requests appear here as staff raise them. You can also open one on someone's behalf.": "تظهر الطلبات الجديدة هنا عند رفعها. يمكنك أيضًا فتح تذكرة نيابةً عن أحد الموظفين.",
+  "New requests will appear here as they are raised.": "ستظهر الطلبات الجديدة هنا عند رفعها.",
   "Mail is not set up yet, so here is your code:": "لم يتم إعداد البريد بعد، لذا هذا هو رمزك:",
   "No code? Check the address is the one your workplace has on file, or ask IT to confirm you are registered.": "لم يصلك رمز؟ تأكد أن البريد هو المسجّل لدى جهة عملك، أو راجع تقنية المعلومات للتأكد من تسجيلك.",
   "Overview": "نظرة عامة",
@@ -2196,8 +2202,9 @@ function uiLabel(english) {
 }
 
 function resetStaticShellLabels() {
-  $(".brand strong") && ($(".brand strong").textContent = uiLabel("IT Command Center"));
-  $(".brand small") && ($(".brand small").textContent = uiLabel("Operations Suite"));
+  // Company first, product second - matches the sign-in screen.
+  $(".brand strong") && ($(".brand strong").textContent = uiLabel("AMJAD Almutahidh"));
+  $(".brand small") && ($(".brand small").textContent = uiLabel("IT Command Center"));
   $("#sidebarSearch") && ($("#sidebarSearch").placeholder = uiLabel("Jump to module..."));
   $("#sidebarSearch") && $("#sidebarSearch").setAttribute("aria-label", uiLabel("Search modules"));
   $("#globalSearch") && ($("#globalSearch").placeholder = uiLabel("Search tickets, assets, people, vendors..."));
@@ -2479,6 +2486,28 @@ function afterPaint(callback) {
   else requestAnimationFrame(callback);
 }
 
+
+// On a freshly set up system the dashboard would otherwise just report emptiness.
+// Point at the next useful action for the signed-in role instead.
+function firstRunEmptyState() {
+  const configured = Object.keys(state.db?.settings?.ticketAssignment?.categoryRoutes || {}).length > 0;
+  if (has("settings", "edit") && !configured) {
+    return [
+      "Nothing has come in yet",
+      "Set who receives each kind of request, then tickets route themselves as staff raise them.",
+      `<button class="btn btn-primary" type="button" data-goto-settings="ticket_assignment">Set up ticket routing</button>`
+    ];
+  }
+  if (has("tickets", "create")) {
+    return [
+      "Nothing has come in yet",
+      "New requests appear here as staff raise them. You can also open one on someone's behalf.",
+      `<button class="btn btn-secondary" type="button" data-add="tickets">Open a ticket</button>`
+    ];
+  }
+  return ["Nothing has come in yet", "New requests will appear here as they are raised."];
+}
+
 function dashboard() {
   const tickets = rows("tickets");
   const tasks = rows("tasks");
@@ -2556,7 +2585,7 @@ function dashboard() {
     <div class="command-center-bottom">
       <section class="surface-card command-panel command-activity-panel">
         <div class="section-title"><div><p class="eyebrow">Recent activity</p><h3>Meaningful operational updates</h3></div><button class="btn btn-secondary" data-page-jump="timeline">See all</button></div>
-        <div class="dashboard-activity-list">${activity.slice(0, 8).map(dashboardActivityCard).join("") || emptyState("No operational activity", "New work will appear here.")}</div>
+        <div class="dashboard-activity-list">${activity.slice(0, 8).map(dashboardActivityCard).join("") || emptyState(...firstRunEmptyState())}</div>
       </section>
       <section class="surface-card command-panel command-quick-actions-panel">
         <div class="section-title"><div><p class="eyebrow">Quick actions</p><h3>Start common work</h3></div></div>
@@ -9145,6 +9174,13 @@ function bindPageActions() {
     form.querySelector("[data-ticket-composer-internal]").checked = internal;
     form.classList.toggle("is-internal", internal);
     $$("[data-ticket-composer-mode]", form).forEach((item) => item.classList.toggle("active", item === button));
+  }));
+  $$("[data-goto-settings]").forEach((button) => button.addEventListener("click", () => {
+    state.detail = null;
+    state.page = "settings";
+    state.settingsTab = button.dataset.gotoSettings;
+    setHomeRoute();
+    render();
   }));
   $$("[data-clear-filters]").forEach((button) => button.addEventListener("click", () => {
     const scope = button.dataset.clearFilters;
