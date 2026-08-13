@@ -3507,6 +3507,57 @@ async function handleApi(req, res) {
     return send(res, 405, { error: "Method not allowed" });
   }
 
+  // Reset a password for any employee, whether or not they have signed in before.
+  // Accounts are normally created on first sign-in, so most people have none - and
+  // an administrator still needs to be able to hand them credentials.
+  if (req.method === "PATCH" && resource === "employees" && resourceId && action === "reset-password") {
+    if (!can(db, user, "users", "edit")) return send(res, 403, { error: "Forbidden" });
+    const employee = (db.employees || []).find((item) => item.id === resourceId);
+    if (!employee) return send(res, 404, { error: "Employee not found" });
+    if (employee.archivedAt || employee.deletedAt || String(employee.status || "active").toLowerCase() !== "active") {
+      return send(res, 400, { error: "This person is not active" });
+    }
+    let account = db.users.find((item) => item.employeeId === employee.id && !item.archivedAt);
+    let created = false;
+    if (!account) {
+      const base = String(employee.email || "").toLowerCase().split("@")[0] || `emp${employee.employeeNo || ""}`;
+      let username = base.replace(/[^a-z0-9._-]+/g, ".") || `emp${Date.now()}`;
+      // Usernames must stay unique even when two people share a mailbox prefix.
+      let suffix = 1;
+      while (db.users.some((item) => String(item.username || "").toLowerCase() === username)) {
+        username = `${base}${suffix += 1}`;
+      }
+      account = {
+        id: id("user"),
+        name: employee.name || employee.email || username,
+        username,
+        email: employee.email || "",
+        roleId: "role_employee",
+        status: "active",
+        accountType: "Employee",
+        employeeId: employee.id,
+        createdAt: now(),
+        notificationPreferences: notificationPreferences({ roleId: "role_employee" })
+      };
+      db.users.unshift(account);
+      employee.userId = account.id;
+      created = true;
+    }
+    const temporary = auth.generateTemporaryPassword();
+    account.password = auth.hashPassword(temporary);
+    account.passwordSetAt = now();
+    account.requirePasswordChange = true;
+    destroyUserSessions(db, account.id);
+    audit(db, req, created ? "create_login" : "reset_password", "users", account.id, null, { ...account, password: "***" });
+    writeDb(db);
+    return send(res, 200, {
+      ...stripInternal(account),
+      temporaryPassword: temporary,
+      accountCreated: created,
+      employeeNo: employee.employeeNo || ""
+    });
+  }
+
   if (req.method === "PATCH" && resource === "users" && resourceId && ["reset-password", "disable", "unlock", "change-role"].includes(action)) {
     if (!can(db, user, "users", "edit")) return send(res, 403, { error: "Forbidden" });
     const account = db.users.find((item) => item.id === resourceId);

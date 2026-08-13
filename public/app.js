@@ -1727,6 +1727,15 @@ Object.assign(uiTextAr, {
   "Your password was reset by IT. Please set your own now.": "تمت إعادة تعيين كلمة مرورك من قبل تقنية المعلومات. عيّن كلمتك الخاصة الآن."
 });
 
+// Creating a login for someone who has never signed in.
+Object.assign(uiTextAr, {
+  "Create login and password": "إنشاء حساب وكلمة مرور",
+  "Create a login for this person?": "إنشاء حساب لهذا الشخص؟",
+  "{name} has no login yet. One will be created with a temporary password they can change after signing in.": "لا يملك {name} حسابًا بعد. سيتم إنشاء حساب بكلمة مرور مؤقتة يمكنه تغييرها بعد تسجيل الدخول.",
+  "Create login": "إنشاء حساب",
+  "They sign in with employee ID {id}.": "يسجّل الدخول بالرقم الوظيفي {id}."
+});
+
 // Ticket assignment routing and "open on behalf of".
 Object.assign(uiTextAr, {
   "Who is this request for?": "لمن هذا الطلب؟",
@@ -6335,8 +6344,13 @@ function peopleWorkspaceDetail(person) {
 function peopleMoreMenu(person) {
   const actions = [];
   if (has("employees", "edit")) actions.push(`<button type="button" class="btn btn-secondary" data-edit="employees" data-id="${person.id}">${icon("edit")}Edit Person</button>`);
+  // Available for anyone, whether or not they have signed in before. Most people
+  // have no account until their first sign-in, so this creates one when needed.
+  if (has("users", "edit")) {
+    const hasLogin = Boolean(linkedUserForPerson(person));
+    actions.push(`<button type="button" class="btn btn-secondary" data-reset-person-password="${person.id}">${icon("key_round")}${escapeHtml(hasLogin ? trText("Reset password") : trText("Create login and password"))}</button>`);
+  }
   if (has("employees", "archive")) actions.push(`<button type="button" class="btn btn-warning" data-archive="employees" data-id="${person.id}">${icon("archive_center")}Archive</button>`);
-  actions.push(comingSoonButton("Org chart"), comingSoonButton("Export profile"), comingSoonButton("Send onboarding"));
   return `<details class="ticket-v2-more people-more-menu"><summary>${icon("more")}More</summary><div>${actions.join("")}</div></details>`;
 }
 
@@ -9570,6 +9584,7 @@ function bindPageActions() {
   $$("[data-open-linked-account]").forEach((button) => button.addEventListener("click", () => openAccountWorkspace(button.dataset.openLinkedAccount)));
   $$("[data-open-linked-person]").forEach((button) => button.addEventListener("click", () => openPeopleWorkspace(button.dataset.openLinkedPerson)));
   $$("[data-reset-user-password]").forEach((button) => button.addEventListener("click", () => resetUserPassword(button.dataset.resetUserPassword)));
+  $$("[data-reset-person-password]").forEach((button) => button.addEventListener("click", () => resetPersonPassword(button.dataset.resetPersonPassword)));
   $$("[data-disable-user-account]").forEach((button) => button.addEventListener("click", () => disableUserAccount(button.dataset.disableUserAccount)));
   $$("[data-unlock-user-account]").forEach((button) => button.addEventListener("click", () => unlockUserAccount(button.dataset.unlockUserAccount)));
   $$("[data-change-user-role]").forEach((button) => button.addEventListener("click", () => changeUserRole(button.dataset.changeUserRole)));
@@ -11460,7 +11475,31 @@ async function resetUserPassword(userId) {
   }
 }
 
-function showTemporaryPassword(who, password) {
+// Works for every employee, including the 497 who have never signed in and so have
+// no account yet. One is created for them on the spot.
+async function resetPersonPassword(personId) {
+  const person = rows("employees").find((item) => item.id === personId);
+  if (!person) return;
+  const hasLogin = Boolean(linkedUserForPerson(person));
+  const ok = await confirmDialog(
+    hasLogin ? trText("Reset this password?") : trText("Create a login for this person?"),
+    hasLogin
+      ? tpl("A new temporary password will be generated for {name}. Any session they currently have will end, and they will be asked to choose a new password.", { name: person.name })
+      : tpl("{name} has no login yet. One will be created with a temporary password they can change after signing in.", { name: person.name }),
+    { confirmLabel: hasLogin ? trText("Reset password") : trText("Create login"), confirmClass: hasLogin ? "btn-danger" : "btn-primary" }
+  );
+  if (!ok) return;
+  try {
+    const result = await api(`/api/employees/${personId}/reset-password`, { method: "PATCH", body: "{}" });
+    await loadState();
+    render();
+    showTemporaryPassword(person.name, result.temporaryPassword, result.employeeNo);
+  } catch (error) {
+    toast(trText("Could not reset the password"), error.message);
+  }
+}
+
+function showTemporaryPassword(who, password, employeeNo) {
   $("#dialogHost").innerHTML = `
     <div class="modal-backdrop">
       <section class="modal surface-card temp-password-card">
@@ -11471,6 +11510,7 @@ function showTemporaryPassword(who, password) {
           </div>
         </div>
         <p class="muted">${escapeHtml(trText("Give this to them directly. It is shown once and cannot be retrieved later."))}</p>
+        ${employeeNo ? `<p class="hint">${escapeHtml(tpl("They sign in with employee ID {id}.", { id: employeeNo }))}</p>` : ""}
         <div class="temp-password-value" data-temp-password>${escapeHtml(password)}</div>
         <p class="hint">${escapeHtml(trText("They will be asked to choose their own password after signing in."))}</p>
         <div class="modal-actions">
@@ -11598,11 +11638,12 @@ function showLoginStep(step) {
     // Disabled controls are exempt, so inactive steps are switched off entirely.
     $$("input", node).forEach((input) => { input.disabled = !active; });
   });
-  // One-time values must never carry over. Returning to the code step with the
-  // previous code still in the box made it look as though a stale code had been
-  // sent, and submitting it fails confusingly.
-  $$('[data-login-step="code"] input, [data-login-step="totp"] input, [data-login-step="password"] input[type="password"]').forEach((input) => {
-    input.value = "";
+  // Nothing typed on a step the user has left should still be there when they come
+  // back. A stale code looked like a stale email had been sent, and a leftover
+  // employee ID silently signed in as whoever was typed previously.
+  $$("[data-login-step]").forEach((node) => {
+    if (node.dataset.loginStep === step) return;
+    $$("input", node).forEach((input) => { input.value = ""; });
   });
   const error = $("[data-login-error]");
   if (error) { error.hidden = true; error.textContent = ""; }

@@ -399,6 +399,33 @@ function platformTests() {
       const anonymous = await ctx.anonymous({ method: "PATCH", path: `/api/users/${qaIds.adminUser}/reset-password`, body: {} });
       assertStatus(anonymous, 401, "An anonymous caller cannot reset a password");
     }),
+    test("SEC-RESET-002", "security", "Password reset", "System Admin", "High", async (ctx) => {
+      // Most people have no account until their first sign-in, so a reset that only
+      // works on existing accounts covers almost nobody. Resetting by person must
+      // create the login when it is missing.
+      const person = await ctx.asManager({ method: "POST", path: "/api/employees", body: { name: `${PREFIX} No Login`, employeeNo: `QA-NL-${Date.now()}`, email: `qa.auto.nologin.${Date.now()}@example.test`, departmentId: "dep_it", jobTitle: "Tester", status: "active", personType: "Employee" } });
+      assertStatus(person, 201, "Person created with no login");
+      const before = await ctx.asAdmin({ path: "/api/state" });
+      assert(!(before.data.users || []).some((row) => row.employeeId === person.data.id), "They start with no account");
+
+      const reset = await ctx.asAdmin({ method: "PATCH", path: `/api/employees/${person.data.id}/reset-password`, body: {} });
+      assertStatus(reset, 200, "Admin can reset a password for someone with no account");
+      assert(reset.data.accountCreated === true, "A login is created on the spot");
+      assert(reset.data.roleId === "role_employee", "The new login is an ordinary employee");
+      const temporary = reset.data.temporaryPassword;
+      assert(typeof temporary === "string" && temporary.length >= 12, "A temporary password is returned");
+      assert(!JSON.stringify(reset.data).includes("scrypt"), "The stored hash is never returned");
+
+      const signedIn = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: reset.data.employeeNo, password: temporary } });
+      assertStatus(signedIn, 200, "They can sign in with their employee number and the temporary password");
+
+      const staff = await ctx.asStaff({ method: "PATCH", path: `/api/employees/${person.data.id}/reset-password`, body: {} });
+      assertStatus(staff, 403, "IT Staff cannot reset other people's passwords");
+      const anonymous = await ctx.anonymous({ method: "PATCH", path: `/api/employees/${person.data.id}/reset-password`, body: {} });
+      assertStatus(anonymous, 401, "An anonymous caller cannot reset a password");
+      const missing = await ctx.asAdmin({ method: "PATCH", path: "/api/employees/does-not-exist/reset-password", body: {} });
+      assertStatus(missing, 404, "An unknown person returns not found");
+    }),
     test("SEC-EMPID-001", "security", "Sign-in", "All", "High", async (ctx) => {
       // Staff know their employee number, so it is accepted as an identifier. It must
       // still require the password, and must not become a way in on its own.
