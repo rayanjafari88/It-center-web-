@@ -2629,3 +2629,9 @@ body.rtl .modal-head {
   background: var(--primary-soft);
   color: var(--primary);
 }
+
+.password-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

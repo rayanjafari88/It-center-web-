@@ -733,12 +733,34 @@ function loginCodes(db) {
   return db.loginCodes;
 }
 
+// Accepts an email, a username, or an employee number. Staff know their employee
+// number, and many of them share a personal mailbox they do not check at work.
 function accountForIdentifier(db, identifier) {
   const wanted = String(identifier || "").toLowerCase().trim();
   if (!wanted) return null;
-  return db.users.find((item) =>
+  const direct = db.users.find((item) =>
     [item.email, item.username].filter(Boolean).some((value) => String(value).toLowerCase() === wanted)
     && !item.archivedAt
+  );
+  if (direct) return direct;
+  const employee = (db.employees || []).find((item) =>
+    String(item.employeeNo || "").toLowerCase().trim() === wanted
+    && !item.archivedAt && !item.deletedAt
+  );
+  if (!employee) return null;
+  return db.users.find((item) => item.employeeId === employee.id && !item.archivedAt) || null;
+}
+
+// Resolves an employee record from the same set of identifiers, so a first-time
+// sign-in by employee number can still provision an account.
+function employeeForIdentifier(db, identifier) {
+  const wanted = String(identifier || "").toLowerCase().trim();
+  if (!wanted) return null;
+  return (db.employees || []).find((item) =>
+    (String(item.employeeNo || "").toLowerCase().trim() === wanted
+      || String(item.email || "").toLowerCase().trim() === wanted)
+    && String(item.status || "active").toLowerCase() === "active"
+    && !item.archivedAt && !item.deletedAt
   ) || null;
 }
 
@@ -850,7 +872,8 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
     }
     recordAttempt(db, `req:${email}`);
     recordAttempt(db, `ip:${ip}`);
-    const account = accountForIdentifier(db, email) || autoProvisionFromEmployee(db, email);
+    const employee = employeeForIdentifier(db, email);
+    const account = accountForIdentifier(db, email) || autoProvisionFromEmployee(db, employee ? employee.email : email);
     let devCode = "";
     if (account && !accountBlockedReason(account)) {
       const code = auth.generateLoginCode();
@@ -1011,12 +1034,39 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
     return send(res, 200, { enabled: false }), true;
   }
 
+  // Setting your own password. Deliberately self-service and session-gated: an
+  // administrator cannot read or choose someone else's password here.
+  if (route === "set-password" && req.method === "POST") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Authentication required" }), true;
+    const body = await readBody(req);
+    const password = String(body.password || "");
+    if (password.length < 8) return send(res, 400, { error: "Use at least 8 characters." }), true;
+    if (password !== String(body.confirmPassword ?? password)) return send(res, 400, { error: "The two passwords do not match." }), true;
+    account.password = auth.hashPassword(password);
+    account.passwordSetAt = now();
+    delete account.requirePasswordChange;
+    audit(db, req, "set_password", "users", account.id, null, { passwordSetAt: account.passwordSetAt }, account);
+    writeDb(db);
+    return send(res, 200, { ok: true }), true;
+  }
+
+  if (route === "clear-password" && req.method === "POST") {
+    const account = sessionUser(db, req);
+    if (!account) return send(res, 401, { error: "Authentication required" }), true;
+    delete account.password;
+    delete account.passwordSetAt;
+    audit(db, req, "clear_password", "users", account.id, null, null, account);
+    writeDb(db);
+    return send(res, 200, { ok: true }), true;
+  }
+
   // Who am I? The only way the client learns its own identity.
   if (route === "session" && req.method === "GET") {
     const account = sessionUser(db, req);
     if (!account) return send(res, 401, { error: "Not signed in" }), true;
     return send(res, 200, {
-      user: { ...stripInternal(account), mfaEnabled: Boolean(account.totpSecret) },
+      user: { ...stripInternal(account), mfaEnabled: Boolean(account.totpSecret), passwordSet: Boolean(account.password) },
       role: db.roles.find((role) => role.id === account.roleId)
     }), true;
   }

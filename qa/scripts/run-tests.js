@@ -369,6 +369,37 @@ function authTests() {
 
 function platformTests() {
   return [
+    test("SEC-EMPID-001", "security", "Sign-in", "All", "High", async (ctx) => {
+      // Staff know their employee number, so it is accepted as an identifier. It must
+      // still require the password, and must not become a way in on its own.
+      const employee = await ctx.asManager({ method: "POST", path: "/api/employees", body: { name: `${PREFIX} IdLogin`, employeeNo: `QA-ID-${Date.now()}`, email: `qa.auto.idlogin.${Date.now()}@example.test`, departmentId: "dep_it", jobTitle: "Tester", status: "active", personType: "Employee" } });
+      assertStatus(employee, 201, "Employee created for the ID sign-in test");
+
+      // No account and no password yet: the number alone must not sign anyone in.
+      const noAccount = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: employee.data.employeeNo, password: "anything-at-all" } });
+      assertStatus(noAccount, 401, "An employee number with no account cannot sign in");
+
+      // Give the QA manager a password, then sign in with their employee number.
+      const set = await ctx.asManager({ method: "POST", path: "/api/auth/set-password", body: { password: "QA_AUTO_idlogin123!", confirmPassword: "QA_AUTO_idlogin123!" } });
+      assertStatus(set, 200, "A signed-in user can set their own password");
+      const short = await ctx.asManager({ method: "POST", path: "/api/auth/set-password", body: { password: "short", confirmPassword: "short" } });
+      assertStatus(short, 400, "A short password is rejected");
+      const mismatch = await ctx.asManager({ method: "POST", path: "/api/auth/set-password", body: { password: "QA_AUTO_idlogin123!", confirmPassword: "QA_AUTO_different1!" } });
+      assertStatus(mismatch, 400, "Mismatched confirmation is rejected");
+
+      const managerEmployee = (require("fs").existsSync(DATA_FILE) ? JSON.parse(require("fs").readFileSync(DATA_FILE, "utf8")) : { employees: [] })
+        .employees.find((row) => row.id === qaIds.managerEmployee);
+      if (managerEmployee?.employeeNo) {
+        const byId = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: managerEmployee.employeeNo, password: "QA_AUTO_idlogin123!" } });
+        assertStatus(byId, 200, "Employee number plus the correct password signs in");
+        const wrong = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: managerEmployee.employeeNo, password: "wrong-password" } });
+        assertStatus(wrong, 401, "Employee number with the wrong password is refused");
+      }
+
+      // Setting a password must never be possible without a session.
+      const anonymousSet = await ctx.anonymous({ method: "POST", path: "/api/auth/set-password", body: { password: "QA_AUTO_hijack123!", confirmPassword: "QA_AUTO_hijack123!" } });
+      assertStatus(anonymousSet, 401, "Anonymous callers cannot set a password");
+    }),
     test("SEC-DEVCODE-001", "security", "Sign-in", "All", "Critical", async (ctx) => {
       // While no mail transport is configured the sign-in code is returned so the
       // system can be used at all. That must be impossible once mail is real -

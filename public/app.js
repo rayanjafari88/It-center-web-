@@ -1616,6 +1616,98 @@ Object.assign(uiTextAr, {
   "PDF, image, Word, or Excel file": "ملف PDF أو صورة أو Word أو Excel"
 });
 
+// Settings pages, assignment groups and password sign-in.
+Object.assign(uiTextAr, {
+  "Configure auto-assignment, strategy, fallback assignee, and category routing.": "تهيئة الإسناد التلقائي والاستراتيجية والمسؤول الاحتياطي وتوجيه التصنيفات.",
+  "Manage IT teams that can receive routed tickets.": "إدارة فرق تقنية المعلومات التي تستقبل التذاكر الموجَّهة.",
+  "Maintain dropdown values used across operational forms.": "صيانة قيم القوائم المنسدلة المستخدمة في نماذج العمل.",
+  "Manage": "إدارة",
+  "Review current language and theme settings.": "مراجعة إعدادات اللغة والمظهر الحالية.",
+  "View system configuration surfaces and administrative utilities.": "عرض إعدادات النظام والأدوات الإدارية.",
+  "Admin and system areas": "المناطق الإدارية وأدوات النظام",
+  "Administrative modules live here so daily navigation stays focused on operational work.": "توجد الوحدات الإدارية هنا ليبقى التنقّل اليومي مركّزًا على العمل التشغيلي.",
+  "Manage login accounts, service accounts, disabled accounts, and account access.": "إدارة حسابات الدخول وحسابات الخدمة والحسابات المعطّلة وصلاحيات الوصول.",
+  "Roles & Permissions": "الأدوار والصلاحيات",
+  "Review the V1 role permission matrix.": "مراجعة مصفوفة صلاحيات الأدوار.",
+  "Configure category routing, fallback assignment, and auto-assignment behavior.": "تهيئة توجيه التصنيفات والإسناد الاحتياطي وسلوك الإسناد التلقائي.",
+  "Manage IT teams used by ticket routing.": "إدارة فرق تقنية المعلومات المستخدمة في توجيه التذاكر.",
+  "Manage dropdown values used across operational forms.": "إدارة قيم القوائم المنسدلة المستخدمة في نماذج العمل.",
+  "Maintain reusable document and request templates.": "صيانة قوالب المستندات والطلبات القابلة لإعادة الاستخدام.",
+  "System Audit": "تدقيق النظام",
+  "Review technical audit history for compliance.": "مراجعة سجل التدقيق التقني لأغراض الالتزام.",
+  "Restore inactive retained records.": "استعادة السجلات المحفوظة غير النشطة.",
+  "Trash": "سلة المحذوفات",
+  "Restore or permanently remove deleted records where allowed.": "استعادة السجلات المحذوفة أو إزالتها نهائيًا عند السماح بذلك.",
+  "Admin search for file metadata; daily attachment work remains record-level.": "بحث إداري في بيانات الملفات؛ يبقى العمل اليومي على المرفقات ضمن السجلات.",
+  "Review V1 system posture and operational guardrails.": "مراجعة وضع النظام والضوابط التشغيلية.",
+  "System administration": "إدارة النظام",
+  "Open administrative utilities and protected system areas. Operational controls remain in their owning modules.": "فتح الأدوات الإدارية ومناطق النظام المحمية. تبقى الضوابط التشغيلية داخل وحداتها.",
+  "Manage login and service accounts.": "إدارة حسابات الدخول وحسابات الخدمة.",
+  "Review role access and permission coverage.": "مراجعة وصول الأدوار وتغطية الصلاحيات.",
+  "Audit": "التدقيق",
+  "Open technical audit history for compliance review.": "فتح سجل التدقيق التقني لمراجعة الالتزام.",
+  "Restore retained inactive records.": "استعادة السجلات غير النشطة المحفوظة.",
+  "Search attachment metadata when record-level access is not enough.": "البحث في بيانات المرفقات عندما لا يكفي الوصول على مستوى السجل.",
+  "IT teams for ticket routing": "فرق تقنية المعلومات لتوجيه التذاكر",
+  "Create IT teams that can receive tickets by category while preserving individual assignment and workload rules.": "أنشئ فرقًا لتقنية المعلومات تستقبل التذاكر حسب التصنيف مع الحفاظ على قواعد الإسناد الفردي وتوزيع العمل.",
+  "Infrastructure": "البنية التحتية",
+  "Applications": "التطبيقات",
+  "Select user": "اختر مستخدمًا",
+  "Group Lead": "قائد الفريق",
+  "Manual Queue": "قائمة انتظار يدوية",
+  "Use Ctrl/Cmd to select multiple members.": "استخدم Ctrl أو Cmd لاختيار أكثر من عضو.",
+  "Can receive tickets": "يمكنه استقبال التذاكر",
+  "Create Group": "إنشاء فريق",
+  "No assignment groups": "لا توجد مجموعات إسناد",
+  "Create a Service Desk, Infrastructure, Applications, Assets, or Security group.": "أنشئ فريق مكتب خدمة أو بنية تحتية أو تطبيقات أو أصول أو أمن.",
+  "Workspace appearance": "مظهر مساحة العمل",
+  "Asset condition": "حالة الأصل",
+  "Asset model": "طراز الأصل",
+  "Asset status": "حالة الأصل التشغيلية",
+  "Contract status": "حالة العقد",
+  "Employee status": "حالة الموظف",
+  "Form type": "نوع النموذج",
+  "Kb category": "تصنيف قاعدة المعرفة",
+  "Kb status": "حالة قاعدة المعرفة",
+  "My task category": "تصنيف مهامي",
+  "My task priority": "أولوية مهامي",
+  "My task recurrence": "تكرار مهامي",
+  "My task status": "حالة مهامي",
+  "Renewal reminder period": "فترة تذكير التجديد",
+  "Request type": "نوع الطلب",
+  "Task priority": "أولوية المهمة",
+  "Task status": "حالة المهمة",
+  "Ticket cancel reason": "سبب إلغاء التذكرة",
+  "Ticket category": "تصنيف التذكرة",
+  "Ticket priority": "أولوية التذكرة",
+  "Ticket status": "حالة التذكرة",
+  "Ticket waiting reason": "سبب انتظار التذكرة",
+  "Transfer action": "إجراء النقل",
+  "User status": "حالة المستخدم",
+  "Vendor service type": "نوع خدمة المورد",
+  "Vendor status": "حالة المورد",
+  "Admin configuration": "الإعداد الإداري",
+  "Manage dropdown values used by tickets, tasks, assets, employees, contracts, vendors, documents, forms, and knowledge base articles.": "إدارة قيم القوائم المستخدمة في التذاكر والمهام والأصول والموظفين والعقود والموردين والمستندات والنماذج ومقالات قاعدة المعرفة.",
+  "Password sign-in": "تسجيل الدخول بكلمة مرور",
+  "Optional. Set a password to sign in with your employee ID instead of waiting for an email code.": "اختياري. عيّن كلمة مرور لتسجيل الدخول برقمك الوظيفي بدل انتظار رمز البريد.",
+  "New password": "كلمة المرور الجديدة",
+  "Confirm password": "تأكيد كلمة المرور",
+  "Set password": "تعيين كلمة المرور",
+  "Change password": "تغيير كلمة المرور",
+  "Remove password": "إزالة كلمة المرور",
+  "At least 8 characters": "٨ أحرف على الأقل",
+  "Employee ID or email": "الرقم الوظيفي أو البريد الإلكتروني",
+  "Password saved": "تم حفظ كلمة المرور",
+  "You can now sign in with your employee ID and this password.": "يمكنك الآن تسجيل الدخول برقمك الوظيفي وهذه الكلمة.",
+  "Password removed": "تمت إزالة كلمة المرور",
+  "Sign in with an email code from now on.": "سجّل الدخول برمز البريد من الآن فصاعدًا.",
+  "Could not save the password": "تعذّر حفظ كلمة المرور",
+  "Could not remove the password": "تعذّر إزالة كلمة المرور",
+  "Use at least 8 characters.": "استخدم ٨ أحرف على الأقل.",
+  "The two passwords do not match.": "كلمتا المرور غير متطابقتين.",
+  "Your employee ID is {id}.": "رقمك الوظيفي هو {id}."
+});
+
 // Ticket assignment routing and "open on behalf of".
 Object.assign(uiTextAr, {
   "Who is this request for?": "لمن هذا الطلب؟",
@@ -1665,6 +1757,7 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "{n} active": "{n} مُفعّلة",
   "Choose how the workspace looks on this device.": "اختر شكل مساحة العمل على هذا الجهاز.",
   "Match my device": "حسب إعداد الجهاز",
   "Theme": "المظهر",
@@ -5934,8 +6027,62 @@ function preferencesPage() {
         <div class="settings-actions">${formSaveStateHtml()}<button class="btn btn-primary" type="submit">Save Preferences</button></div>
       </form>
     </section>
+    ${passwordPanel()}
     ${twoFactorPanel()}
   `;
+}
+
+// Lets staff sign in with their employee number and a password, for anyone who
+// cannot conveniently reach their email at work.
+function passwordPanel() {
+  const isSet = Boolean(state.user?.passwordSet);
+  const employee = employeeForUser();
+  return `
+    <section class="surface-card employee-settings-page">
+      <div class="settings-page-head">
+        <div>
+          <p class="eyebrow">Security</p>
+          <h3>Password sign-in</h3>
+          <p class="muted">Optional. Set a password to sign in with your employee ID instead of waiting for an email code.</p>
+        </div>
+        <span class="badge ${isSet ? "success" : "neutral"}">${isSet ? "On" : "Off"}</span>
+      </div>
+      <div class="two-factor-actions" data-password-area>
+        ${employee?.employeeNo ? `<p class="muted">${escapeHtml(tpl("Your employee ID is {id}.", { id: employee.employeeNo }))}</p>` : ""}
+        <label class="two-factor-code"><span>New password</span><input type="password" data-new-password autocomplete="new-password" minlength="8" placeholder="At least 8 characters"></label>
+        <label class="two-factor-code"><span>Confirm password</span><input type="password" data-confirm-password autocomplete="new-password"></label>
+        <div class="password-actions">
+          <button class="btn btn-primary" type="button" data-save-password>${isSet ? "Change password" : "Set password"}</button>
+          ${isSet ? `<button class="btn btn-secondary" type="button" data-remove-password>Remove password</button>` : ""}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function wirePasswordPanel() {
+  $("[data-save-password]")?.addEventListener("click", async () => {
+    const password = $("[data-new-password]")?.value || "";
+    const confirmPassword = $("[data-confirm-password]")?.value || "";
+    try {
+      await api("/api/auth/set-password", { method: "POST", body: JSON.stringify({ password, confirmPassword }) });
+      await loadSession();
+      render();
+      toast("Password saved", "You can now sign in with your employee ID and this password.");
+    } catch (error) {
+      toast("Could not save the password", error.message);
+    }
+  });
+  $("[data-remove-password]")?.addEventListener("click", async () => {
+    try {
+      await api("/api/auth/clear-password", { method: "POST", body: "{}" });
+      await loadSession();
+      render();
+      toast("Password removed", "Sign in with an email code from now on.");
+    } catch (error) {
+      toast("Could not remove the password", error.message);
+    }
+  });
 }
 
 // Self-service second factor. It keeps working when email delivery does not, which
@@ -7873,7 +8020,7 @@ function lookupManagementSettingsPanel() {
       <div class="lookup-groups">
         ${grouped.map((type) => `
           <article class="lookup-group">
-            <div class="lookup-group-head"><strong>${escapeHtml(labelize(type))}</strong><span>${lookups.filter((item) => item.type === type && item.active !== false).length} active</span></div>
+            <div class="lookup-group-head"><strong>${escapeHtml(labelize(type))}</strong><span>${escapeHtml(tpl("{n} active", { n: lookups.filter((item) => item.type === type && item.active !== false).length }))}</span></div>
             <div class="lookup-chips">
               ${lookups.filter((item) => item.type === type).sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0)).map((item) => `
                 <div class="lookup-chip ${item.active === false ? "inactive" : ""}">
@@ -7988,7 +8135,7 @@ function ticketAssignmentSettingsPanel() {
   const users = rows("users").filter((user) => ["role_staff", "role_manager"].includes(user.roleId));
   const groups = rows("assignmentGroups").filter((group) => group.active !== false && group.canReceiveTickets !== false);
   const parents = ticketCategoryParents();
-  const assigneeOptions = (selected = "") => `<option value="">Use fallback</option>${users.map((user) => `<option value="${user.id}" ${selected === user.id ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("")}`;
+  const assigneeOptions = (selected = "") => `<option value="">Use fallback</option>${users.map((user) => `<option value="${user.id}" ${selected === user.id ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(trText(look("roles", user.roleId) || "IT"))})</option>`).join("")}`;
   const routeValue = (code) => {
     const route = settings.categoryRoutes?.[code] || null;
     if (route?.type && route.id) return `${route.type}:${route.id}`;
@@ -7998,7 +8145,7 @@ function ticketAssignmentSettingsPanel() {
   const routeOptions = (selected = "", inheritLabel = "") => `
     <option value="" ${!selected ? "selected" : ""}>${escapeHtml(inheritLabel || "Use fallback")}</option>
     <optgroup label="Specific user">
-      ${users.map((user) => `<option value="user:${user.id}" ${selected === `user:${user.id}` ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("")}
+      ${users.map((user) => `<option value="user:${user.id}" ${selected === `user:${user.id}` ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(trText(look("roles", user.roleId) || "IT"))})</option>`).join("")}
     </optgroup>
     <optgroup label="Assignment group">
       ${groups.map((group) => `<option value="group:${group.id}" ${selected === `group:${group.id}` ? "selected" : ""}>${escapeHtml(group.name)} (${escapeHtml(group.assignmentMethod || "Least Open Tickets")})</option>`).join("")}
@@ -8081,8 +8228,8 @@ function assignmentGroupsSettingsPanel() {
   const editing = groups.find((group) => group.id === state.assignmentGroupEditingId) || null;
   const groupTypes = ["Service Desk", "Infrastructure", "Applications", "Assets", "Security", "Other"];
   const methods = ["Least Open Tickets", "Round Robin", "Group Lead", "Manual Queue"];
-  const userOptions = (selected = "") => `<option value="">Select user</option>${users.map((user) => `<option value="${user.id}" ${selected === user.id ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("")}`;
-  const memberOptions = (selected = []) => users.map((user) => `<option value="${user.id}" ${selected.includes(user.id) ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(look("roles", user.roleId) || "IT")})</option>`).join("");
+  const userOptions = (selected = "") => `<option value="">Select user</option>${users.map((user) => `<option value="${user.id}" ${selected === user.id ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(trText(look("roles", user.roleId) || "IT"))})</option>`).join("")}`;
+  const memberOptions = (selected = []) => users.map((user) => `<option value="${user.id}" ${selected.includes(user.id) ? "selected" : ""}>${escapeHtml(user.name)} (${escapeHtml(trText(look("roles", user.roleId) || "IT"))})</option>`).join("");
   return `
     <section class="surface-card settings-section-card assignment-groups-settings">
       <div class="section-title">
@@ -9260,6 +9407,7 @@ function bindPageActions() {
   $$("[data-task-subtask-form]").forEach((form) => form.addEventListener("submit", submitTaskSubtask));
   $$("[data-task-notes-form]").forEach((form) => form.addEventListener("submit", submitTaskNotes));
   wireTwoFactorPanel();
+  wirePasswordPanel();
   wireFormSaveState($("[data-preferences-form]"));
   $("[data-preferences-form]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -11384,6 +11532,12 @@ function showLoginStep(step) {
     // Disabled controls are exempt, so inactive steps are switched off entirely.
     $$("input", node).forEach((input) => { input.disabled = !active; });
   });
+  // One-time values must never carry over. Returning to the code step with the
+  // previous code still in the box made it look as though a stale code had been
+  // sent, and submitting it fails confusingly.
+  $$('[data-login-step="code"] input, [data-login-step="totp"] input, [data-login-step="password"] input[type="password"]').forEach((input) => {
+    input.value = "";
+  });
   const error = $("[data-login-error]");
   if (error) { error.hidden = true; error.textContent = ""; }
   const focusTarget = $(`[data-login-step="${step}"] input`);
@@ -11434,6 +11588,7 @@ $("#loginForm").addEventListener("submit", async (event) => {
       const devBox = $("[data-dev-code]");
       if (devBox) {
         devBox.hidden = !requested.devCode;
+        if (!requested.devCode) devBox.innerHTML = "";
         if (requested.devCode) {
           devBox.innerHTML = `<strong>${escapeHtml(trText("Mail is not set up yet, so here is your code:"))}</strong><span class="dev-code-value">${escapeHtml(requested.devCode)}</span>`;
           const field = $('[data-login-step="code"] input[name="code"]');
