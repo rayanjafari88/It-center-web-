@@ -1066,7 +1066,7 @@ async function handleAuthRoutes(db, req, res, resource, resourceId) {
     const account = sessionUser(db, req);
     if (!account) return send(res, 401, { error: "Not signed in" }), true;
     return send(res, 200, {
-      user: { ...stripInternal(account), mfaEnabled: Boolean(account.totpSecret), passwordSet: Boolean(account.password) },
+      user: { ...stripInternal(account), mfaEnabled: Boolean(account.totpSecret), passwordSet: Boolean(account.password), mustChangePassword: Boolean(account.requirePasswordChange) },
       role: db.roles.find((role) => role.id === account.roleId)
     }), true;
   }
@@ -3515,9 +3515,23 @@ async function handleApi(req, res) {
     const oldValue = { ...account };
     const body = await readBody(req);
     if (action === "reset-password") {
-      if (!String(body.password || "").trim()) return send(res, 400, { error: "Password is required" });
-      account.password = String(body.password);
+      // The account holder is the only person who should end up knowing this, so the
+      // server generates it. An administrator may still supply one deliberately.
+      const supplied = String(body.password || "").trim();
+      if (supplied && supplied.length < 8) return send(res, 400, { error: "Use at least 8 characters." });
+      const temporary = supplied || auth.generateTemporaryPassword();
+      // Was stored in plain text here, which both defeated the hashing everywhere
+      // else and produced a password that verifyPassword could never accept.
+      account.password = auth.hashPassword(temporary);
+      account.passwordSetAt = now();
       account.requirePasswordChange = true;
+      // A reset usually follows a lockout or a suspected compromise, so any session
+      // the account already holds must end.
+      destroyUserSessions(db, account.id);
+      audit(db, req, "reset_password", "users", account.id, { ...oldValue, password: "***" }, { ...account, password: "***" });
+      writeDb(db);
+      // Returned once, so it can be handed over. It is never retrievable later.
+      return send(res, 200, { ...stripInternal(account), temporaryPassword: temporary });
     }
     if (action === "disable") {
       account.status = "disabled";

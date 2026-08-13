@@ -369,6 +369,36 @@ function authTests() {
 
 function platformTests() {
   return [
+    test("SEC-RESET-001", "security", "Password reset", "System Admin", "Critical", async (ctx) => {
+      // A dedicated throwaway account: resetting a password ends that user's sessions
+      // and replaces their password, so doing it to a shared fixture would break every
+      // later test that reuses the same cached session.
+      const created = await ctx.asAdmin({ method: "POST", path: "/api/users", body: { name: `${PREFIX} Reset Target`, username: `qa_auto_reset_${Date.now()}`, email: `qa.auto.reset.${Date.now()}@example.test`, password: "QA_AUTO_reset123!", roleId: "role_employee", status: "active", accountType: "Temporary" } });
+      assertStatus(created, 201, "Throwaway account created for the reset test");
+      const target = created.data.id;
+      const username = created.data.username;
+      // The reset previously stored the password in plain text, which both defeated
+      // hashing and produced a password sign-in could never accept.
+      const reset = await ctx.asAdmin({ method: "PATCH", path: `/api/users/${target}/reset-password`, body: {} });
+      assertStatus(reset, 200, "Admin can reset a password");
+      const temporary = reset.data.temporaryPassword;
+      assert(typeof temporary === "string" && temporary.length >= 12, "A temporary password is generated and returned once");
+      assert(!JSON.stringify(reset.data).includes("scrypt"), "The stored hash is never returned");
+      assert(reset.data.requirePasswordChange === true, "The account is flagged to choose a new password");
+
+      const stored = JSON.parse(require("fs").readFileSync(DATA_FILE, "utf8")).users.find((row) => row.id === target);
+      assert(String(stored.password).startsWith("scrypt$"), "The reset password is stored hashed, never in plain text");
+      assert(String(stored.password) !== temporary, "The plain temporary password is not what gets stored");
+
+      const signedIn = await ctx.anonymous({ method: "POST", path: "/api/login", body: { email: username, password: temporary } });
+      assertStatus(signedIn, 200, "The temporary password actually works for signing in");
+
+      // Only people who may edit accounts can do this.
+      const byEmployee = await ctx.asEmployeeA({ method: "PATCH", path: `/api/users/${qaIds.adminUser}/reset-password`, body: {} });
+      assertStatus(byEmployee, 403, "An employee cannot reset someone else's password");
+      const anonymous = await ctx.anonymous({ method: "PATCH", path: `/api/users/${qaIds.adminUser}/reset-password`, body: {} });
+      assertStatus(anonymous, 401, "An anonymous caller cannot reset a password");
+    }),
     test("SEC-EMPID-001", "security", "Sign-in", "All", "High", async (ctx) => {
       // Staff know their employee number, so it is accepted as an identifier. It must
       // still require the password, and must not become a way in on its own.

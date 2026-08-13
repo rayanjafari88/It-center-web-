@@ -1708,6 +1708,25 @@ Object.assign(uiTextAr, {
   "Your employee ID is {id}.": "رقمك الوظيفي هو {id}."
 });
 
+// Administrator password reset.
+Object.assign(uiTextAr, {
+  "Reset this password?": "إعادة تعيين كلمة المرور؟",
+  "A new temporary password will be generated for {name}. Any session they currently have will end, and they will be asked to choose a new password.": "سيتم توليد كلمة مرور مؤقتة لـ {name}. ستنتهي أي جلسة مفتوحة له، وسيُطلب منه اختيار كلمة مرور جديدة.",
+  "Reset password": "إعادة تعيين كلمة المرور",
+  "Could not reset the password": "تعذّرت إعادة تعيين كلمة المرور",
+  "Password reset": "إعادة تعيين كلمة المرور",
+  "Temporary password for {name}": "كلمة مرور مؤقتة لـ {name}",
+  "Give this to them directly. It is shown once and cannot be retrieved later.": "سلّمها له مباشرة. تُعرض مرة واحدة فقط ولا يمكن استرجاعها لاحقًا.",
+  "They will be asked to choose their own password after signing in.": "سيُطلب منه اختيار كلمة مروره الخاصة بعد تسجيل الدخول.",
+  "Copy": "نسخ",
+  "Done": "تم",
+  "Copied": "تم النسخ",
+  "The temporary password is on your clipboard.": "كلمة المرور المؤقتة في الحافظة.",
+  "Your password was reset by IT. Please choose your own password now.": "تمت إعادة تعيين كلمة مرورك من قبل تقنية المعلومات. اختر كلمة مرورك الخاصة الآن.",
+  "Choose a new password": "اختر كلمة مرور جديدة",
+  "Your password was reset by IT. Please set your own now.": "تمت إعادة تعيين كلمة مرورك من قبل تقنية المعلومات. عيّن كلمتك الخاصة الآن."
+});
+
 // Ticket assignment routing and "open on behalf of".
 Object.assign(uiTextAr, {
   "Who is this request for?": "لمن هذا الطلب؟",
@@ -6036,6 +6055,7 @@ function preferencesPage() {
 // cannot conveniently reach their email at work.
 function passwordPanel() {
   const isSet = Boolean(state.user?.passwordSet);
+  const mustChange = Boolean(state.user?.mustChangePassword);
   const employee = employeeForUser();
   return `
     <section class="surface-card employee-settings-page">
@@ -6048,6 +6068,7 @@ function passwordPanel() {
         <span class="badge ${isSet ? "success" : "neutral"}">${isSet ? "On" : "Off"}</span>
       </div>
       <div class="two-factor-actions" data-password-area>
+        ${mustChange ? `<p class="form-error" role="status">${escapeHtml(trText("Your password was reset by IT. Please choose your own password now."))}</p>` : ""}
         ${employee?.employeeNo ? `<p class="muted">${escapeHtml(tpl("Your employee ID is {id}.", { id: employee.employeeNo }))}</p>` : ""}
         <label class="two-factor-code"><span>New password</span><input type="password" data-new-password autocomplete="new-password" minlength="8" placeholder="At least 8 characters"></label>
         <label class="two-factor-code"><span>Confirm password</span><input type="password" data-confirm-password autocomplete="new-password"></label>
@@ -11418,14 +11439,59 @@ function accountPayloadFromForm(form) {
 }
 
 
+// The server generates the temporary password so an administrator never has to
+// invent one, and it is shown exactly once - it cannot be retrieved afterwards.
 async function resetUserPassword(userId) {
-  const password = await textDialog("Reset password", "Enter a new temporary password.", "");
-  if (!password) return;
+  const account = rows("users").find((item) => item.id === userId);
+  const who = account ? (look("employees", account.employeeId) || account.name || account.email) : "";
+  const ok = await confirmDialog(
+    trText("Reset this password?"),
+    tpl("A new temporary password will be generated for {name}. Any session they currently have will end, and they will be asked to choose a new password.", { name: who }),
+    { confirmLabel: trText("Reset password"), confirmClass: "btn-danger" }
+  );
+  if (!ok) return;
   try {
-    await api(`/api/users/${userId}/reset-password`, { method: "PATCH", body: JSON.stringify({ password }) });
-    toast("Password reset", "The account now requires a password change on next login.");
-    await loadState(); render();
-  } catch (error) { toast("Could not reset password", error.message); }
+    const result = await api(`/api/users/${userId}/reset-password`, { method: "PATCH", body: "{}" });
+    await loadState();
+    render();
+    showTemporaryPassword(who, result.temporaryPassword);
+  } catch (error) {
+    toast(trText("Could not reset the password"), error.message);
+  }
+}
+
+function showTemporaryPassword(who, password) {
+  $("#dialogHost").innerHTML = `
+    <div class="modal-backdrop">
+      <section class="modal surface-card temp-password-card">
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow">${escapeHtml(trText("Password reset"))}</p>
+            <h3>${escapeHtml(tpl("Temporary password for {name}", { name: who }))}</h3>
+          </div>
+        </div>
+        <p class="muted">${escapeHtml(trText("Give this to them directly. It is shown once and cannot be retrieved later."))}</p>
+        <div class="temp-password-value" data-temp-password>${escapeHtml(password)}</div>
+        <p class="hint">${escapeHtml(trText("They will be asked to choose their own password after signing in."))}</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" type="button" data-copy-temp-password>${escapeHtml(trText("Copy"))}</button>
+          <button class="btn btn-primary" type="button" data-temp-password-done>${escapeHtml(trText("Done"))}</button>
+        </div>
+      </section>
+    </div>
+  `;
+  localizeRenderedUi($("#dialogHost"));
+  $("[data-copy-temp-password]")?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(password);
+      toast(trText("Copied"), trText("The temporary password is on your clipboard."));
+    } catch (_) {
+      // Clipboard access can be refused; the value is on screen either way.
+      const node = $("[data-temp-password]");
+      if (node) window.getSelection()?.selectAllChildren(node);
+    }
+  });
+  $("[data-temp-password-done]")?.addEventListener("click", () => { $("#dialogHost").innerHTML = ""; });
 }
 
 async function disableUserAccount(userId) {
@@ -11560,6 +11626,12 @@ async function enterWorkspace(result) {
   $("#login").classList.add("hidden");
   $("#app").classList.remove("hidden");
   render();
+  if (state.user?.mustChangePassword) {
+    state.page = "preferences";
+    render();
+    toast(trText("Choose a new password"), trText("Your password was reset by IT. Please set your own now."));
+    return;
+  }
   toast("Signed in", tpl("Welcome back, {name}.", { name: state.user.name }));
 }
 

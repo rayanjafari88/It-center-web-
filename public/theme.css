@@ -2635,3 +2635,22 @@ body.rtl .modal-head {
   flex-wrap: wrap;
   gap: 10px;
 }
+
+/* Temporary password handover: shown once, so it must be easy to read aloud. */
+.temp-password-card {
+  width: min(460px, 100%);
+  text-align: center;
+}
+
+.temp-password-value {
+  margin: 16px 0 8px;
+  padding: 16px;
+  border: 1px dashed var(--field-border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  user-select: all;
+}
