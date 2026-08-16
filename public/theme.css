@@ -2654,3 +2654,96 @@ body.rtl .modal-head {
   letter-spacing: 2px;
   user-select: all;
 }
+
+/* --------------------------------------------------------------------------
+   Ticket sent: a paper aeroplane leaves the screen
+   -------------------------------------------------------------------------- */
+
+.ticket-sent-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  /* Decoration only - it must never intercept a click. */
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.ticket-sent-plane {
+  width: 76px;
+  height: 76px;
+  color: var(--primary);
+  filter: drop-shadow(0 6px 14px color-mix(in srgb, var(--primary) 45%, transparent));
+  transform-origin: 50% 50%;
+  animation: ticket-plane-fly 1.15s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
+
+/* A short vapour trail that fades as the plane pulls away. */
+.ticket-sent-trail {
+  position: absolute;
+  width: 120px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 60%, transparent));
+  transform-origin: 100% 50%;
+  animation: ticket-trail-fade 0.85s ease-out forwards;
+}
+
+@keyframes ticket-plane-fly {
+  0% {
+    transform: translate3d(0, 18px, 0) rotate(-8deg) scale(0.7);
+    opacity: 0;
+  }
+  18% {
+    transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
+    opacity: 1;
+  }
+  38% {
+    /* A small dip, the way a thrown plane settles before it climbs. */
+    transform: translate3d(26px, 12px, 0) rotate(4deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(min(62vw, 760px), -58vh, 0) rotate(-24deg) scale(0.32);
+    opacity: 0;
+  }
+}
+
+@keyframes ticket-trail-fade {
+  0%   { transform: translate3d(-70px, 6px, 0) scaleX(0); opacity: 0; }
+  35%  { transform: translate3d(-40px, 2px, 0) scaleX(1); opacity: 0.65; }
+  100% { transform: translate3d(120px, -34vh, 0) scaleX(0.2); opacity: 0; }
+}
+
+/* RTL: the plane should fly toward the reading direction. */
+body.rtl .ticket-sent-plane {
+  animation-name: ticket-plane-fly-rtl;
+}
+
+body.rtl .ticket-sent-trail {
+  display: none;
+}
+
+@keyframes ticket-plane-fly-rtl {
+  0% {
+    transform: translate3d(0, 18px, 0) rotate(8deg) scaleX(-1) scale(0.7);
+    opacity: 0;
+  }
+  18% {
+    transform: translate3d(0, 0, 0) rotate(4deg) scaleX(-1) scale(1);
+    opacity: 1;
+  }
+  38% {
+    transform: translate3d(-26px, 12px, 0) rotate(-4deg) scaleX(-1) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(max(-62vw, -760px), -58vh, 0) rotate(24deg) scaleX(-1) scale(0.32);
+    opacity: 0;
+  }
+}
+
+/* Anyone who has asked for reduced motion gets nothing at all. */
+@media (prefers-reduced-motion: reduce) {
+  .ticket-sent-layer { display: none !important; }
+}

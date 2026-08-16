@@ -1785,6 +1785,8 @@ Object.assign(uiTextAr, {
   "Saved": "تم الحفظ",
   "Not saved": "لم يتم الحفظ",
   "No results found": "لا توجد نتائج",
+  "Your request is on its way": "طلبك في طريقه",
+  "{number} was sent to IT.": "تم إرسال {number} إلى تقنية المعلومات.",
   "{n} active": "{n} مُفعّلة",
   "Choose how the workspace looks on this device.": "اختر شكل مساحة العمل على هذا الجهاز.",
   "Match my device": "حسب إعداد الجهاز",
@@ -10179,7 +10181,14 @@ function openModal(name, row = null, prefill = {}) {
       else saved = await api(`/api/${name}`, { method: "POST", body: JSON.stringify(body) });
       await handleModalPostSaveUploads(form, name, saved);
       backdrop.remove();
-      toast(row ? "Updated" : "Created", `${t(name)} saved successfully.`);
+      // A new ticket is the one moment worth marking: the person has just handed a
+      // problem to someone else and wants to feel it left.
+      if (name === "tickets" && !row) {
+        playTicketSentAnimation();
+        toast(trText("Your request is on its way"), tpl("{number} was sent to IT.", { number: saved.ticketNumber || "" }));
+      } else {
+        toast(row ? "Updated" : "Created", `${t(name)} saved successfully.`);
+      }
       await loadState();
       render();
     } catch (err) {
@@ -11497,6 +11506,31 @@ async function resetPersonPassword(personId) {
   } catch (error) {
     toast(trText("Could not reset the password"), error.message);
   }
+}
+
+// A paper aeroplane that leaves the screen when a ticket is submitted. Purely
+// decorative: it is appended to its own layer, ignores pointer events, and removes
+// itself, so nothing else has to wait for it.
+function playTicketSentAnimation() {
+  // Respect people who have asked their system for less movement.
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const host = document.createElement("div");
+  host.className = "ticket-sent-layer";
+  host.setAttribute("aria-hidden", "true");
+  host.innerHTML = `
+    <svg class="ticket-sent-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 2 11 13" />
+      <path d="M22 2 15 22l-4-9-9-4 20-7z" />
+    </svg>
+    <span class="ticket-sent-trail"></span>
+  `;
+  document.body.appendChild(host);
+  // Clean up when the flight finishes, and defensively on a timer in case the
+  // animation never fires (a background tab, for instance).
+  const done = () => host.remove();
+  host.addEventListener("animationend", done, { once: true });
+  setTimeout(done, 2000);
 }
 
 function showTemporaryPassword(who, password, employeeNo) {

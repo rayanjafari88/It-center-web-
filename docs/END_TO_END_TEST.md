@@ -44,18 +44,20 @@ Result: account created, role **Employee**, linked to employee no. 1004.
 
 ## Step 2 — Employee raises a ticket
 
-Submitted through the guided wizard: category **Hardware & Devices → Printer**,
-priority **high**, description written in Arabic.
+Submitted through the guided wizard in the browser: category **Hardware & Devices
+→ Laptop**, description written in Arabic.
 
-```
-POST /api/tickets   → 201
-```
+On success a paper aeroplane flies off the screen and the request is confirmed as
+sent. The animation is decoration only - its own layer, `pointer-events: none`,
+`aria-hidden`, and it removes itself when the flight ends. It is skipped entirely
+for anyone whose system asks for reduced motion, and in Arabic it flies the other
+way, following the reading direction.
 
 | Field | Value |
 | --- | --- |
 | Ticket | **TCK-0001** |
-| Category | Hardware & Devices / Printer |
-| Priority / status | high / open |
+| Category | Hardware & Devices / Laptop |
+| Status | open |
 | **Assigned to** | **IT Staff** |
 | Method | `category` |
 
@@ -76,16 +78,13 @@ PATCH /api/tickets/{id}  {"status":"in_progress"}   → 200
 
 ## Step 5 — Conversation, including a private note
 
-Three messages were posted:
-
 | Author | Message | Visibility |
 | --- | --- | --- |
-| IT Staff | "Received. I will inspect the printer within the hour." (Arabic) | public |
-| IT Staff | "Internal: roller assembly worn, part ordered." | **internal** |
-| Employee | "Thanks, it is the printer by reception." (Arabic) | public |
+| IT Staff | "Received, I will check the device today." (Arabic) | public |
+| IT Staff | "Internal: battery diagnostics scheduled." | **internal** |
 
-**Isolation check** — loading the employee's own view returned **2 comments, not 3**.
-The internal note did not appear anywhere in their payload.
+**Isolation check** — the employee's own view returned **1 comment, not 2**, and
+the internal note appeared nowhere in their payload.
 
 ## Step 6 — Resolution
 
@@ -107,10 +106,10 @@ Every action recorded, attributed to the person who performed it:
 | `create` | Employee |
 | `auto_assign` | (system, on the employee's request) |
 | `status_change` | IT Staff |
-| `comment` ×3 | IT Staff ×2, Employee ×1 |
+| `comment` ×2 | IT Staff |
 | `resolve` | IT Staff |
 
-Seven timeline entries were written for the same ticket.
+Every entry is attributed to the person who performed it.
 
 ---
 
@@ -129,8 +128,10 @@ Seven timeline entries were written for the same ticket.
 | Requester notified of progress and resolution | pass |
 | Full audit trail with attribution | pass |
 | Arabic content end to end | pass |
+| Paper aeroplane on submit, then self-removes | pass |
+| Animation skipped under reduced motion | pass |
 
-**11 of 11 checks passed.**
+**13 of 13 checks passed.**
 
 ## Notes
 
